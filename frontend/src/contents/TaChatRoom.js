@@ -63,7 +63,19 @@ function UserChatMsgItem({ msg }) {
   );
 }
 
-const TaChatRoom = ({ num, chatsData, list, addMsgData, getBotResponse }) => {
+var getCookie = function (name) {
+  var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return value ? value[2] : null;
+};
+
+const TaChatRoom = ({
+  num,
+  chatsData,
+  list,
+  addMsgData,
+  history,
+  getBotResponse,
+}) => {
   const msgInput = useRef();
   const scrollRef = useRef();
 
@@ -73,18 +85,26 @@ const TaChatRoom = ({ num, chatsData, list, addMsgData, getBotResponse }) => {
     stomp.connect({}, () => {
       stomp.subscribe('/sub/chat/room/' + '12321', function (chat) {
 
-        var content = JSON.parse(chat.body);
-        
-        console.log(content);
-        
-        addMsgData(num, 'ta', content.message);
-        // chatBox.append(
-        //   '<li>' + content.message + '(' + content.userId + ')</li>',
-        // );
+        console.log("msg arrived");
 
+        let data = getCookie('id');
+
+        if (data === null) {
+          history.push('/');
+          return;
+        }
+
+        var content = JSON.parse(chat.body);
+
+        console.log(content);
+
+        if (data === content.userId) {
+          addMsgData(num, 'user', content.message);
+        } else{
+          addMsgData(num, 'ta', content.message);
+        }
       });
     });
-
   });
 
   const scrollToBottom = () => {
@@ -104,9 +124,20 @@ const TaChatRoom = ({ num, chatsData, list, addMsgData, getBotResponse }) => {
       return;
     }
 
-    stomp.send('/pub/chat/message', {}, JSON.stringify({roomNo: 12321, userId: "user", message: text}));
+    let data = getCookie('id');
 
-    addMsgData(num, 'user', text);
+    if (data === null) {
+      history.push('/');
+      return;
+    }
+
+    stomp.send(
+      '/pub/chat/message',
+      {},
+      JSON.stringify({ roomNo: 12321, userId: data, message: text }),
+    );
+
+    //addMsgData(num, 'user', text);
     msgInput.current.value = '';
 
     //getBotResponse(text);

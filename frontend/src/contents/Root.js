@@ -24,35 +24,6 @@ const Root = ({ loginState, changeType }) => {
 
   useEffect(() => {
     try {
-      //   let data = getCookie("id");
-      //   data = { id: data };
-      //   if (data === null) {
-      //     console.log("app silent requset fail");
-      //     return;
-      //   }
-      //   console.log(data);
-      //   axios
-      //     .post('http://localhost:8080/refreshLoginToken', JSON.stringify(data), {
-      //       headers: {
-      //         'Content-Type': `application/json`,
-      //       },
-      //       withCredentials: true,
-      //     })
-      //     .then((res) => {
-      //       console.log('login success');
-      //       axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data;
-      //       changeType(LOGIN_SUCCESS);
-      //     })
-      //     .catch((ex) => {
-      //       console.log('app silent requset fail : ' + ex);
-      //       changeType(LOGIN_BEFORE);
-      //     })
-      //     .finally(() => {
-      //       //console.log('login request end');
-      //     });
-      // } catch (e) {
-      //   console.log(e);
-      // }
 
       refreshLoginToken(loginCallback);
     } catch (e) {

@@ -88,11 +88,19 @@ public class LoginController {
     @PostMapping("/userlogout")
     public String logout(HttpServletResponse response) {
         System.out.println("qwe");
-        Cookie cookie = new Cookie("refreshToken", null);
 
+        Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
         cookie.setPath("/"); // 모든 경로에서 삭제 됬음을 알린다.
+
+
+        Cookie cookie2 = new Cookie("id", null);
+        cookie2.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
+        cookie2.setPath("/"); // 모든 경로에서 삭제 됬음을 알린다.
+
         response.addCookie(cookie);
+        response.addCookie(cookie2);
+
         return "logout";
     }
 

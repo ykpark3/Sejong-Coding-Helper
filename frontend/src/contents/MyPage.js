@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import axios from 'axios';
@@ -7,10 +7,9 @@ import { changeType } from '../redux/login/loginActions';
 import Root from './Root';
 import { LOGIN_BEFORE, LOGIN_SUCCESS } from '../redux/login/loginTypes';
 
-const MyPage = ({ history, loginState,changeType }) => {
+const MyPage = ({ history, loginState, changeType }) => {
 
   const logout = () => {
-
     axios
       .post(
         'http://localhost:8080/userlogout',

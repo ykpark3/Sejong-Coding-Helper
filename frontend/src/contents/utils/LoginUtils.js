@@ -11,8 +11,9 @@ export const refreshLoginToken = function (callback) {
   try {
     let data = getCookie('id');
     data = { id: data };
-    if (data === null) {
+    if (data.id === null) {
       console.log('app silent requset fail');
+      callback(LOGIN_BEFORE);
       return;
     }
 
