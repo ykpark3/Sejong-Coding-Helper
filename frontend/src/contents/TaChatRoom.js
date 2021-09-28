@@ -12,9 +12,6 @@ import '../css/Chatroom.css';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 
-let sockJS = new SockJS('http://localhost:8080/websocket');
-let stomp = Stomp.over(sockJS);
-
 const chatData = ({ chatsData }) => {
   const chatItems = chatsData.map((chat) => {
     if (chat.sender === 'ta') {
@@ -68,14 +65,10 @@ var getCookie = function (name) {
   return value ? value[2] : null;
 };
 
-const TaChatRoom = ({
-  num,
-  chatsData,
-  list,
-  addMsgData,
-  history,
-  getBotResponse,
-}) => {
+const sockJS = new SockJS('http://localhost:8080/websocket');
+const stomp = Stomp.over(sockJS);
+
+const TaChatRoom = ({ num, chatsData, list, addMsgData, history }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
 
@@ -83,30 +76,31 @@ const TaChatRoom = ({
     scrollToBottom();
 
     stomp.connect({}, () => {
-      stomp.subscribe('/sub/chat/room/' + '12321', function (chat) {
-
-        console.log("msg arrived");
-
+      stomp.subscribe('/sub/chat/room/' + '12321', (chat)=> {
+        console.log('msg arrived');
+  
         let data = getCookie('id');
-
+  
         if (data === null) {
           history.push('/');
           return;
         }
-
+  
         var content = JSON.parse(chat.body);
-
+  
         console.log(content);
-
+  
         if (data === content.userId) {
           addMsgData(num, 'user', content.message);
-        } else{
+        } else {
           addMsgData(num, 'ta', content.message);
         }
       });
-    });
+    },[]);
+  
   });
 
+ 
   const scrollToBottom = () => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
   };
@@ -184,7 +178,7 @@ const TaChatRoom = ({
 };
 
 const mapStateToProps = ({ taChats }) => {
-  console.log(taChats.chats);
+  //onsole.log(taChats.chats);
 
   return {
     chatsData: taChats.chats,

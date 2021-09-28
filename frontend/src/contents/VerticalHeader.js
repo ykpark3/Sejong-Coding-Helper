@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { clickedNavItem } from '../redux/view/viewActions';
 import { useMediaQuery } from 'react-responsive';
 
-const VerticalHeader = ({ clickedNavNum, clickedNavItem }) => {
+const VerticalHeader = ({ clickedNavNum, clickedNavItem,history }) => {
   const isShort = useMediaQuery({
     query: '(min-height:0px) and (max-height:599px)',
   });
@@ -70,7 +70,8 @@ const VerticalHeader = ({ clickedNavNum, clickedNavItem }) => {
         </div>
       </Link>
 
-      <Link to="/tachatroom">
+       {/* 리로드가 필요해서 a 태그씀. */}
+      <a onClick={() => window.location.replace("tachatroom")}>
         <div className={clicked2}>
           {isLong && <img className="logoImg" src="img/coding.png" />}
 
@@ -93,7 +94,7 @@ const VerticalHeader = ({ clickedNavNum, clickedNavItem }) => {
 
           <hr className="header_line" />
         </div>
-      </Link>
+      </a>
 
       <Link to="/curri">
         <div className={clicked3}>
