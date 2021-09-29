@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import HorizontalHeader from './HorizontalHeader';
 import VerticalHeader from './VerticalHeader';
 import '../css/Signup.css';
+import axios from 'axios';
+import { API_BASE_URL } from './utils/Constant';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +18,22 @@ const Signup = () => {
       return;
     }
 
-    console.log('qwe');
+    axios.post(
+      API_BASE_URL + '/sendSejongEmail',
+      { email:email },
+      {
+        headers: {
+          'Content-type': 'application/json',
+          Accept: 'application/json',
+        },
+        withCredentials: true,
+      },
+    ). then((res) => {
+      console.log(res.data);
+    })
+    .catch((res) => {
+      console.log(res);
+    });
   };
 
   return (
