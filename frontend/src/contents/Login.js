@@ -73,7 +73,7 @@ const Login = ({ loginState, login,changeType,history }) => {
           onChange={(e) => { setPwd(e.target.value); }}></input>
 
         <div id="textBox">
-          <h4 className="contentsText1">회원 가입</h4>
+          <h4 className="contentsText1" onClick={()=>{history.push("/signup")}}>회원 가입</h4>
           <h4 className="contentsText1">아아디 찾기</h4>
           <h4 className="contentsText1">비밀번호 찾기</h4>
 

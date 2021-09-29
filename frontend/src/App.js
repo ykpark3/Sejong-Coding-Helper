@@ -14,6 +14,7 @@ import Curriculum from './contents/Curriculum';
 import TaChatRoom from './contents/TaChatRoom';
 import Loading from './contents/Loading';
 import Root from './contents/Root';
+import Signup from './contents/Signup';
 
 function App() {
   
@@ -28,6 +29,7 @@ function App() {
           <UserRoute path="/botchatroom" component={BotChatRoom} />
           <UserRoute path="/tachatroom" component={TaChatRoom} />
           <UserRoute path="/myPage" component={MyPage} />
+          <Route path="/signup" component={Signup} />
           
           <Route path="/login" component={Login} />
           <Route path="/curri" component={Curriculum} />
