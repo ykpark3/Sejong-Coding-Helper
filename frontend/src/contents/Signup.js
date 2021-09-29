@@ -61,6 +61,7 @@ const Signup = () => {
           </ul>
           <div>
             <p>위 안내사항을 확인하였으며, 개인정보수집에 동의합니다.</p>
+
             <input
               type="checkbox"
               onChange={(e) => {
@@ -83,8 +84,7 @@ const Signup = () => {
           <p>@sju.ac.kr</p>
         </div>
         <>
-        {isChecked ?'': <p id="noticeConfirm">!! 약관에 동의해주세요 !!</p> }
-          
+          {isChecked ? '' : <p id="noticeConfirm">!! 약관에 동의해주세요 !!</p>}
         </>
         <button
           onClick={() => {

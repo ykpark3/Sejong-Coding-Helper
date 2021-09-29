@@ -121,11 +121,30 @@ a {
   margin-top: 80px;
 }
 
-#signupNoticeBox div:nth-of-type(2) input {
+/* #signupNoticeBox div:nth-of-type(2) input[type="checkbox"] {
   width: 17px;
   height: 17px;
 
   margin-right: 10px;
+  background: #990000;
+} */
+
+
+input[type='checkbox'] {
+  width: 17px;
+  height: 17px;
+  margin-right: 10px;
+}
+
+input[type='checkbox']:checked {
+  width: 17px;
+  height: 17px;
+  background-color: #990000;
+  border-radius: 3px;
+
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -o-appearance: none;
 }
 
 #signupNoticeBox li {
@@ -171,33 +190,31 @@ a {
   flex-direction: row;
   font-size: 27px;
   font-family: 'nanumR';
-  margin:37px 00px 0px 0px;
+  margin: 37px 00px 0px 0px;
 }
 
 #signupBox button {
-    width: 500px;
-    height: fit-content;
-    font-family: 'nanumB';
-    font-size: 17px;
-    margin-top: 20px;
-    margin-bottom: 50px;
-    padding: 15px 0 15px 0;
-  
-    background-color: #990000;
-    color: white;
-    border-style: none;
-    border-radius: 30px;
-    cursor: pointer;
-  }
+  width: 500px;
+  height: fit-content;
+  font-family: 'nanumB';
+  font-size: 17px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  padding: 15px 0 15px 0;
 
-  #signupBox button:hover{
-    background-color: #ff7777;
-  }
+  background-color: #990000;
+  color: white;
+  border-style: none;
+  border-radius: 30px;
+  cursor: pointer;
+}
 
-  #noticeConfirm{
-    font-family: 'nanumB';
-    font-size: 17px;
-    color: #990000;
-  }
+#signupBox button:hover {
+  background-color: #ff7777;
+}
 
-
+#noticeConfirm {
+  font-family: 'nanumB';
+  font-size: 17px;
+  color: #990000;
+}
