@@ -34,6 +34,7 @@ public class SignupController {
 
         // 메일 보내기
         MimeMessage message = javaMailSender.createMimeMessage();
+        message.setFrom("Sejong Coding Helper<sjhelper10@gmail.com>");
         message.setSubject("hi");
         message.setRecipient(Message.RecipientType.TO,new InternetAddress(email));
         message.setText("hi");
