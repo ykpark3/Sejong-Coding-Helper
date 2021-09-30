@@ -7,7 +7,8 @@ import Login from './contents/Login';
 import Main from './contents/Main';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import UserRoute from './router/userRoute';
+import UserRoute from './router/UserRoute';
+import SignupRoute from './router/SignupRoute';
 import MyPage from './contents/MyPage';
 import Qa from './contents/Qa';
 import Curriculum from './contents/Curriculum';
@@ -31,8 +32,9 @@ function App() {
           <UserRoute path="/tachatroom" component={TaChatRoom} />
           <UserRoute path="/myPage" component={MyPage} />
           <Route path="/signup" component={Signup} />
+          {/* <SignupRoute path="/signupDetails" component={SignupDetails}/> */}
           <Route path="/signupDetails" component={SignupDetails}/>
-          
+
           <Route path="/login" component={Login} />
           <Route path="/curri" component={Curriculum} />
           <Route path="/qa" component={Qa} />

@@ -1,7 +1,8 @@
-import { LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_PENDING, LOGIN_BEFORE,LOGIN_ORIGIN,SET_ID } from './loginTypes';
+import { LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_PENDING, LOGIN_BEFORE,LOGIN_ORIGIN,CHANGE_SIGNUP_AUTH } from './loginTypes';
 
 const initialState = {
     
+    signupAuth:false,
     type:LOGIN_ORIGIN,
     id:''
 };
@@ -30,6 +31,11 @@ const loginReducer = (state = initialState, action) => {
         return{
             ...state,
             type:LOGIN_BEFORE
+        }
+    case CHANGE_SIGNUP_AUTH:
+        return{
+            ...state,
+            signupAuth:data.signupAuth,
         }
 
     default:

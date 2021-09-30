@@ -6,8 +6,10 @@ import { LOGIN_BEFORE } from '../../redux/login/loginTypes';
 import axios from 'axios';
 import { API_BASE_URL } from '../utils/Constant';
 import { useHistory } from 'react-router';
+import { connect, useDispatch } from 'react-redux';
+import { changeSignupAuth } from '../../redux/login/loginActions';
 
-const EmailAuthModal = ({setAuthModalOn}) => {
+const EmailAuthModal = ({setAuthModalOn,changeSignupAuth}) => {
   const input2Ref = useRef(null);
   const input3Ref = useRef(null);
   const input4Ref = useRef(null);
@@ -69,6 +71,7 @@ const EmailAuthModal = ({setAuthModalOn}) => {
       .then((res) => {
           console.log(res.data);
         if(res.data === 'accepted'){
+            changeSignupAuth(true);
             history.push('/signupDetails');
 
         } else{
@@ -222,4 +225,16 @@ const EmailAuthModal = ({setAuthModalOn}) => {
   );
 };
 
-export default EmailAuthModal;
+const mapStateToProps = ({ login }) => {
+    return {
+        signupAuth: login.signupAuth,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeSignupAuth:(props) => dispatch(changeSignupAuth(props)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EmailAuthModal);

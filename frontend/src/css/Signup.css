@@ -49,7 +49,7 @@ a {
 }
 
 #signupBox {
-  width: 1000px;
+  width: 850px;
   height: fit-content;
   position: relative;
   top: 100px;
@@ -218,3 +218,58 @@ input[type='checkbox']:checked {
   font-size: 17px;
   color: #990000;
 }
+
+#signupForm{
+  width: 70%;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+#signupForm .smallTitle{
+  font-family: 'GmB';
+  font-size: 20px;
+  margin-top: 40px;
+  margin-bottom: 10px;
+}
+
+#signupForm .smallNotice{
+
+  font-family: 'GmB';
+  color: #990000;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+#signupForm .smallInput {
+  
+  border: solid 2px #990000;
+  border-radius: 10px;
+  font-size: 20px;
+  font-family: 'nanumR';
+  padding: 10px;
+}
+
+#signupForm .smallInput:focus {
+  
+  outline: none;
+  border: solid 2px #ff7777;
+}
+
+#signupForm button{
+  width: 400px;
+  height: fit-content;
+  font-family: 'nanumB';
+  font-size: 17px;
+  margin: 100px auto 0 auto;
+
+  background-color: #990000;
+  color: white;
+  border-style: none;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+
+
