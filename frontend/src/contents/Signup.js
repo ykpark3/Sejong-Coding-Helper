@@ -4,10 +4,14 @@ import VerticalHeader from './VerticalHeader';
 import '../css/Signup.css';
 import axios from 'axios';
 import { API_BASE_URL } from './utils/Constant';
+import LoadingModal from './modal/LoadingModal';
+import EmailAuthModal from './modal/EmailAuthModal';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [isChecked, setChecked] = useState(false);
+  const [isEmailLoading,setEmailLoading] = useState(false);
+  const [isAuthModalOn, setAuthModalOn] = useState(false);
 
   const sendEmail = () => {
     if (email === '') {
@@ -17,6 +21,8 @@ const Signup = () => {
     if (!isChecked) {
       return;
     }
+
+    setEmailLoading(true);
 
     axios.post(
       API_BASE_URL + '/sendSejongEmail',
@@ -30,6 +36,8 @@ const Signup = () => {
       },
     ). then((res) => {
       console.log(res.data);
+      setEmailLoading(false);
+      setAuthModalOn(true);
     })
     .catch((res) => {
       console.log(res);
@@ -40,6 +48,16 @@ const Signup = () => {
     <div id="signupMainContainer">
       <VerticalHeader />
       <HorizontalHeader />
+
+      <>
+        {isEmailLoading ? <LoadingModal/> : ''}
+      </>
+
+      <>
+        {isAuthModalOn ? <EmailAuthModal setAuthModalOn={setAuthModalOn}/> : ''}
+      </>
+
+      {/* <EmailAuthModal/> */}
 
       <div id="signupBox">
         <img src="img/logo.png" />

@@ -1,5 +1,6 @@
 package com.example.testlocal.controller;
 
+import jdk.swing.interop.SwingInterOpUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,6 +14,8 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
@@ -26,7 +29,7 @@ public class SignupController {
     private final JavaMailSender javaMailSender;
 
     @PostMapping("/sendSejongEmail")
-    public String sendSejongEmail(@RequestBody Map<String, String> map) throws MessagingException {
+    public void sendSejongEmail(@RequestBody Map<String, String> map, HttpServletRequest request) throws MessagingException {
 
         String email = map.get("email") + "@sju.ac.kr";
 
@@ -49,7 +52,23 @@ public class SignupController {
 
         javaMailSender.send(message);
 
-        return authCode;
+        HttpSession session = request.getSession();
+        session.setMaxInactiveInterval(60*10);  //10분
+        session.setAttribute("authCode",authCode);
+    }
+
+    @PostMapping("checkEmailAuthCode")
+    public String checkEmailAuthCode(@RequestBody Map<String, String> map,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String authCode =(String)session.getAttribute("authCode");
+        String inputedAuthCode = map.get("authCode");
+        System.out.println(authCode + "," +inputedAuthCode);
+
+        if(authCode.equals(inputedAuthCode))
+            return "accepted";
+        else
+            return "fail";
+
     }
 
     //인증코드 난수 발생

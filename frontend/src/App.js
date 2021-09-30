@@ -15,6 +15,7 @@ import TaChatRoom from './contents/TaChatRoom';
 import Loading from './contents/Loading';
 import Root from './contents/Root';
 import Signup from './contents/Signup';
+import SignupDetails from './contents/SignupDetails';
 
 function App() {
   
@@ -30,6 +31,7 @@ function App() {
           <UserRoute path="/tachatroom" component={TaChatRoom} />
           <UserRoute path="/myPage" component={MyPage} />
           <Route path="/signup" component={Signup} />
+          <Route path="/signupDetails" component={SignupDetails}/>
           
           <Route path="/login" component={Login} />
           <Route path="/curri" component={Curriculum} />
