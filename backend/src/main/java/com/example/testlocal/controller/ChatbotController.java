@@ -1,7 +1,6 @@
 package com.example.testlocal.controller;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.apache.tomcat.util.json.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -22,14 +21,83 @@ import java.util.Date;
 @Controller
 public class ChatbotController {
 
-    private static String secretKey = "[시크릿키]";
-    private static String apiUrl = "[apiUrl키]";
+    public ChatbotController() {
+
+        System.out.println("ChatbotController!!!!!!!!");
+    }
+
+
+    private static String secretKey = "Q0VQQXdtd3BqUGVSdmZPWlRwYkh3d25ham5EUXNPRXU=";
+    private static String apiUrl =
+            //"https://0745b29300d6481abe2d712e9ae4aeab.apigw.ntruss.com/custom_chatbot/prod/";
+            "https://0745b29300d6481abe2d712e9ae4aeab.apigw.ntruss.com/custom/v1/5480/5e7422eda1c613f1bf3ecd3b47e3da0929f62a0855f074c9e053a82a865936a7";
+
 
     @MessageMapping("/sendMessage")
     @SendTo("/topic/public")
     public String sendMessage(@Payload String chatMessage) throws IOException {
 
+        System.out.println("!!!!! sendMessage");
+        String chatbotMessage = "";
+
+        try {
+            //String apiURL = "https://ex9av8bv0e.apigw.ntruss.com/custom_chatbot/prod/";
+
+            URL url = new URL(apiUrl);
+
+            String message = getReqMessage(chatMessage);
+            System.out.println("##" + message);
+            System.out.println("!!!!chatmessage: "+chatMessage);
+
+
+            String encodeBase64String = makeSignature(message, secretKey);
+
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json;UTF-8");
+            con.setRequestProperty("X-NCP-CHATBOT_SIGNATURE", encodeBase64String);
+
+            // post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.write(message.getBytes("UTF-8"));
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+
+            BufferedReader br;
+
+            if(responseCode==200) { // Normal call
+                System.out.println(con.getResponseMessage());
+                System.out.println("!!! 200 정상");
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                                con.getInputStream()));
+                String decodedString;
+                while ((decodedString = in.readLine()) != null) {
+                    chatbotMessage = decodedString;
+                }
+                //chatbotMessage = decodedString;
+                in.close();
+
+
+            } else {  // Error occurred
+                System.out.println("!!! 에러");
+
+                chatbotMessage = con.getResponseMessage();
+            }
+        } catch (Exception e) {
+            System.out.println("!!! catch");
+
+            System.out.println(e);
+        }
+
+        return chatbotMessage;
+
+        /*
         URL url = new URL(apiUrl);
+        System.out.println("sendMessage!!!!!!!!");
 
         String message =  getReqMessage(chatMessage);
         String encodeBase64String = makeSignature(message, secretKey);
@@ -52,6 +120,8 @@ public class ChatbotController {
 
         if(responseCode==200) { // 정상 호출
 
+            System.out.println("정상 호출 !!!!!!!!");
+
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
                             con.getInputStream(), "UTF-8"));
@@ -61,12 +131,15 @@ public class ChatbotController {
                 jsonString = decodedString; //jsonString에 값 받아오기
             }
 
+            System.out.println("!!!!!!!jsonstring:   "+jsonString);
+
             //받아온 값을 세팅하는 부분
             //JSONParser jsonParser = new JSONParser();
             JSONParser jsonParser = new JSONParser(jsonString);
             try {
-                JSONObject jsonObject = (JSONObject)jsonParser.parse();
+                System.out.println("!!!try");
 
+                JSONObject jsonObject = (JSONObject)jsonParser.parse();
 
                 // "bubbles": [ {"type": "text",
                 //"data" : { "description" : "postback text of welcome action" } } ],
@@ -79,8 +152,10 @@ public class ChatbotController {
                 description = (String)data.get("description");
                 chatMessage = description;
 
+                System.out.println("!!!!! chatMessage: " + chatMessage);
+
             } catch (Exception e) {
-                System.out.println("error");
+                System.out.println("!!!!!error");
                 e.printStackTrace();
             }
 
@@ -88,14 +163,19 @@ public class ChatbotController {
         }
 
         else {  // 에러 발생
+
+            System.out.println("!!!!!error 22");
             chatMessage = con.getResponseMessage();
         }
         return chatMessage;
+
+         */
     }
 
     //보낼 메세지를 네이버에서 제공해준 암호화로 변경해주는 메소드
     public static String makeSignature(String message, String secretKey) {
 
+        System.out.println("!!!!! makeSignature");
         String signatureHeader = "";
 
         // 요청 Signature 헤더
@@ -107,11 +187,14 @@ public class ChatbotController {
             mac.init(secretKeySpec);
 
             byte[] signature  = mac.doFinal(message.getBytes("UTF-8"));
-            signatureHeader = Base64.encodeBase64String(signature );
+            signatureHeader = Base64.encodeBase64String(signature);
+
+            System.out.println("!!!!signitureHeader:  "+signatureHeader);
 
             return signatureHeader;
 
         } catch (Exception e){
+            System.out.println("!!!!error ");
             System.out.println(e);
         }
 
@@ -123,9 +206,10 @@ public class ChatbotController {
     public static String getReqMessage(String sendMessage) {
 
         String requestBody = "";
+
         System.out.println("!!!!! getReqMessage !!!!!");
 
-        sendMessage = "파이썬이 뭐야";
+        //sendMessage = "파이썬이 뭐야";
 
         try {
 
@@ -159,10 +243,13 @@ public class ChatbotController {
 
             requestBody = jsonObject.toString();
 
+            System.out.println("!!! requestBody:   "+requestBody);
+
         } catch (Exception e){
             System.out.println("## Exception : " + e);
         }
 
         return requestBody;
     }
+
 }
