@@ -251,7 +251,21 @@ input[type='checkbox']:checked {
   padding: 10px;
 }
 
+#signupForm .smallInputPassword {
+  
+  border: solid 2px #990000;
+  border-radius: 10px;
+  font-size: 20px;
+  padding: 10px;
+}
+
 #signupForm .smallInput:focus {
+  
+  outline: none;
+  border: solid 2px #ff7777;
+}
+
+#signupForm .smallInputPassword:focus {
   
   outline: none;
   border: solid 2px #ff7777;

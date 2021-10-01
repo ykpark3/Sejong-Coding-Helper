@@ -8,11 +8,22 @@ import { connect, useDispatch } from 'react-redux';
 import { changeSignupAuth } from '../redux/login/loginActions';
 
 const SignupDetails = ({ changeSignupAuth }) => {
+
+  const [isCorrectName, setCorrectName] = useState(false);
+  const [isCorrectStuId, setCorrectStuId] = useState(false);
+  cosnt[isCorrectPw, setCorrectPw] = useState(false);
+  cosnt[isCorrectPwCheck, setCorrectPwCheck] = useState(false);
+
   useEffect(() => {
     return () => {
       changeSignupAuth(false);
     };
   });
+
+  const onClickSignupBnt = () => {
+    const reg_name = /^[가-힣]{2,4}$/;
+    
+  }
 
   return (
     <div id="signupMainContainer">
@@ -32,16 +43,16 @@ const SignupDetails = ({ changeSignupAuth }) => {
           <input className="smallInput"></input>
 
           <p className="smallTitle">비밀 번호</p>
-          <input className="smallInput"></input>
+          <input className="smallInputPassword" type="password"></input>
 
           <p className="smallTitle">비밀 번호 확인</p>
-          <input className="smallInput"></input>
+          <input className="smallInputPassword" type="password"></input>
 
           <p className="smallTitle">세종대 이메일</p>
           <p className="smallNotice">*비밀번호 분실시 이용됩니다.</p>
-          <input className="smallInput"></input>
+          <input className="smallInput" ></input>
 
-          <button onClick={() => {}}>가입 완료</button>
+          <button onClick={() => {onClickSignupBnt();}}>가입 완료</button>
         </div>
       </div>
     </div>
