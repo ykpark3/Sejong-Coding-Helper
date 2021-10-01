@@ -10,6 +10,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        //해당 부분은 웹 소켓이 연결되는 엔드포인트를 “/ws” 로 설정
+        //SockJS와 연동해 웹 소켓을 지원하지 않는 브라우저의 경우 SockJS 규격으로 연결
+        registry.addEndpoint("/ws").withSockJS();
+    }
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry){
         // 도착 경로에 대한 prefix 설정

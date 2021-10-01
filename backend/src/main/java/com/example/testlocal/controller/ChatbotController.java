@@ -123,6 +123,9 @@ public class ChatbotController {
     public static String getReqMessage(String sendMessage) {
 
         String requestBody = "";
+        System.out.println("!!!!! getReqMessage !!!!!");
+
+        sendMessage = "파이썬이 뭐야";
 
         try {
 
