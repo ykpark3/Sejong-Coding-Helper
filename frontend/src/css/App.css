@@ -40,11 +40,11 @@ a{
 
 #horizontalHeaderBg{
   position: fixed;
+  right: 0;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  left: 0;
-  width: 100%;
+  /* width: 100%; */
   z-index: 15;
 }
 
