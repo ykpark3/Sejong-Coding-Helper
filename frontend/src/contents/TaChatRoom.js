@@ -178,7 +178,7 @@ const TaChatRoom = ({ num, chatsData, list, addMsgData, history }) => {
 };
 
 const mapStateToProps = ({ taChats }) => {
-  //onsole.log(taChats.chats);
+  //console.log(taChats.chats);
 
   return {
     chatsData: taChats.chats,

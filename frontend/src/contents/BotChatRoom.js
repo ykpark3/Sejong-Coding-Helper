@@ -133,7 +133,7 @@ const BotChatRoom = ({ num, chatsData, list, addMsgData, getBotResponse }) => {
 };
 
 const mapStateToProps = ({ botChats }) => {
-  console.log(botChats.chats);
+  //console.log(botChats.chats);
 
   return {
     chatsData: botChats.chats,

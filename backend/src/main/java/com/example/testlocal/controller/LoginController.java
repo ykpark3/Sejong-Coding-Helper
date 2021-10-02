@@ -60,6 +60,12 @@ public class LoginController {
     @PostMapping("/refreshLoginToken")
     public String refreshLoginToken(@RequestBody Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         String accessToken = "";
         String refreshToken = "";
 
