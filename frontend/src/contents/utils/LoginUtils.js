@@ -8,6 +8,8 @@ export const refreshLoginToken = function (callback) {
     return value ? value[2] : null;
   };
 
+  console.log("ref");
+
   try {
     let data = getCookie('id');
     data = { id: data };

@@ -74,8 +74,8 @@ public class UserService {
                     refreshToken = cookie.getValue();
 
                     if (jwtTokenProvider.validateToken(refreshToken)) {
-                        accessToken = jwtTokenProvider.createToken(id, 10L);
-                        refreshToken = jwtTokenProvider.createToken(id, 60L);
+                        accessToken = jwtTokenProvider.createToken(id, 60L);
+                        refreshToken = jwtTokenProvider.createToken(id, 120L);
                     } else {
                         throw new IllegalArgumentException("토큰 오류");
                     }

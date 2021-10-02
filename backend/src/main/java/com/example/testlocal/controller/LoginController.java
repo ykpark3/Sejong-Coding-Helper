@@ -68,7 +68,7 @@ public class LoginController {
         refreshToken = resultMap.get("refreshToken");
 
         Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setMaxAge(120 * 60);   //30분 : 30 * 60
+        refreshCookie.setMaxAge(120 * 60);   //120분 : 120 * 60
         refreshCookie.setPath("/");
         refreshCookie.setSecure(false);
         refreshCookie.setHttpOnly(true);

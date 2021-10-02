@@ -24,7 +24,6 @@ const Root = ({ loginState, changeType }) => {
 
   useEffect(() => {
     try {
-
       refreshLoginToken(loginCallback);
     } catch (e) {
       console.log(e);
