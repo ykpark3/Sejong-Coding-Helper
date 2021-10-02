@@ -1,5 +1,7 @@
 package com.example.testlocal.controller;
 
+import com.example.testlocal.domain.dto.UserDTO;
+import com.example.testlocal.service.UserService;
 import jdk.swing.interop.SwingInterOpUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ import java.util.Random;
 public class SignupController {
 
     private final JavaMailSender javaMailSender;
+    private final UserService userService;
 
     @PostMapping("/sendSejongEmail")
     public void sendSejongEmail(@RequestBody Map<String, String> map, HttpServletRequest request) throws MessagingException {
@@ -70,6 +73,21 @@ public class SignupController {
             return "fail";
 
     }
+
+    @PostMapping("/completeUserSignup")
+    public void completeUserSignup(@RequestBody Map<String, String> map){
+
+        // db에 저장하는 구문
+        //userService.signUp(new UserDTO(map.get("studentId"), map.get("id"), map.get("pwd"), map.get("name")));
+
+
+    }
+
+    @PostMapping("/checkIdOverlap")
+    public void checkIdOverlap(@RequestBody Map<String, String> map){
+
+    }
+
 
     //인증코드 난수 발생
     private String getAuthCode() {

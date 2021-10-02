@@ -23,8 +23,6 @@ import java.util.Map;
 //@CrossOrigin(origins = "http://3.141.167.159:80" , allowCredentials = "true")
 public class LoginController {
 
-    private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
     private final UserService userService;
 
     @PostMapping("/logincheck")
@@ -57,12 +55,6 @@ public class LoginController {
 //        return "good";
 
         return accessToken;
-    }
-
-    @PostMapping("/usersignup")
-    public String userSignUp(@RequestBody Map<String, String> map) {
-        userService.signUp(new UserDTO(map.get("studentId"), map.get("id"), map.get("pwd"), map.get("name")));
-        return "good";
     }
 
     @PostMapping("/refreshLoginToken")

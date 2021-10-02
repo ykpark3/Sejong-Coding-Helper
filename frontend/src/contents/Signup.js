@@ -10,7 +10,7 @@ import EmailAuthModal from './modal/EmailAuthModal';
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [isChecked, setChecked] = useState(false);
-  const [isEmailLoading,setEmailLoading] = useState(false);
+  const [isEmailLoading, setEmailLoading] = useState(false);
   const [isAuthModalOn, setAuthModalOn] = useState(false);
 
   const sendEmail = () => {
@@ -26,7 +26,7 @@ const Signup = () => {
 
     axios.post(
       API_BASE_URL + '/sendSejongEmail',
-      { email:email },
+      { email: email },
       {
         headers: {
           'Content-type': 'application/json',
@@ -34,14 +34,14 @@ const Signup = () => {
         },
         withCredentials: true,
       },
-    ). then((res) => {
+    ).then((res) => {
       console.log(res.data);
       setEmailLoading(false);
       setAuthModalOn(true);
     })
-    .catch((res) => {
-      console.log(res);
-    });
+      .catch((res) => {
+        console.log(res);
+      });
   };
 
   return (
@@ -50,11 +50,11 @@ const Signup = () => {
       <HorizontalHeader />
 
       <>
-        {isEmailLoading ? <LoadingModal/> : ''}
+        {isEmailLoading ? <LoadingModal /> : ''}
       </>
 
       <>
-        {isAuthModalOn ? <EmailAuthModal setAuthModalOn={setAuthModalOn}/> : ''}
+        {isAuthModalOn ? <EmailAuthModal setAuthModalOn={setAuthModalOn} email={email} /> : ''}
       </>
 
       {/* <EmailAuthModal/> */}

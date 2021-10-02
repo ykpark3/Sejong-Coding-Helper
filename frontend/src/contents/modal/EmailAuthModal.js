@@ -9,7 +9,7 @@ import { useHistory } from 'react-router';
 import { connect, useDispatch } from 'react-redux';
 import { changeSignupAuth } from '../../redux/login/loginActions';
 
-const EmailAuthModal = ({setAuthModalOn,changeSignupAuth}) => {
+const EmailAuthModal = ({ setAuthModalOn, changeSignupAuth,email }) => {
   const input2Ref = useRef(null);
   const input3Ref = useRef(null);
   const input4Ref = useRef(null);
@@ -69,13 +69,17 @@ const EmailAuthModal = ({setAuthModalOn,changeSignupAuth}) => {
         },
       )
       .then((res) => {
-          console.log(res.data);
-        if(res.data === 'accepted'){
-            changeSignupAuth(true);
-            history.push('/signupDetails');
+        console.log(res.data);
+        if (res.data === 'accepted') {
+          changeSignupAuth(true);
+          history.push({
+            pathname: '/signupDetails', state: {
+              email: email
+            }
+          });
 
-        } else{
-            alert("인증 코드가 일치하지 않습니다.");
+        } else {
+          alert("인증 코드가 일치하지 않습니다.");
         }
 
       })
@@ -210,8 +214,8 @@ const EmailAuthModal = ({setAuthModalOn,changeSignupAuth}) => {
         </div>
         <div id="emailModalBntLine"></div>
         <div id="emailModalBntBox">
-          <button onClick={()=>{setAuthModalOn(false);}}>취 소</button>
-          <div/>
+          <button onClick={() => { setAuthModalOn(false); }}>취 소</button>
+          <div />
           <button
             onClick={() => {
               onClickConfirmBnt();
@@ -226,15 +230,15 @@ const EmailAuthModal = ({setAuthModalOn,changeSignupAuth}) => {
 };
 
 const mapStateToProps = ({ login }) => {
-    return {
-        signupAuth: login.signupAuth,
-    };
+  return {
+    signupAuth: login.signupAuth,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        changeSignupAuth:(props) => dispatch(changeSignupAuth(props)),
-    };
+  return {
+    changeSignupAuth: (props) => dispatch(changeSignupAuth(props)),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EmailAuthModal);
