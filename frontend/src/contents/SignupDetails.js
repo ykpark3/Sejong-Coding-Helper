@@ -7,10 +7,14 @@ import { API_BASE_URL } from './utils/Constant';
 import { connect, useDispatch } from 'react-redux';
 import { changeSignupAuth } from '../redux/login/loginActions';
 import { useLocation } from 'react-router';
+import { changeLoadingState } from '../redux/view/viewActions';
+import { isDOMComponent } from 'react-dom/test-utils';
+import { useHistory } from 'react-router';
 
-const SignupDetails = ({ changeSignupAuth, }) => {
+const SignupDetails = ({ changeSignupAuth, changeLoadingState }) => {
 
   const location = useLocation();
+  const history = useHistory();
 
   const [isCorrectName, setCorrectName] = useState(false);
   const [isCorrectStuId, setCorrectStuId] = useState(false);
@@ -64,6 +68,8 @@ const SignupDetails = ({ changeSignupAuth, }) => {
       return;
     }
 
+    changeLoadingState(true);
+
     // 아이디 중복 체크
 
     // signup db등록 메소드.
@@ -78,62 +84,66 @@ const SignupDetails = ({ changeSignupAuth, }) => {
         withCredentials: true,
       },
     ).then((res) => {
-      console.log(res.data);
+      changeLoadingState(false);
 
-      
-
+      history.push({
+        pathname: '/signupComplete', state: {
+          name: name
+        }
+      })
     })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
       });
+  };
 
-  }
 
-  return (
-    <div id="signupMainContainer">
-      <VerticalHeader />
-      <HorizontalHeader />
-      <div id="signupBox">
-        <img src="img/logo.png" />
-        <h3>Sejong Coding Helper 회원가입</h3>
-        <div id="signupForm">
-          <p className="smallTitle">이름</p>
-          <input type="text" className="smallInput" maxLength='5' onChange={(e) => {
-            setName(e.target.value);
-          }}></input>
+return (
+  <div id="signupMainContainer">
+    <VerticalHeader />
+    <HorizontalHeader />
+    <div id="signupBox">
+      <img src="img/logo.png" />
+      <h3>Sejong Coding Helper 회원가입</h3>
+      <div id="signupForm">
+        <p className="smallTitle">이름</p>
+        <input type="text" className="smallInput" maxLength='5' onChange={(e) => {
+          setName(e.target.value);
+        }}></input>
 
-          <p className="smallTitle">학번(아이디)</p>
-          <p className="smallNotice">
-            *채팅 매칭을 위해서 정확한 학번을 입력해주세요.
-          </p>
-          <input className="smallInput" maxLength='8' onChange={(e) => {
-            setId(e.target.value);
-          }} onKeyPress={(e) => {
-            if (!/[0-9]/.test(e.key)) {
-              e.preventDefault();
-            }
-          }}></input>
+        <p className="smallTitle">학번(아이디)</p>
+        <p className="smallNotice">
+          *채팅 매칭을 위해서 정확한 학번을 입력해주세요.
+        </p>
+        <input className="smallInput" maxLength='8' onChange={(e) => {
+          setId(e.target.value);
+        }} onKeyPress={(e) => {
+          if (!/[0-9]/.test(e.key)) {
+            e.preventDefault();
+          }
+        }}></input>
 
-          <p className="smallTitle">비밀 번호</p>
-          <input className="smallInputPassword" maxLength='20' type="password" onChange={(e) => {
-            setPw(e.target.value);
-          }}></input>
+        <p className="smallTitle">비밀 번호</p>
+        <input className="smallInputPassword" maxLength='20' type="password" onChange={(e) => {
+          setPw(e.target.value);
+        }}></input>
 
-          <p className="smallTitle">비밀 번호 확인</p>
-          <input className="smallInputPassword" type="password" maxLength='20' onChange={(e) => {
-            setPwCheck(e.target.value);
-          }}></input>
+        <p className="smallTitle">비밀 번호 확인</p>
+        <input className="smallInputPassword" type="password" maxLength='20' onChange={(e) => {
+          setPwCheck(e.target.value);
+        }}></input>
 
-          <p className="smallTitle">세종대 이메일</p>
-          <p className="smallNotice">*비밀번호 분실시 이용됩니다.</p>
-          <input className="smallInput" disabled value={email}></input>
+        <p className="smallTitle">세종대 이메일</p>
+        <p className="smallNotice">*비밀번호 분실시 이용됩니다.</p>
+        <input className="smallInput" disabled value={email}></input>
 
-          <button onClick={() => { onClickSignupBnt(); }}>가입 완료</button>
-        </div>
+        <button onClick={() => { onClickSignupBnt(); }}>가입 완료</button>
       </div>
     </div>
-  );
-};
+  </div>
+);
+  };
 
 const mapStateToProps = ({ login }) => {
   return {
@@ -144,6 +154,7 @@ const mapStateToProps = ({ login }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     changeSignupAuth: (props) => dispatch(changeSignupAuth(props)),
+    changeLoadingState: (props) => dispatch(changeLoadingState(props))
   };
 };
 

@@ -1,12 +1,14 @@
-import { CHANGE_HEADER_INVERSE, CHANGE_VER_NAV_ITEM } from './viewTypes';
+import { CHANGE_HEADER_INVERSE, CHANGE_VER_NAV_ITEM,CHANGE_LOADING_STATE } from './viewTypes';
 import { BASE_URL } from '../../contents/utils/Constant';
 
 const intialViewState = {
   isMain: true,
+  isLoading:false,
   clickedNavNum: 0,
 };
 
 const viewReducer = (state = intialViewState, action) => {
+  const { type, data } = action;
   const currentUrl = decodeURI(window.location.href);
 
   switch (action.type) {
@@ -18,6 +20,12 @@ const viewReducer = (state = intialViewState, action) => {
       return {
         ...state,
         isMain: isNowMain,
+      };
+
+    case CHANGE_LOADING_STATE:
+      return {
+        ...state,
+        isLoading: data.isLoading,
       };
 
     case CHANGE_VER_NAV_ITEM:

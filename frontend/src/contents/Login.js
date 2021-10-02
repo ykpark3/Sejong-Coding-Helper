@@ -8,25 +8,25 @@ import LoginModal from './modal/LoginModal';
 import LoadingModal from './modal/LoadingModal';
 import { login,changeType } from '../redux/login/loginActions';
 import {LOGIN_PENDING, LOGIN_FAIL, LOGIN_SUCCESS,LOGIN_BEFORE } from '../redux/login/loginTypes';
+import { changeLoadingState } from '../redux/view/viewActions';
 
-const Login = ({ loginState, login,changeType,history }) => {
+const Login = ({ loginState, login,changeType,changeLoadingState,history }) => {
 
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [modalOn, setModalOn] = useState(false);
-  const [loadingModalOn, setLoadingModalOn] = useState(false);
 
   console.log(loginState);
 
   useEffect(() => {
     if (loginState === LOGIN_FAIL) {
-      setLoadingModalOn(false);
+      changeLoadingState(false);
       setModalOn(true);
     } else if (loginState === LOGIN_SUCCESS) {
-      setLoadingModalOn(false);
+      changeLoadingState(false);
       goToMain();
     } else if (loginState === LOGIN_PENDING) {
-      setLoadingModalOn(true);
+      changeLoadingState(true);
       setModalOn(false);
     }
   });
@@ -50,10 +50,6 @@ const Login = ({ loginState, login,changeType,history }) => {
     <div id="loginMainContainer">
       <VerticalHeader />
       <HorizontalHeader />
-
-      <>
-        {loadingModalOn ? <LoadingModal/> : ''}
-      </>
 
       <>
         {modalOn ? <LoginModal setModalOn={setModalOn}
@@ -85,9 +81,10 @@ const Login = ({ loginState, login,changeType,history }) => {
   );
 };
 
-const mapStateToProps = ({ login }) => {
+const mapStateToProps = ({ login,views }) => {
   return {
     loginState: login.type,
+    isLoading : views.isLoading,
   };
 };
 
@@ -95,6 +92,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     login: (id, pwd) => dispatch(login(id, pwd)),
     changeType: (type) => dispatch(changeType(type)),
+    changeLoadingState : (props) => dispatch(changeLoadingState(props))
   };
 };
 

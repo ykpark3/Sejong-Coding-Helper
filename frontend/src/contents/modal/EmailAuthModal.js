@@ -96,6 +96,8 @@ const EmailAuthModal = ({ setAuthModalOn, changeSignupAuth,email }) => {
         <p style={{ marginTop: '30px' }}>
           이메일로 전송된 숫자 인종 코드 6자리를 입력해주세요.
         </p>
+        
+        <p>인증 메일이 오지 않을 경우, 정크 메일함을 확인해보세요!</p>
         <p>인증코드는 10분간만 유효합니다.</p>
         <div style={{ margin: '40px 0 40px 0' }}>
           <input

@@ -45,7 +45,8 @@
 }
 
 .emailModalBox p:nth-of-type(2),
-.emailModalBox p:nth-of-type(3){
+.emailModalBox p:nth-of-type(3),
+.emailModalBox p:nth-of-type(4){
     font-family: nanumR;
     font-size: 17px;
     margin-top: 5px;
