@@ -21,13 +21,13 @@ public class ChatController {
     // MessageMapping 경로가 병합됨
     //"/pub/chat/enter"
     @MessageMapping("/chat/enter")
-    public void enter(ChatDTO msg){
+    public void enter(ChatDTO msg) {
         msg.setMessage(msg.getUserId() + "님이 채팅방에 참여하였습니다.");
         template.convertAndSend("/sub/chat/room/" + msg.getRoomNo(), msg);
     }
 
     @MessageMapping("/chat/message")
-    public void message(ChatDTO msg){
+    public void message(ChatDTO msg) {
         template.convertAndSend("/sub/chat/room/" + msg.getRoomNo(), msg);
     }
 

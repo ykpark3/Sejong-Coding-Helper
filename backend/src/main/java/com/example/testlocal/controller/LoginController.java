@@ -1,31 +1,34 @@
 package com.example.testlocal.controller;
 
 import com.example.testlocal.domain.dto.UserDTO;
+import com.example.testlocal.domain.entity.User;
 import com.example.testlocal.repository.UserRepository;
 import com.example.testlocal.service.UserService;
+import com.example.testlocal.service.UserService2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-//@CrossOrigin(origins = "http://3.141.167.159:80" , allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http://3.141.167.159", allowCredentials = "true")
 public class LoginController {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final UserService2 userService2;
 
     @PostMapping("/logincheck")
     public String loginUser(@RequestBody Map<String, String> map, HttpServletResponse response) {
@@ -63,6 +66,35 @@ public class LoginController {
     public String userSignUp(@RequestBody Map<String, String> map) {
         userService.signUp(new UserDTO(map.get("studentId"), map.get("id"), map.get("pwd"), map.get("name")));
         return "good";
+    }
+
+    // 유저 조회
+    @GetMapping("/user")
+    public List<User> all() {
+        return userService2.read();
+    }
+
+    // 유저 생성
+    @PostMapping("/user")
+    public String hello(@RequestBody Map<String, String> map) {
+        userService2.create();
+        return "good";
+    }
+
+    @GetMapping("/user/{id}")
+    public Optional<User> getUser(@PathVariable Long id) {
+        return userService2.readOne(id);
+    }
+
+    @DeleteMapping("/user/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        userService2.deleteAccount(id);
+        return "delete User" + id.toString();
+    }
+
+    @PostMapping("/test2222")
+    public void hello(){
+
     }
 
     @PostMapping("/refreshLoginToken")

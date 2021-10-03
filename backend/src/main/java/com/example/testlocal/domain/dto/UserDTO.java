@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
 
-    private String id,password,name,studentNumber;
+    private String id, password, name, studentNumber;
 
     public UserDTO(String studentNumber, String id, String password, String name) {
         this.studentNumber = studentNumber;
@@ -19,7 +19,7 @@ public class UserDTO {
         this.name = name;
     }
 
-    public UserEntity toEntity(){
+    public UserEntity toEntity() {
         return UserEntity.builder().studentNumber(studentNumber).id(id).password(password).name(name).build();
     }
 

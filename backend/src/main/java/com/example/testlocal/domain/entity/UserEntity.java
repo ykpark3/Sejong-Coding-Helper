@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "user")
+@Table(name = "user1213213")
 public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long key;
 
-    private String id,password,name,studentNumber;
+    private String id, password, name, studentNumber;
 
     @Builder
-    public UserEntity(String studentNumber,String id,String password,String name){
+    public UserEntity(String studentNumber, String id, String password, String name) {
         this.id = id;
         this.password = password;
         this.name = name;

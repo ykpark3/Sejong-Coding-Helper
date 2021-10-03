@@ -16,14 +16,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     //endpoint 등록
     //연결시 CORS(CrossOrigin) 허용
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry){
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry){
-        registry.setApplicationDestinationPrefixes("/pub");
-        registry.enableSimpleBroker("/sub");
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.setApplicationDestinationPrefixes("/pub"); //app
+        registry.enableSimpleBroker("/sub"); //topic
+        //registry.setApplicationDestinationPrefixes("/app"); //app
+        //registry.enableSimpleBroker("/topic"); //topic
     }
 
     @Bean
