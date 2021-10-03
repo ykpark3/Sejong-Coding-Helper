@@ -1,9 +1,10 @@
-import { CHANGE_HEADER_INVERSE, CHANGE_VER_NAV_ITEM,CHANGE_LOADING_STATE } from './viewTypes';
+import { CHANGE_HEADER_INVERSE, CHANGE_VER_NAV_ITEM, CHANGE_LOADING_STATE, CHAGNE_FIRST_RENDERING } from './viewTypes';
 import { BASE_URL } from '../../contents/utils/Constant';
 
 const intialViewState = {
   isMain: true,
-  isLoading:false,
+  isLoading: false,
+  isFirstRendering: true,
   clickedNavNum: 0,
 };
 
@@ -22,11 +23,18 @@ const viewReducer = (state = intialViewState, action) => {
         isMain: isNowMain,
       };
 
+    case CHAGNE_FIRST_RENDERING:
+      return {
+        ...state,
+        isFirstRendering: data.isFirstRendering
+      }
+
     case CHANGE_LOADING_STATE:
       return {
         ...state,
         isLoading: data.isLoading,
       };
+
 
     case CHANGE_VER_NAV_ITEM:
       let num = 0;

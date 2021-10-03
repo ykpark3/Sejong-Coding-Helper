@@ -11,6 +11,8 @@ import {
 import '../css/Chatroom.css';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+import { LOGIN_ORIGIN, LOGIN_SUCCESS } from '../redux/login/loginTypes';
+import Loading from './Loading';
 
 const chatData = ({ chatsData }) => {
   const chatItems = chatsData.map((chat) => {
@@ -68,39 +70,40 @@ var getCookie = function (name) {
 const sockJS = new SockJS('http://localhost:8080/websocket');
 const stomp = Stomp.over(sockJS);
 
-const TaChatRoom = ({ num, chatsData, list, addMsgData, history }) => {
+const TaChatRoom = ({ loginState, num, chatsData, list, addMsgData, history }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
 
   useEffect(() => {
+    
     scrollToBottom();
 
     stomp.connect({}, () => {
-      stomp.subscribe('/sub/chat/room/' + '12321', (chat)=> {
+      stomp.subscribe('/sub/chat/room/' + '12321', (chat) => {
         console.log('msg arrived');
-  
+
         let data = getCookie('id');
-  
+
         if (data === null) {
           history.push('/');
           return;
         }
-  
+
         var content = JSON.parse(chat.body);
-  
+
         console.log(content);
-  
+
         if (data === content.userId) {
           addMsgData(num, 'user', content.message);
         } else {
           addMsgData(num, 'ta', content.message);
         }
       });
-    },[]);
-  
+    }, []);
+
   });
 
- 
+
   const scrollToBottom = () => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
   };
@@ -139,6 +142,7 @@ const TaChatRoom = ({ num, chatsData, list, addMsgData, history }) => {
   }
 
   return (
+
     <div style={{ width: '100%' }}>
       <VerticalHeader />
       <HorizontalHeader />
@@ -174,16 +178,18 @@ const TaChatRoom = ({ num, chatsData, list, addMsgData, history }) => {
         </div>
       </div>
     </div>
+
   );
 };
 
-const mapStateToProps = ({ taChats }) => {
+const mapStateToProps = ({ taChats, login }) => {
   //console.log(taChats.chats);
 
   return {
     chatsData: taChats.chats,
     list: taChats.list,
     num: taChats.num,
+    loginState: login.type,
   };
 };
 

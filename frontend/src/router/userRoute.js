@@ -7,17 +7,22 @@ import { changeToTypeLoginSuccess, changeToTypeLoginPending, changeToTypeLoginBe
 import axios from 'axios';
 import Root from '../contents/Root';
 
-const UserRoute = ({ loginState,changeType, component: Component, ...rest }) => {
+const UserRoute = ({ loginState, pathname, changeType, component: Component, ...rest }) => {
     console.log(loginState);
+    console.log(pathname);
 
     return (
         <Route {...rest} render={props => {
 
-            if (loginState === LOGIN_SUCCESS || loginState === LOGIN_ORIGIN) {
+            if (loginState === LOGIN_SUCCESS) {
                 return <Component {...props} />
             }
+
             else {
-                return <Redirect to="/login" />
+                return <Redirect to={{
+                    pathname: '/pending',
+                    state: { path: {pathname} }
+                }} />
             }
         }} />
     );

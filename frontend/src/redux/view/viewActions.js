@@ -1,4 +1,5 @@
-import { CHANGE_HEADER_INVERSE,CHANGE_VER_NAV_ITEM,CHANGE_LOADING_STATE } from "./viewTypes"
+import { CHANGE_HEADER_INVERSE,CHANGE_VER_NAV_ITEM,CHANGE_LOADING_STATE,
+CHAGNE_FIRST_RENDERING } from "./viewTypes"
 
 export const headerViewer = () => {
     return {
@@ -17,4 +18,11 @@ export const changeLoadingState = (props) => {
         type: CHANGE_LOADING_STATE,
         data:{isLoading : props},
       };
+}
+
+export const changeFirstRendering = (props) => {
+    return {
+        type: CHAGNE_FIRST_RENDERING,
+        data : {isFirstRendering : props}
+    }
 }

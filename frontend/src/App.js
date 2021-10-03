@@ -18,6 +18,7 @@ import Signup from './contents/Signup';
 import SignupDetails from './contents/SignupDetails';
 import LoadingModal from './contents/modal/LoadingModal';
 import SignupComplete from './contents/SignupComplete';
+import Loading from './contents/Loading';
 
 function App() {
   
@@ -29,10 +30,12 @@ function App() {
           <LoadingModal/>
 
           <Route path="/" component={Main} exact />
+          <Route paht="/pending" component={Loading}/>
           
-          <UserRoute path="/botchatroom" component={BotChatRoom} />
-          <UserRoute path="/tachatroom" component={TaChatRoom} />
-          <UserRoute path="/myPage" component={MyPage} />
+          <UserRoute path="/botchatroom" pathname="/botchatroom" component={BotChatRoom} exact />
+          <UserRoute path="/tachatroom" pathname="/tachatroom" component={TaChatRoom} exact/>
+          <UserRoute path="/myPage" pathname="/myPage" component={MyPage} exact/>
+
           <Route path="/signup" component={Signup} />
           {/* <SignupRoute path="/signupDetails" component={SignupDetails}/> */}
           <Route path="/signupDetails" component={SignupDetails}/>
