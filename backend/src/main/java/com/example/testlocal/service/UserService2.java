@@ -1,6 +1,12 @@
 package com.example.testlocal.service;
 
+import com.example.testlocal.domain.dto.AssistantDTO;
+import com.example.testlocal.domain.dto.UserDTO;
+import com.example.testlocal.domain.dto.UserDTO2;
+import com.example.testlocal.domain.entity.Assistant;
 import com.example.testlocal.domain.entity.User;
+import com.example.testlocal.exception.InvalidAssistantIdException;
+import com.example.testlocal.exception.InvalidUserIdException;
 import com.example.testlocal.repository.UserRepository2;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.buf.UDecoder;
@@ -16,16 +22,10 @@ public class UserService2 {
 
     private final UserRepository2 userRepository2;
 
-    public Long create(){
 
-        User user =
-                User.builder()
-                        .studentNumber("17011527")
-                        .name("김현욱")
-                        .password("1234")
-                        .email("fofo@naver.com")
-                        .build();
-            return userRepository2.save(user).getId();
+    public User create(UserDTO2 requestDTO){
+        User user = new User(requestDTO);
+        return userRepository2.save(user);
     }
 
     // 전체 유저 읽기
@@ -39,6 +39,10 @@ public class UserService2 {
 
     public void deleteAccount(Long id) {
         userRepository2.deleteById(id);
+    }
+
+    public User findById(Long id) {
+        return userRepository2.findById(id).orElseThrow(() -> new InvalidUserIdException());
     }
 
 

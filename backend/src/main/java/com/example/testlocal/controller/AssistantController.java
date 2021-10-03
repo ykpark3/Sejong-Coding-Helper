@@ -38,9 +38,9 @@ public class AssistantController {
         return assistantService.findById(id);
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/assistant/{id}")
     public String deleteUser(@PathVariable Long id) {
         assistantService.deleteAssistant(id);
-        return "delete User" + id.toString();
+        return "delete Assistant" + id.toString();
     }
 }

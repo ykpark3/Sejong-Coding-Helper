@@ -30,7 +30,8 @@ public class Assistant {
     private User user;
 
     public Assistant(AssistantDTO requestDTO, UserService2 userService) {
-
+        this.email = requestDTO.getStudentEmail();
+        this.user = userService.findById(requestDTO.getUserId());
     }
 
 }

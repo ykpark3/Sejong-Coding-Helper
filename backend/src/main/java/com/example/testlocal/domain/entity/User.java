@@ -1,5 +1,6 @@
 package com.example.testlocal.domain.entity;
 
+import com.example.testlocal.domain.dto.UserDTO2;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,10 +33,12 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
-    public User(String studentNumber, String password, String name, String email) {
-        this.studentNumber = studentNumber;
-        this.password = password;
-        this.name = name;
-        this.email = email;
+    public User(UserDTO2 userDTO) {
+        this.studentNumber = userDTO.getStudentNumber();
+        this.password = userDTO.getPassword();
+        this.name = userDTO.getName();
+        this.email = userDTO.getEmail();
     }
+
+
 }

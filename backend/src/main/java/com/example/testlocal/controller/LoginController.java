@@ -1,6 +1,9 @@
 package com.example.testlocal.controller;
 
+import com.example.testlocal.domain.dto.AssistantDTO;
 import com.example.testlocal.domain.dto.UserDTO;
+import com.example.testlocal.domain.dto.UserDTO2;
+import com.example.testlocal.domain.entity.Assistant;
 import com.example.testlocal.domain.entity.User;
 import com.example.testlocal.repository.UserRepository;
 import com.example.testlocal.service.UserService;
@@ -74,11 +77,18 @@ public class LoginController {
         return userService2.read();
     }
 
-    // 유저 생성
+   /* // 유저 생성
     @PostMapping("/user")
+    @ResponseBody
     public String hello(@RequestBody Map<String, String> map) {
         userService2.create();
         return "good";
+    }*/
+
+    @ResponseBody
+    @PostMapping("/user")
+    public User createUser(@RequestBody UserDTO2 requestDTO) {
+        return userService2.create(requestDTO);
     }
 
     @GetMapping("/user/{id}")
@@ -92,10 +102,6 @@ public class LoginController {
         return "delete User" + id.toString();
     }
 
-    @PostMapping("/test2222")
-    public void hello(){
-
-    }
 
     @PostMapping("/refreshLoginToken")
     public String refreshLoginToken(@RequestBody Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {

@@ -18,7 +18,7 @@ public class AssistantService {
 
     public Assistant create(AssistantDTO requestDTO){
         Assistant assistant = new Assistant(requestDTO, userService);
-        return assistant;
+        return assistantRepository.save(assistant);
     }
 
     public List<Assistant> read(){
