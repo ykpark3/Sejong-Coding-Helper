@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { changeType } from '../redux/login/loginActions';
-import { LOGIN_BEFORE, LOGIN_SUCCESS } from '../redux/login/loginTypes';
+import { LOGIN_BEFORE, LOGIN_SUCCESS,LOGIN_ORIGIN } from '../redux/login/loginTypes';
 import { refreshLoginToken } from './utils/LoginUtils';
 import { changeLoadingState, changeFirstRendering } from '../redux/view/viewActions';
 
@@ -18,22 +18,23 @@ const Root = ({ loginState,isFirstRendering, changeType, changeLoadingState, cha
     }
   }
 
-  if (isFirstRendering) {
+  // 새로고침 이후에서만 slient 로그인
+  if (loginState==LOGIN_ORIGIN) {
     try {
       changeLoadingState(true);
       refreshLoginToken(loginCallback);
-      changeFirstRendering(false);
+      // changeFirstRendering(false);
     } catch (e) {
       console.log(e);
     }
   }
 
-  return '';
+  return null;
 };
 
 const mapStateToProps = ({ login, views }) => {
   return {
-    loginState: login.state,
+    loginState: login.type,
     isFirstRendering: views.isFirstRendering,
   };
 };

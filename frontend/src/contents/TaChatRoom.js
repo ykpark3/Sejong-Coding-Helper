@@ -12,7 +12,8 @@ import '../css/Chatroom.css';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { LOGIN_ORIGIN, LOGIN_SUCCESS } from '../redux/login/loginTypes';
-import Loading from './Loading';
+import Root from './Root';
+
 
 const chatData = ({ chatsData }) => {
   const chatItems = chatsData.map((chat) => {

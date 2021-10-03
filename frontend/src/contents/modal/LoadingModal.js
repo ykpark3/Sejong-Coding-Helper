@@ -13,7 +13,7 @@ const LoadingModal = ({ isLoading }) => {
                     <div className="loadingModalBox">
                         <img src="img/loading.gif"></img>
                     </div>
-                </div> : ''}
+                </div> : null}
         </>
 
     );
