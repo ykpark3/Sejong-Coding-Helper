@@ -1,5 +1,8 @@
 package com.example.testlocal.domain.entity;
 
+import com.example.testlocal.domain.dto.AssistantDTO;
+import com.example.testlocal.domain.dto.UserDTO2;
+import com.example.testlocal.service.UserService2;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,15 +25,12 @@ public class Assistant {
     @Column(name = "student_email", nullable = false)
     private String email;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Assistant(String student_email, Long userId) {
-        this.user = userId;
-        this.password = password;
-        this.name = name;
-        this.email = email;
+    public Assistant(AssistantDTO requestDTO, UserService2 userService) {
+
     }
 
 }

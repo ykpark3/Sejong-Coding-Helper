@@ -1,5 +1,7 @@
 package com.example.testlocal.controller;
 
+import com.example.testlocal.domain.dto.AssistantDTO;
+import com.example.testlocal.domain.entity.Assistant;
 import com.example.testlocal.domain.entity.User;
 import com.example.testlocal.service.AssistantService;
 import lombok.RequiredArgsConstructor;
@@ -16,27 +18,29 @@ import java.util.Optional;
 public class AssistantController {
 
     final private AssistantService assistantService;
+
+
     // 유저 조회
     @GetMapping("/assistant")
-    public List<User> all() {
+    public List<Assistant> all() {
         return assistantService.read();
     }
 
     // 유저 생성
+    @ResponseBody
     @PostMapping("/assistant")
-    public String hello(@RequestBody Map<String, String> map) {
-        assistantService.create();
-        return "good";
+    public Assistant createAssistant(@RequestBody AssistantDTO requestDTO) {
+        return assistantService.create(requestDTO);
     }
 
-    @GetMapping("/user/{id}")
-    public Optional<User> getUser(@PathVariable Long id) {
-        return assistantService.readOne(id);
+    @GetMapping("/assistant/{id}")
+    public Assistant getAssistant(@PathVariable Long id) {
+        return assistantService.findById(id);
     }
 
     @DeleteMapping("/user/{id}")
     public String deleteUser(@PathVariable Long id) {
-        assistantService.deleteAccount(id);
+        assistantService.deleteAssistant(id);
         return "delete User" + id.toString();
     }
 }
