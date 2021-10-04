@@ -30,4 +30,9 @@ public class Chat {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
 }
