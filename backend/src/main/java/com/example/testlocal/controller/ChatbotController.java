@@ -59,7 +59,7 @@ public class ChatbotController {
         String message =  getReqMessage(chatMessage);
         String encodeBase64String = makeSignature(message, secretKey);
 
-        // api서버 접속 (서버 -> 서버 통신)
+        // api서버 접속
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json;UTF-8");
