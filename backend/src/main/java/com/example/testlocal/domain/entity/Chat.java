@@ -1,5 +1,9 @@
 package com.example.testlocal.domain.entity;
 
+import com.example.testlocal.domain.dto.ChatDTO2;
+import com.example.testlocal.domain.dto.RoomDTO;
+import com.example.testlocal.service.RoomService;
+import com.example.testlocal.service.UserService2;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,5 +38,11 @@ public class Chat {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public Chat(ChatDTO2 requestDTO, RoomService roomService, UserService2 userService) {
+        this.message = requestDTO.getMessage();
+        this.createTime = requestDTO.getCreateTime();
+        this.room = roomService.findById(requestDTO.getRoomId());
+        this.user = userService.findById(requestDTO.getUserId());
+    }
 
 }
