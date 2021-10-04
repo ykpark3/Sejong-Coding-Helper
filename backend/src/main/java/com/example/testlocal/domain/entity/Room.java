@@ -1,5 +1,8 @@
 package com.example.testlocal.domain.entity;
 
+import com.example.testlocal.domain.dto.AssistantDTO;
+import com.example.testlocal.domain.dto.RoomDTO;
+import com.example.testlocal.service.UserService2;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,8 +31,16 @@ public class Room {
     @Column(name = "update_date", nullable = false)
     private String updateDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public Room(RoomDTO requestDTO, UserService2 userService) {
+        this.assistantId = requestDTO.getAssistantId();
+        this.title = requestDTO.getTitle();
+        this.updateDate = requestDTO.getUpdateDate();
+        this.user = userService.findById(requestDTO.getUserId());
+    }
+
 
 }

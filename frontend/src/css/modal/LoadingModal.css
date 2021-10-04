@@ -1,16 +1,16 @@
 @font-face {
     font-family: 'nanumB';
     src: url('../../fonts/NanumSquareB.ttf');
-  }
-  
-  @font-face {
+}
+
+@font-face {
     font-family: 'nanumR';
     src: url('../../fonts/NanumSquareR.ttf');
-  }
+}
 
-.loadingModal{
-    position:fixed;
-    top:0;
+.loadingModal {
+    position: fixed;
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
@@ -20,25 +20,25 @@
     z-index: 999;
 }
 
-.loadingModalbg{
-    
+.loadingModalbg {
+
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.2);
 
 }
 
-.loadingModalBox{
+.loadingModalBox {
     position: absolute;
-    background-color: rgba(0,0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
     text-align: center;
 }
 
-.loadingModal img{
+.loadingModal img {
     width: 80px;
 
-      /* 이미지  */
-  image-rendering: -webkit-optimize-contrast;
-  transform: translateZ(0);
-  backface-visibility: hidden;
+    /* 이미지  */
+    image-rendering: -webkit-optimize-contrast;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
