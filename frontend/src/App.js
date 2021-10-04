@@ -7,15 +7,20 @@ import Login from './contents/Login';
 import Main from './contents/Main';
 import {Provider} from 'react-redux';
 import store from './redux/store';
-import UserRoute from './router/userRoute';
+import UserRoute from './router/UserRoute';
+import SignupRoute from './router/SignupRoute';
 import MyPage from './contents/MyPage';
 import Qa from './contents/Qa';
 import Curriculum from './contents/Curriculum';
 import TaChatRoom from './contents/TaChatRoom';
-import Loading from './contents/Loading';
 import Root from './contents/Root';
+import Signup from './contents/Signup';
+import SignupDetails from './contents/SignupDetails';
+import LoadingModal from './contents/modal/LoadingModal';
+import SignupComplete from './contents/SignupComplete';
 
 function App() {
+<<<<<<< HEAD
 
     return (
         <Provider store={store}>
@@ -37,6 +42,34 @@ function App() {
             </div>
         </Provider>
     );
+=======
+  
+  return (
+    <Provider store={store}>
+      <div className="App">
+        <BrowserRouter>
+          <Route path="/" component={Root} />
+          <LoadingModal/>
+
+          <Route path="/" component={Main} exact />
+          
+          <UserRoute path="/botchatroom" component={BotChatRoom} exact />
+          <UserRoute path="/tachatroom" component={TaChatRoom} exact/>
+          <UserRoute path="/myPage"  component={MyPage} exact/>
+
+          <Route path="/signup" component={Signup} />
+          {/* <SignupRoute path="/signupDetails" component={SignupDetails}/> */}
+          <Route path="/signupDetails" component={SignupDetails}/>
+          <Route path="/signupComplete" component={SignupComplete}/> 
+
+          <Route path="/login" component={Login} />
+          <Route path="/curri" component={Curriculum} />
+          <Route path="/qa" component={Qa} />
+        </BrowserRouter>
+      </div>
+    </Provider>
+  );
+>>>>>>> upstream/master
 }
 
 export default App;

@@ -38,6 +38,13 @@ dependencies {
     //web socket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+
+	//web socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	//mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 
 test {

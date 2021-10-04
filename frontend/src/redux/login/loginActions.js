@@ -1,10 +1,19 @@
 import axios from 'axios';
 import {
+<<<<<<< HEAD
     LOGIN_PENDING,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
     LOGIN_BEFORE,
     LOGIN_ORIGIN,
+=======
+  LOGIN_PENDING,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGIN_BEFORE,
+  LOGIN_ORIGIN,
+  CHANGE_SIGNUP_AUTH,
+>>>>>>> upstream/master
 } from './loginTypes';
 import Cookies from 'js-cookie';
 import {refreshLoginToken} from '../../contents/utils/LoginUtils';
@@ -15,6 +24,13 @@ export const changeType = (type) => {
         type: type,
     };
 };
+
+export const changeSignupAuth = (props) =>{
+  return {
+    type:CHANGE_SIGNUP_AUTH,
+    data:{signupAuth: props},
+  };
+}
 
 export const login = (id, pwd) => (dispatch) => {
     dispatch({type: LOGIN_PENDING});

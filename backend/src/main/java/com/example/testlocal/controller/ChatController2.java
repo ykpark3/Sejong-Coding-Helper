@@ -1,6 +1,5 @@
 package com.example.testlocal.controller;
 
-import com.example.testlocal.domain.dto.ChatDTO;
 import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.dto.RoomDTO;
 import com.example.testlocal.domain.entity.Chat;
@@ -23,21 +22,21 @@ public class ChatController2 {
 
     private final ChatService chatService;
 
-    @GetMapping("/chat")
+    @GetMapping("/chat2")
     public List<Chat> all() { return chatService.findAll();}
 
     @ResponseBody
-    @PostMapping("/chat")
+    @PostMapping("/chat2")
     public Chat createChat(@RequestBody ChatDTO2 requestDTO){
         return chatService.create(requestDTO);
     }
 
-    @GetMapping("/chat/{id}")
+    @GetMapping("/chat2/{id}")
     public Chat getChat(@PathVariable Long id) {
         return chatService.findById(id);
     }
 
-    @DeleteMapping("/chat")
+    @DeleteMapping("/chat2")
     public void deleteChat(@PathVariable Long id) { chatService.deleteChat(id);}
 
 }

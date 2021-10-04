@@ -10,10 +10,14 @@ import {
 } from '../redux/chat/ta_chat/taChatActions';
 import '../css/Chatroom.css';
 import SockJS from 'sockjs-client';
+<<<<<<< HEAD
 import {Stomp} from '@stomp/stompjs';
+=======
+import { Stomp } from '@stomp/stompjs';
+import { LOGIN_ORIGIN, LOGIN_SUCCESS } from '../redux/login/loginTypes';
+import Root from './Root';
+>>>>>>> upstream/master
 
-let sockJS = new SockJS('http://localhost:8080/websocket');
-let stomp = Stomp.over(sockJS);
 
 const chatData = ({chatsData}) => {
     const chatItems = chatsData.map((chat) => {
@@ -63,6 +67,7 @@ function UserChatMsgItem({msg}) {
     );
 }
 
+<<<<<<< HEAD
 const TaChatRoom = ({num, chatsData, list, addMsgData, getBotResponse}) => {
     const msgInput = useRef();
     const scrollRef = useRef();
@@ -81,6 +86,53 @@ const TaChatRoom = ({num, chatsData, list, addMsgData, getBotResponse}) => {
                 // chatBox.append(
                 //   '<li>' + content.message + '(' + content.userId + ')</li>',
                 // );
+=======
+var getCookie = function (name) {
+  var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return value ? value[2] : null;
+};
+
+const sockJS = new SockJS('http://localhost:8080/websocket');
+const stomp = Stomp.over(sockJS);
+
+const TaChatRoom = ({ loginState, num, chatsData, list, addMsgData, history }) => {
+  const msgInput = useRef();
+  const scrollRef = useRef();
+
+  useEffect(() => {
+    
+    scrollToBottom();
+
+    stomp.connect({}, () => {
+      stomp.subscribe('/sub/chat/room/' + '12321', (chat) => {
+        console.log('msg arrived');
+
+        let data = getCookie('id');
+
+        if (data === null) {
+          history.push('/');
+          return;
+        }
+
+        var content = JSON.parse(chat.body);
+
+        console.log(content);
+
+        if (data === content.userId) {
+          addMsgData(num, 'user', content.message);
+        } else {
+          addMsgData(num, 'ta', content.message);
+        }
+      });
+    }, []);
+
+  });
+
+
+  const scrollToBottom = () => {
+    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+>>>>>>> upstream/master
 
             });
         });
@@ -91,6 +143,7 @@ const TaChatRoom = ({num, chatsData, list, addMsgData, getBotResponse}) => {
         scrollRef.current.scrollIntoView({behavior: 'smooth'});
     };
 
+<<<<<<< HEAD
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             sendMsg();
@@ -99,12 +152,37 @@ const TaChatRoom = ({num, chatsData, list, addMsgData, getBotResponse}) => {
 
     function sendMsg() {
         const text = msgInput.current.value;
+=======
+    let data = getCookie('id');
+
+    if (data === null) {
+      history.push('/');
+      return;
+    }
+
+    stomp.send(
+      '/pub/chat/message',
+      {},
+      JSON.stringify({ roomNo: 12321, userId: data, message: text }),
+    );
+
+    //addMsgData(num, 'user', text);
+    msgInput.current.value = '';
+>>>>>>> upstream/master
 
         if (text === '') {
             return;
         }
 
+<<<<<<< HEAD
         stomp.send('/pub/chat/message', {}, JSON.stringify({roomNo: 12321, userId: "user", message: text}));
+=======
+  return (
+
+    <div style={{ width: '100%' }}>
+      <VerticalHeader />
+      <HorizontalHeader />
+>>>>>>> upstream/master
 
         addMsgData(num, 'user', text);
         msgInput.current.value = '';
@@ -149,6 +227,7 @@ const TaChatRoom = ({num, chatsData, list, addMsgData, getBotResponse}) => {
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
     );
 };
 
@@ -160,6 +239,23 @@ const mapStateToProps = ({taChats}) => {
         list: taChats.list,
         num: taChats.num,
     };
+=======
+      </div>
+    </div>
+
+  );
+};
+
+const mapStateToProps = ({ taChats, login }) => {
+  //console.log(taChats.chats);
+
+  return {
+    chatsData: taChats.chats,
+    list: taChats.list,
+    num: taChats.num,
+    loginState: login.type,
+  };
+>>>>>>> upstream/master
 };
 
 const mapDispatchToProps = (dispatch) => {

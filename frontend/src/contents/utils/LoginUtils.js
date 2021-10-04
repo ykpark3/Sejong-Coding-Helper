@@ -3,6 +3,7 @@ import {LOGIN_SUCCESS, LOGIN_BEFORE} from '../../redux/login/loginTypes';
 import {API_BASE_URL} from './Constant';
 
 export const refreshLoginToken = function (callback) {
+<<<<<<< HEAD
     var getCookie = function (name) {
         var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
         return value ? value[2] : null;
@@ -14,6 +15,39 @@ export const refreshLoginToken = function (callback) {
         if (data === null) {
             console.log('app silent requset fail');
             return;
+=======
+  var getCookie = function (name) {
+    var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return value ? value[2] : null;
+  };
+
+  console.log("ref");
+
+  try {
+    let data = getCookie('id');
+    data = { id: data };
+    if (data.id === null) {
+      console.log('app silent requset fail');
+      callback(LOGIN_BEFORE);
+      return;
+    }
+
+    console.log(data);
+
+    axios
+      .post( API_BASE_URL + '/refreshLoginToken', JSON.stringify(data), {
+        headers: {
+          'Content-Type': `application/json`,
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log('login success');
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data;
+
+        if (callback) {
+          callback(LOGIN_SUCCESS);
+>>>>>>> upstream/master
         }
 
         console.log(data);

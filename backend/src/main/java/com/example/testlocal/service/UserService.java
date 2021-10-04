@@ -1,9 +1,9 @@
-
 package com.example.testlocal.service;
 
-import com.example.testlocal.domain.dto.UserDTO;
-import com.example.testlocal.domain.entity.UserEntity;
-import com.example.testlocal.repository.UserRepository;
+import com.example.testlocal.domain.dto.UserDTO2;
+import com.example.testlocal.domain.entity.User;
+import com.example.testlocal.exception.InvalidUserIdException;
+import com.example.testlocal.repository.UserRepository2;
 import com.example.testlocal.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,18 +21,40 @@ import java.util.Optional;
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
+    private final UserRepository2 userRepository2;
+
+    public User create(UserDTO2 requestDTO){
+        User user = new User(requestDTO);
+        return userRepository2.save(user);
+    }
+
+    // 전체 유저 읽기
+    public List<User> read(){
+        return userRepository2.findAll();
+    }
+
+    public Optional<User> readOne(Long id){
+        return userRepository2.findById(id);
+    }
+
+    public void deleteAccount(Long id) {
+        userRepository2.deleteById(id);
+    }
+
+    public User findById(Long id) {
+        return userRepository2.findById(id).orElseThrow(() -> new InvalidUserIdException());
+    }
 
     @Transactional
-    public String signUp(UserDTO user) {
+    public void signUp(UserDTO2 user) {
         // pw를 암호화하는 과정
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user.toEntity()).getId();
+        userRepository2.save(user.toEntity()).getId();
     }
 
     // 중복체크
     public void checkId(String id) {
-        Optional<UserEntity> member = userRepository.findById(id);
+        Optional<User> member = userRepository2.findById(id);
         if (member.isPresent()) {
 
         } else {
@@ -44,7 +67,7 @@ public class UserService {
         String refreshToken = "";
 
         // id확인
-        UserEntity checkedUser = userRepository.findById(user.get("id"))
+        User checkedUser = userRepository2.findById(user.get("id"))
                 .orElseThrow(() -> new IllegalArgumentException("id가 존재하지 않습니다."));
 
         // 비번 확인
@@ -52,8 +75,8 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 비밀 번호입니다.");
         }
 
-        accessToken = jwtTokenProvider.createToken(checkedUser.getId(), 10L);
-        refreshToken = jwtTokenProvider.createToken(checkedUser.getId(), 60L);
+        accessToken = jwtTokenProvider.createToken(checkedUser.getStudentNumber(), 10L);
+        refreshToken = jwtTokenProvider.createToken(checkedUser.getStudentNumber(), 60L);
 
         Map<String, String> map = new HashMap<>();
         map.put("accessToken", accessToken);
@@ -75,8 +98,8 @@ public class UserService {
                     refreshToken = cookie.getValue();
 
                     if (jwtTokenProvider.validateToken(refreshToken)) {
-                        accessToken = jwtTokenProvider.createToken(id, 10L);
-                        refreshToken = jwtTokenProvider.createToken(id, 60L);
+                        accessToken = jwtTokenProvider.createToken(id, 60L);
+                        refreshToken = jwtTokenProvider.createToken(id, 120L);
                     } else {
                         throw new IllegalArgumentException("토큰 오류");
                     }
@@ -96,4 +119,3 @@ public class UserService {
     }
 
 }
-

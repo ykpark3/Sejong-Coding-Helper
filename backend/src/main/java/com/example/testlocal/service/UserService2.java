@@ -1,16 +1,10 @@
 package com.example.testlocal.service;
 
-import com.example.testlocal.domain.dto.AssistantDTO;
-import com.example.testlocal.domain.dto.UserDTO;
 import com.example.testlocal.domain.dto.UserDTO2;
-import com.example.testlocal.domain.entity.Assistant;
 import com.example.testlocal.domain.entity.User;
-import com.example.testlocal.exception.InvalidAssistantIdException;
 import com.example.testlocal.exception.InvalidUserIdException;
 import com.example.testlocal.repository.UserRepository2;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.buf.UDecoder;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +15,6 @@ import java.util.Optional;
 public class UserService2 {
 
     private final UserRepository2 userRepository2;
-
 
     public User create(UserDTO2 requestDTO){
         User user = new User(requestDTO);

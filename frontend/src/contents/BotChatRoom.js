@@ -132,8 +132,13 @@ const BotChatRoom = ({num, chatsData, list, addMsgData, getBotResponse}) => {
     );
 };
 
+<<<<<<< HEAD
 const mapStateToProps = ({botChats}) => {
     console.log(botChats.chats);
+=======
+const mapStateToProps = ({ botChats }) => {
+  //console.log(botChats.chats);
+>>>>>>> upstream/master
 
     return {
         chatsData: botChats.chats,

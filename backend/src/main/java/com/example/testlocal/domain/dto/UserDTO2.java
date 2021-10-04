@@ -1,5 +1,6 @@
 package com.example.testlocal.domain.dto;
 
+import com.example.testlocal.domain.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,4 +13,10 @@ public class UserDTO2 {
     private String password;
     private String name;
     private String email;
+
+    public User toEntity() {
+        // 뭐하는 코등ㅁ ???
+        return User.builder().studentNumber(studentNumber).email(email).password(password).name(name).build();
+    }
+
 }

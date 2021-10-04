@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, {useState, useEffect} from 'react';
+=======
+import React, { useState, useEffect } from 'react';
+>>>>>>> upstream/master
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import axios from 'axios';
@@ -7,6 +11,7 @@ import {changeType} from '../redux/login/loginActions';
 import Root from './Root';
 import {LOGIN_BEFORE, LOGIN_SUCCESS} from '../redux/login/loginTypes';
 
+<<<<<<< HEAD
 const MyPage = ({history, loginState, changeType}) => {
 
     const logout = () => {
@@ -44,6 +49,45 @@ const MyPage = ({history, loginState, changeType}) => {
             </button>
         </div>
     );
+=======
+const MyPage = ({ history, loginState, changeType }) => {
+
+  const logout = () => {
+    axios
+      .post(
+        'http://localhost:8080/userlogout',
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+        changeType(LOGIN_BEFORE);
+        history.push('/');
+      })
+      .catch((res) => {
+        // id or pwd 오류
+        console.log(res);
+      });
+  };
+
+  return (
+    <div>
+      <VerticalHeader />
+      {/* <HorizontalHeader /> */}
+      <Root/>
+      myPage입니다 ㅅㄱmyPage입니다 ㅅㄱmyPage입니다 ㅅㄱ
+      <button style={{ zIndex: '999' }} onClick={() => logout()}>
+        로그 아웃
+      </button>
+    </div>
+  );
+>>>>>>> upstream/master
 };
 
 const mapStateToProps = ({login}) => {
