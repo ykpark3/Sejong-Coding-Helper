@@ -25,7 +25,7 @@ public class ChatService {
         return repository.save(chat);
     }
 
-    public Map<String, String> findById2(Map<String, String> chat, Long id) {
+    public Map<String, String> findById(Map<String, String> chat, Long id) {
 
         Chat checkedChat = repository.findById(id).orElseThrow(()-> new InvalidChatIdException());
 
@@ -43,9 +43,9 @@ public class ChatService {
         return repository.findAll();
     }
 
-    public Chat findById(Long id){
+  /*  public Chat findById(Long id){
         return repository.findById(id).orElseThrow(()-> new InvalidChatIdException());
-    }
+    }*/
 
     public void deleteChat(Long id) {
         repository.deleteById(id);
