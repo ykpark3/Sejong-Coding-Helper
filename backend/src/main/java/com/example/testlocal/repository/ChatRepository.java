@@ -9,8 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-    @Override
-    <S extends Chat> S save(S entity);
 
-    Optional<Chat> findById(String id);
+
+    //Optional<Chat> findById(String id);
 }

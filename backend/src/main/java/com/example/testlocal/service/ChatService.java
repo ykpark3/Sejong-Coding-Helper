@@ -25,16 +25,16 @@ public class ChatService {
         return repository.save(chat);
     }
 
-    public Map<String, String> findById(Map<String, String> chat, Long id) {
+    public Map<String, Object> findById2(Long id) {
 
         Chat checkedChat = repository.findById(id).orElseThrow(()-> new InvalidChatIdException());
 
-        Map<String, String> map = new HashMap<>();
-        map.put("id", checkedChat.getId().toString());
-        map.put("message", checkedChat.getMessage().toString());
-        map.put("UserId",checkedChat.getUser().toString());
-        map.put("createTime",checkedChat.getCreateTime().toString());
-        map.put("roomId",checkedChat.getRoom().toString());
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", checkedChat.getId());
+        map.put("message", checkedChat.getMessage());
+        map.put("UserId",checkedChat.getUser());
+        map.put("createTime",checkedChat.getCreateTime());
+        map.put("roomId",checkedChat.getRoom());
 
         return map;
     }
@@ -43,9 +43,9 @@ public class ChatService {
         return repository.findAll();
     }
 
-  /*  public Chat findById(Long id){
+    public Chat findById(Long id){
         return repository.findById(id).orElseThrow(()-> new InvalidChatIdException());
-    }*/
+    }
 
     public void deleteChat(Long id) {
         repository.deleteById(id);

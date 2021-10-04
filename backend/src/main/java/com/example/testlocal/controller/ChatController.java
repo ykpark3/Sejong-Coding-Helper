@@ -38,9 +38,9 @@ public class ChatController {
 //    }*/
 
     @PostMapping("/chat/{id}")
-    public String hello(@RequestBody Map<String, String> map, @PathVariable Long id) {
-        map = chatService.findById(map, id);
-        return "메시지 불러오기 성공";
+    public String hello(@RequestBody Map<String, Object> map, @PathVariable Long id) {
+        map = chatService.findById2(id);
+        return map.values().toString();
     }
 
  /*   @PostMapping("/chat/{id}")

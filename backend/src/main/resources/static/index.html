@@ -43,7 +43,7 @@
 
         sendBtn.click(function () {
             var message = messageInput.val();
-            stomp.send('/pub/chat/message', {}, JSON.stringify({roomID: 1, userId: 1, message: message}));
+            stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: 1, userId: 1, message: message}));
             messageInput.val('');
         });
     });
