@@ -30,14 +30,12 @@ public class ChatRoomRepository {
     public List<RoomDTO2> findAllRooms(){
         List<RoomDTO2> result = new ArrayList<>(chatRoomDTOMap.values());
         Collections.reverse(result);
-
         return result;
     }
 
     public RoomDTO2 createChatRoomDTO(String no, String name){
         RoomDTO2 room = RoomDTO2.create(no, name);
         chatRoomDTOMap.put(room.getRoomNo(), room);
-
         return room;
     }
 }

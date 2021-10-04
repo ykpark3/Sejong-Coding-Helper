@@ -1,18 +1,16 @@
 package com.example.testlocal.service;
 
-import com.example.testlocal.domain.dto.ChatDTO;
 import com.example.testlocal.domain.dto.ChatDTO2;
-import com.example.testlocal.domain.dto.RoomDTO;
 import com.example.testlocal.domain.entity.Chat;
-import com.example.testlocal.domain.entity.Room;
+import com.example.testlocal.domain.entity.User;
 import com.example.testlocal.exception.InvalidChatIdException;
-import com.example.testlocal.exception.InvalidRoomIdException;
 import com.example.testlocal.repository.ChatRepository;
-import com.example.testlocal.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +23,20 @@ public class ChatService {
     public Chat create(ChatDTO2 chatDTO){
         Chat chat = new Chat(chatDTO, roomService, userService);
         return repository.save(chat);
+    }
+
+    public Map<String, String> findById2(Map<String, String> chat, Long id) {
+
+        Chat checkedChat = repository.findById(id).orElseThrow(()-> new InvalidChatIdException());
+
+        Map<String, String> map = new HashMap<>();
+        map.put("id", checkedChat.getId().toString());
+        map.put("message", checkedChat.getMessage().toString());
+        map.put("UserId",checkedChat.getUser().toString());
+        map.put("createTime",checkedChat.getCreateTime().toString());
+        map.put("roomId",checkedChat.getRoom().toString());
+
+        return map;
     }
 
     public List<Chat> findAll(){
