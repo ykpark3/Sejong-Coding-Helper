@@ -14,4 +14,9 @@ public class ChatDTO2 {
     private Long userId;
     private Timestamp createTime;
     private String message;
+
+    public Timestamp getCreateTime() {
+        createTime = new Timestamp(System.currentTimeMillis());
+        return createTime;
+    }
 }
