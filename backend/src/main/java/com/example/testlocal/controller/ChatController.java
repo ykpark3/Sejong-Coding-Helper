@@ -20,14 +20,16 @@ public class ChatController {
     //WebSocketConfig에서 설정한 applicationDestinationPrefixes와
     // MessageMapping 경로가 병합됨
     //"/pub/chat/enter"
-    @MessageMapping("/chat/enter")
+
+    @MessageMapping("/chat/enter") // 채팅방 들어왔을 때
     public void enter(ChatDTO msg) {
         msg.setMessage(msg.getUserId() + "님이 채팅방에 참여하였습니다.");
         template.convertAndSend("/sub/chat/room/" + msg.getRoomNo(), msg);
     }
 
-    @MessageMapping("/chat/message")
+    @MessageMapping("/chat/message") // ㅁ
     public void message(ChatDTO msg) {
+        // insert msg
         template.convertAndSend("/sub/chat/room/" + msg.getRoomNo(), msg);
     }
 
