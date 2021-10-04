@@ -17,11 +17,12 @@ console.log("!!! onConnected");
 }
 
 function onMessageReceived(payload) {
-    console.log("!!!!! payload:   "+payload);
+console.log("!!!!! onMessageReceived");
+   // console.log("!!!!! payload:   "+payload);
 }
 
 function onError(error) {
-    console.log("!!! error"+error)
+    console.log("!!! onError"+error)
 }
 
 function sendMessage(content, event) {

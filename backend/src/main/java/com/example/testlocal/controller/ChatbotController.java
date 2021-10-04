@@ -1,8 +1,13 @@
 package com.example.testlocal.controller;
 
+import com.example.testlocal.config.ApiKey;
+import com.fasterxml.jackson.annotation.JacksonInject;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.hibernate.service.spi.InjectService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -18,6 +23,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
+import static com.example.testlocal.config.ApiKey.apiUrl;
+import static com.example.testlocal.config.ApiKey.secretKey;
+
 @Controller
 public class ChatbotController {
 
@@ -26,76 +34,25 @@ public class ChatbotController {
         System.out.println("ChatbotController!!!!!!!!");
     }
 
+    //private final ApiKey apiKey = ApiKey.getInstance();
 
-    private static String secretKey = "Q0VQQXdtd3BqUGVSdmZPWlRwYkh3d25ham5EUXNPRXU=";
-    private static String apiUrl =
-            //"https://0745b29300d6481abe2d712e9ae4aeab.apigw.ntruss.com/custom_chatbot/prod/";
-            "https://0745b29300d6481abe2d712e9ae4aeab.apigw.ntruss.com/custom/v1/5480/5e7422eda1c613f1bf3ecd3b47e3da0929f62a0855f074c9e053a82a865936a7";
+    @Autowired
+    private ApiKey apiKey;
 
 
-    @MessageMapping("/sendMessage")
-    @SendTo("/topic/public")
+   // private final String secretKey = apiKey.getSecretKey();
+   // private final String apiUrl = apiKey.getApiUrl();
+
+
+    @MessageMapping("/sendMessage") //client -> server & "/app/sendMessage"
+    @SendTo("/topic/public")    //server -> client
     public String sendMessage(@Payload String chatMessage) throws IOException {
 
+
+        System.out.println("!!!!! url: "+apiUrl);
+        System.out.println("!!!!! secret: " + secretKey);
         System.out.println("!!!!! sendMessage");
-        String chatbotMessage = "";
 
-        try {
-            //String apiURL = "https://ex9av8bv0e.apigw.ntruss.com/custom_chatbot/prod/";
-
-            URL url = new URL(apiUrl);
-
-            String message = getReqMessage(chatMessage);
-            System.out.println("##" + message);
-            System.out.println("!!!!chatmessage: "+chatMessage);
-
-
-            String encodeBase64String = makeSignature(message, secretKey);
-
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json;UTF-8");
-            con.setRequestProperty("X-NCP-CHATBOT_SIGNATURE", encodeBase64String);
-
-            // post request
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.write(message.getBytes("UTF-8"));
-            wr.flush();
-            wr.close();
-            int responseCode = con.getResponseCode();
-
-            BufferedReader br;
-
-            if(responseCode==200) { // Normal call
-                System.out.println(con.getResponseMessage());
-                System.out.println("!!! 200 정상");
-
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(
-                                con.getInputStream()));
-                String decodedString;
-                while ((decodedString = in.readLine()) != null) {
-                    chatbotMessage = decodedString;
-                }
-                //chatbotMessage = decodedString;
-                in.close();
-
-
-            } else {  // Error occurred
-                System.out.println("!!! 에러");
-
-                chatbotMessage = con.getResponseMessage();
-            }
-        } catch (Exception e) {
-            System.out.println("!!! catch");
-
-            System.out.println(e);
-        }
-
-        return chatbotMessage;
-
-        /*
         URL url = new URL(apiUrl);
         System.out.println("sendMessage!!!!!!!!");
 
@@ -134,12 +91,12 @@ public class ChatbotController {
             System.out.println("!!!!!!!jsonstring:   "+jsonString);
 
             //받아온 값을 세팅하는 부분
-            //JSONParser jsonParser = new JSONParser();
-            JSONParser jsonParser = new JSONParser(jsonString);
+            JSONParser jsonParser = new JSONParser();
+            //JSONParser jsonParser = new JSONParser(jsonString);
             try {
                 System.out.println("!!!try");
 
-                JSONObject jsonObject = (JSONObject)jsonParser.parse();
+                JSONObject jsonObject = (JSONObject)jsonParser.parse(jsonString);
 
                 // "bubbles": [ {"type": "text",
                 //"data" : { "description" : "postback text of welcome action" } } ],
@@ -169,7 +126,7 @@ public class ChatbotController {
         }
         return chatMessage;
 
-         */
+
     }
 
     //보낼 메세지를 네이버에서 제공해준 암호화로 변경해주는 메소드
@@ -187,9 +144,10 @@ public class ChatbotController {
             mac.init(secretKeySpec);
 
             byte[] signature  = mac.doFinal(message.getBytes("UTF-8"));
+          //  signatureHeader = Base64.encodeToString(signature, Base64.NO_WRAP);
             signatureHeader = Base64.encodeBase64String(signature);
 
-            System.out.println("!!!!signitureHeader:  "+signatureHeader);
+          //  System.out.println("!!!!signitureHeader:  "+signatureHeader);
 
             return signatureHeader;
 
