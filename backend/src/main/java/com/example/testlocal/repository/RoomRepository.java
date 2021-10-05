@@ -13,7 +13,7 @@ import java.util.List;
 public interface RoomRepository extends JpaRepository<Room,Long> {
 
     @Query(value = "select * from room where user_id = (select id from user where student_number = ?1)", nativeQuery = true)
-    List<Room> findAllByStudentId(String studentNumber);
+    List<Room> findAllRoomByStudentId(String studentNumber);
 
 }
 

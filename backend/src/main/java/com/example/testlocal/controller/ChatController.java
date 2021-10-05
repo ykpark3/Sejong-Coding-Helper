@@ -44,7 +44,7 @@ public class ChatController {
         return map.values().toString();
     }
 
-    @PostMapping("/chat/room/{roomId}")
+    @PostMapping("/chat/roomId/{roomId}")
     public List<Chat> findByRoomId(@PathVariable Long roomId) {
         return chatService.findByRoomId(roomId);
     }

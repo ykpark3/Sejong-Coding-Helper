@@ -29,8 +29,8 @@ public class RoomService {
         return repository.findById(id).orElseThrow(()-> new InvalidRoomIdException());
     }
 
-    public List<Room> findByStudentId(String studentId){
-        return repository.findAllByStudentId(studentId);
+    public List<Room> findAllRoomByStudentId(String studentId){
+        return repository.findAllRoomByStudentId(studentId);
     }
 
     public void deleteRoom(Long id) {
