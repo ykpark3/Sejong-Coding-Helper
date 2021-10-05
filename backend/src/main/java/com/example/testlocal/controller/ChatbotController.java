@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import static com.example.testlocal.config.ApiKey.apiUrl;
@@ -48,16 +49,14 @@ public class ChatbotController {
     @SendTo("/topic/public")    //server -> client
     public String sendMessage(@Payload String chatMessage) throws IOException {
 
-
-        System.out.println("!!!!! url: "+apiUrl);
-        System.out.println("!!!!! secret: " + secretKey);
         System.out.println("!!!!! sendMessage");
 
         URL url = new URL(apiUrl);
-        System.out.println("sendMessage!!!!!!!!");
-
         String message =  getReqMessage(chatMessage);
         String encodeBase64String = makeSignature(message, secretKey);
+
+        System.out.println("sendMessage message: "+message);
+        System.out.println("sendMessage encodeBase64String: "+encodeBase64String);
 
         // api서버 접속
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -135,19 +134,27 @@ public class ChatbotController {
         System.out.println("!!!!! makeSignature");
         String signatureHeader = "";
 
+
         // 요청 Signature 헤더
         try {
-            byte[] secrete_key_bytes = secretKey.getBytes("UTF-8");
+            byte[] secrete_key_bytes = secretKey.getBytes(StandardCharsets.UTF_8);
+         //   byte[] secrete_key_bytes = secretKey.getBytes("UTF_8");
+
 
             SecretKeySpec secretKeySpec = new SecretKeySpec(secrete_key_bytes, "HmacSHA256");
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(secretKeySpec);
 
-            byte[] signature  = mac.doFinal(message.getBytes("UTF-8"));
-          //  signatureHeader = Base64.encodeToString(signature, Base64.NO_WRAP);
-            signatureHeader = Base64.encodeBase64String(signature);
+            System.out.println("makeSignature message: "+message);
 
-          //  System.out.println("!!!!signitureHeader:  "+signatureHeader);
+            byte[] signature  = mac.doFinal(message.getBytes(StandardCharsets.UTF_8));
+           // byte[] signature  = mac.doFinal(message.getBytes("UTF-8"));
+            System.out.println("signature: "+signature);
+
+            //String signatureHeader = Base64.getEncoder().encodeToString(signature);
+            signatureHeader= Base64.encodeBase64String(signature);
+            //  signatureHeader = Base64.encodeToString(signature, Base64.NO_WRAP);
+            System.out.println("!!!!signitureHeader:  "+signatureHeader);
 
             return signatureHeader;
 
@@ -166,6 +173,8 @@ public class ChatbotController {
         String requestBody = "";
 
         System.out.println("!!!!! getReqMessage !!!!!");
+
+        System.out.println("sendMessage: "+sendMessage);
 
         //sendMessage = "파이썬이 뭐야";
 
