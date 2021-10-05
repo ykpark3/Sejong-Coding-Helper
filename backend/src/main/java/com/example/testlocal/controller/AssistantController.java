@@ -26,9 +26,8 @@ public class AssistantController {
         return assistantService.read();
     }
 
-    @PostMapping("/assistant/studentNumber/{studentNumber}")
+    @PostMapping("/assistant/studentEmail/{studentNumber}")
     public List<String> findAllStudentEmailByStudentNumber(@PathVariable String studentNumber){return assistantService.findAllByStudentId(studentNumber);}
-
     // 유저 생성
     @ResponseBody
     @PostMapping("/assistant")
