@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { changeType } from '../redux/login/loginActions';
+import { changeType, onLoginSuccess } from '../redux/login/loginActions';
 import { LOGIN_BEFORE, LOGIN_SUCCESS,LOGIN_ORIGIN } from '../redux/login/loginTypes';
 import { refreshLoginToken } from './utils/LoginUtils';
 import { changeLoadingState, changeFirstRendering } from '../redux/view/viewActions';
 
-const Root = ({ loginState,isFirstRendering, changeType, changeLoadingState, changeFirstRendering }) => {
+const Root = ({ loginState,isFirstRendering,onLoginSuccess, changeType, changeLoadingState, changeFirstRendering }) => {
 
-  function loginCallback(type) {
+  function loginCallback(type, id) {
     if (type === LOGIN_SUCCESS) {
-      changeType(LOGIN_SUCCESS);
+      onLoginSuccess(LOGIN_SUCCESS, id);
       changeLoadingState(false);
     } else if (type === LOGIN_BEFORE) {
       changeType(LOGIN_BEFORE);
@@ -44,7 +44,8 @@ const mapDispatchToProps = (dispatch) => {
     login: (id, pwd) => dispatch(login(id, pwd)),
     changeType: (type) => dispatch(changeType(type)),
     changeLoadingState: (props) => dispatch(changeLoadingState(props)),
-    changeFirstRendering: (props) => dispatch(changeFirstRendering(props))
+    changeFirstRendering: (props) => dispatch(changeFirstRendering(props)),
+    onLoginSuccess: (props) => dispatch(onLoginSuccess(props)),
 
   };
 };

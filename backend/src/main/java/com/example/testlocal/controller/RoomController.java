@@ -12,10 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class RoomController {
 
     private final RoomService roomService;
@@ -36,5 +38,11 @@ public class RoomController {
 
     @DeleteMapping("/room")
     public void deleteRoom(@PathVariable Long id) { roomService.deleteRoom(id);}
+
+
+    @PostMapping("/getRoomList")
+    public List<Room> getRoomList(@RequestBody Map<String, String> map){
+        return roomService.findAllByUserId(map.get("studentNumber"));
+    }
 
 }

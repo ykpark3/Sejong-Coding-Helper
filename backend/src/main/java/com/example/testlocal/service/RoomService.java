@@ -32,4 +32,9 @@ public class RoomService {
     public void deleteRoom(Long id) {
         repository.deleteById(id);
     }
+
+    public List<Room> findAllByUserId(String userId){
+
+        return repository.findRoomByUserId(Long.parseLong(userId));
+    }
 }

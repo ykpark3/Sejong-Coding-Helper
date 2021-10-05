@@ -4,11 +4,13 @@ import {
   FETCH_CHATDATA_SUCCESS,
   FETCH_CHATDATA_FAILURE,
   ADD_TA_CHATMSG,
+  ADD_TA_CHATROOM,
   GET_TA_RESPONSE,
 } from './taChatTypes';
 
 const initialState = {
   num: 4,
+  roomNum:0,
   chats: [
     {
       id: 1,
@@ -32,16 +34,12 @@ const initialState = {
     },
   ],
   list: [
-    {
-      id: 1,
-      title: '고급 C프로그래밍',
-      des: '홍길동 교수 / TA 박태수',
-    },
-    {
-      id: 2,
-      title: '알고리즘 및 실습',
-      des: '홍길동 교수 / TA 정성벽',
-    },
+    // ex
+    // {
+    //   id: 2,
+    //   title: '알고리즘 및 실습',
+    //   des: '홍길동 교수 / TA 정성벽',
+    // },
   ],
 };
 
@@ -62,6 +60,17 @@ const taChatReducer = (state = initialState, action) => {
           msg: data.msg,
         }),
         num: state.num + 1,
+      };
+
+    case ADD_TA_CHATROOM:
+      return{
+        ...state,
+        list:state.list.concat({
+          id:state.roomNum + 1,
+          title:data.title,
+          des:data.des,
+        }),
+        roomNum:state.roomNum + 1,
       };
 
     case GET_TA_RESPONSE:

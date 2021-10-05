@@ -3,8 +3,11 @@ import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import { Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
+import axios from 'axios';
+import { API_BASE_URL } from './utils/Constant';
 import {
   addMsgData,
+  addRoomData,
   getBotResponse,
   fetchChatData,
 } from '../redux/chat/ta_chat/taChatActions';
@@ -13,7 +16,6 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { LOGIN_ORIGIN, LOGIN_SUCCESS } from '../redux/login/loginTypes';
 import Root from './Root';
-
 
 const chatData = ({ chatsData }) => {
   const chatItems = chatsData.map((chat) => {
@@ -71,39 +73,81 @@ var getCookie = function (name) {
 const sockJS = new SockJS('http://localhost:8080/websocket');
 const stomp = Stomp.over(sockJS);
 
-const TaChatRoom = ({ loginState, num, chatsData, list, addMsgData, history }) => {
+const TaChatRoom = ({
+  loginState,
+  num,
+  roomNum,
+  chatsData,
+  list,
+  addMsgData,
+  addRoomData,
+  history,
+}) => {
   const msgInput = useRef();
   const scrollRef = useRef();
 
-  useEffect(() => {
-    
-    scrollToBottom();
+  const getChatRoomList = () => {
+    let studentNumber = getCookie('id');
 
-    stomp.connect({}, () => {
-      stomp.subscribe('/sub/chat/room/' + '12321', (chat) => {
-        console.log('msg arrived');
-
-        let data = getCookie('id');
-
-        if (data === null) {
-          history.push('/');
-          return;
+    axios
+      .post(
+        API_BASE_URL + '/getRoomList',
+        { studentNumber: studentNumber },
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {//res.data.length
+        for (let i = 0; i < 2; i++) {
+          addRoomData(roomNum, res.data[i].title, res.data[i].updateDate);
         }
 
-        var content = JSON.parse(chat.body);
-
-        console.log(content);
-
-        if (data === content.userId) {
-          addMsgData(num, 'user', content.message);
-        } else {
-          addMsgData(num, 'ta', content.message);
-        }
+        console.log('end');
+        connectStomp();
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
-    }, []);
+  };
 
-  });
+  const connectStomp = () => {
+    stomp.connect(
+      {},
+      () => {
+        stomp.subscribe('/sub/chat/room/' + '12321', (chat) => {
+          console.log('msg arrived');
 
+          let data = getCookie('id');
+
+          if (data === null) {
+            history.push('/');
+            return;
+          }
+
+          var content = JSON.parse(chat.body);
+
+          console.log(content);
+
+          if (data === content.userId) {
+            addMsgData(num, 'user', content.message);
+          } else {
+            addMsgData(num, 'ta', content.message);
+          }
+        });
+      },
+      [],
+    );
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+    getChatRoomList();
+  }, []);
 
   const scrollToBottom = () => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -143,7 +187,6 @@ const TaChatRoom = ({ loginState, num, chatsData, list, addMsgData, history }) =
   }
 
   return (
-
     <div style={{ width: '100%' }}>
       <VerticalHeader />
       <HorizontalHeader />
@@ -179,7 +222,6 @@ const TaChatRoom = ({ loginState, num, chatsData, list, addMsgData, history }) =
         </div>
       </div>
     </div>
-
   );
 };
 
@@ -190,6 +232,7 @@ const mapStateToProps = ({ taChats, login }) => {
     chatsData: taChats.chats,
     list: taChats.list,
     num: taChats.num,
+    roomNum: taChats.roomNum,
     loginState: login.type,
   };
 };
@@ -198,6 +241,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchChatData: () => dispatch(fetchChatData()),
     addMsgData: (id, sender, msg) => dispatch(addMsgData(id, sender, msg)),
+    addRoomData: (id, title, des) => dispatch(addRoomData(id, title, des)),
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
   };
 };

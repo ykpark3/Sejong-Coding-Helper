@@ -5,6 +5,7 @@ import {
   FETCH_CHATDATA_SUCCESS,
   FETCH_CHATDATA_FAILURE,
   ADD_TA_CHATMSG,
+  ADD_TA_CHATROOM,
   GET_TA_RESPONSE,
 } from './taChatTypes';
 
@@ -28,6 +29,13 @@ export const addMsgData = (id, sender,msg) => {
       type: ADD_TA_CHATMSG,
       data:{id:id,sender: sender, msg: msg}
     };
+}
+
+export const addRoomData = (id, title, des) => {
+  return{
+    type: ADD_TA_CHATROOM,
+    data:{id:id, title: title, des: des}
+  };
 }
 
 export const getBotResponse = (msg) => {

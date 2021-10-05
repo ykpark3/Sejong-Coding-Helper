@@ -11,6 +11,7 @@ export const refreshLoginToken = function (callback) {
   console.log("ref");
 
   try {
+    
     let data = getCookie('id');
     data = { id: data };
     if (data.id === null) {
@@ -33,7 +34,7 @@ export const refreshLoginToken = function (callback) {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data;
 
         if (callback) {
-          callback(LOGIN_SUCCESS);
+          callback(LOGIN_SUCCESS,data.id);
         }
 
         //changeType(LOGIN_SUCCESS);

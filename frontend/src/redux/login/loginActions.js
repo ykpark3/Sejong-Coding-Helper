@@ -17,12 +17,19 @@ export const changeType = (type) => {
   };
 };
 
-export const changeSignupAuth = (props) =>{
+export const changeSignupAuth = (props) => {
   return {
-    type:CHANGE_SIGNUP_AUTH,
-    data:{signupAuth: props},
+    type: CHANGE_SIGNUP_AUTH,
+    data: { signupAuth: props },
   };
-}
+};
+
+export const onLoginSuccess = (id) => {
+  return {
+    type: LOGIN_SUCCESS,
+    data: { id: id },
+  };
+};
 
 export const login = (id, pwd) => (dispatch) => {
   dispatch({ type: LOGIN_PENDING });
