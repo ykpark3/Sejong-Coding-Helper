@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -37,4 +38,8 @@ public class RoomController {
     @DeleteMapping("/room")
     public void deleteRoom(@PathVariable Long id) { roomService.deleteRoom(id);}
 
+    @PostMapping("/room/{studentId}")
+    public List<Room> findRoomByStudentId(@PathVariable String studentId) {
+        return roomService.findByStudentId(studentId);
+    }
 }

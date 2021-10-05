@@ -10,4 +10,5 @@ public interface UserRepository2 extends JpaRepository< User, Long> {
     <S extends User> S save(S entity);
 
     Optional<User> findById(String id);
+
 }
