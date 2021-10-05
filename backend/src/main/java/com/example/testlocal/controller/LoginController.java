@@ -1,20 +1,19 @@
 package com.example.testlocal.controller;
 
-import com.example.testlocal.domain.dto.UserDTO;
-import com.example.testlocal.repository.UserRepository;
+import com.example.testlocal.domain.dto.UserDTO2;
+import com.example.testlocal.domain.entity.User;
 import com.example.testlocal.service.UserService;
+import com.example.testlocal.service.UserService2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -24,6 +23,37 @@ import java.util.Map;
 public class LoginController {
 
     private final UserService userService;
+    private final UserService2 userService2;
+
+    @GetMapping("/user")
+    public List<User> all() {
+        return userService2.read();
+    }
+
+   /* // 유저 생성
+    @PostMapping("/user")
+    @ResponseBody
+    public String hello(@RequestBody Map<String, String> map) {
+        userService2.create();
+        return "good";
+    }*/
+
+    @ResponseBody
+    @PostMapping("/user")
+    public User createUser(@RequestBody UserDTO2 requestDTO) {
+        return userService2.create(requestDTO);
+    }
+
+    @GetMapping("/user/{id}")
+    public Optional<User> getUser(@PathVariable Long id) {
+        return userService2.readOne(id);
+    }
+
+    @DeleteMapping("/user/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        userService2.deleteAccount(id);
+        return "delete User" + id.toString();
+    }
 
     @PostMapping("/logincheck")
     public String loginUser(@RequestBody Map<String, String> map, HttpServletResponse response) {
@@ -60,11 +90,11 @@ public class LoginController {
     @PostMapping("/refreshLoginToken")
     public String refreshLoginToken(@RequestBody Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         String accessToken = "";
         String refreshToken = "";

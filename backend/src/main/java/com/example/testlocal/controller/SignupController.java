@@ -1,12 +1,10 @@
 package com.example.testlocal.controller;
 
-import com.example.testlocal.domain.dto.UserDTO;
+import com.example.testlocal.domain.dto.UserDTO2;
 import com.example.testlocal.service.UserService;
-import jdk.swing.interop.SwingInterOpUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,9 +76,7 @@ public class SignupController {
     public void completeUserSignup(@RequestBody Map<String, String> map){
 
         // db에 저장하는 구문
-        //userService.signUp(new UserDTO(map.get("studentId"), map.get("id"), map.get("pwd"), map.get("name")));
-
-
+        userService.signUp(new UserDTO2(map.get("studentNumber"), map.get("pwd"), map.get("name"),map.get("email")));
     }
 
     @PostMapping("/checkIdOverlap")
