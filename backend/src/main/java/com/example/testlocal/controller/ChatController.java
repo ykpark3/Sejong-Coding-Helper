@@ -2,6 +2,7 @@ package com.example.testlocal.controller;
 
 import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.entity.Chat;
+import com.example.testlocal.domain.entity.Room;
 import com.example.testlocal.service.ChatService;
 import com.example.testlocal.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,13 @@ public class ChatController {
         map = chatService.findById2(id);
         return map.values().toString();
     }
+
+    @PostMapping("/chat/room/{roomId}")
+    public List<Chat> findByRoomId(@PathVariable Long roomId) {
+        return chatService.findByRoomId(roomId);
+    }
+
+
 
  /*   @PostMapping("/chat/{id}")
     public Chat getChat(@PathVariable Long id) {
