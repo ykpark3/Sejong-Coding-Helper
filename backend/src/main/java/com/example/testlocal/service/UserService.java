@@ -52,13 +52,23 @@ public class UserService {
         userRepository2.save(user.toEntity());
     }
 
-    // 중복체크
-    public void checkId(String id) {
-        Optional<User> member = userRepository2.findByStudentNumber(id);
+    // id 중복체크
+    public boolean isOverlapStudentNumber(String studentNumber) {
+        Optional<User> member = userRepository2.findByStudentNumber(studentNumber);
         if (member.isPresent()) {
-
-        } else {
+            return true;
         }
+        return false;
+    }
+
+    // email 중복체크
+    public boolean isOverlapEmail(String email) {
+        Optional<User> member = userRepository2.findByEmail(email);
+
+        if (member.isPresent()) {
+            return true;
+        }
+        return false;
     }
 
     public Map<String, String> login(Map<String, String> user) {

@@ -9,12 +9,12 @@ import LoadingModal from './modal/LoadingModal';
 import EmailAuthModal from './modal/EmailAuthModal';
 import { changeLoadingState } from '../redux/view/viewActions';
 
-const Signup = ({changeLoadingState}) => {
+const Signup = ({ changeLoadingState }) => {
   const [email, setEmail] = useState('');
   const [isChecked, setChecked] = useState(false);
   const [isAuthModalOn, setAuthModalOn] = useState(false);
 
-  const sendEmail = () => {
+  const checkEmailOverlap = () => {
     if (email === '') {
       return;
     }
@@ -25,23 +25,56 @@ const Signup = ({changeLoadingState}) => {
 
     changeLoadingState(true);
 
-    axios.post(
-      API_BASE_URL + '/sendSejongEmail',
-      { email: email },
-      {
-        headers: {
-          'Content-type': 'application/json',
-          Accept: 'application/json',
+    axios
+      .post(
+        API_BASE_URL + '/checkEmailOverlap',
+        { email: email },
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
         },
-        withCredentials: true,
-      },
-    ).then((res) => {
-      console.log(res.data);
-      changeLoadingState(false);
-      setAuthModalOn(true);
-    })
+      )
+      .then((res) => {
+        console.log(res.data);
+        if (res.data === 'accepted') {
+          sendEmail();
+        }
+        else{
+          alert('이미 가입된 이메일입니다.');
+          changeLoadingState(false);
+        }
+      })
       .catch((res) => {
+        alert('일시적인 오류가 발생했습니다. 다시 시도해주세요.');
         console.log(res);
+        changeLoadingState(false);
+      });
+  };
+
+  const sendEmail = () => {
+    axios
+      .post(
+        API_BASE_URL + '/sendSejongEmail',
+        { email: email },
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        changeLoadingState(false);
+        setAuthModalOn(true);
+      })
+      .catch((res) => {
+        alert('일시적인 오류가 발생했습니다. 다시 시도해주세요.');
+        console.log(res);
+        changeLoadingState(false);
       });
   };
 
@@ -51,7 +84,11 @@ const Signup = ({changeLoadingState}) => {
       <HorizontalHeader />
 
       <>
-        {isAuthModalOn ? <EmailAuthModal setAuthModalOn={setAuthModalOn} email={email} /> : ''}
+        {isAuthModalOn ? (
+          <EmailAuthModal setAuthModalOn={setAuthModalOn} email={email} />
+        ) : (
+          ''
+        )}
       </>
 
       {/* <EmailAuthModal/> */}
@@ -120,7 +157,7 @@ const Signup = ({changeLoadingState}) => {
         </>
         <button
           onClick={() => {
-            sendEmail();
+            checkEmailOverlap();
           }}
         >
           이메일 전송하기
@@ -130,16 +167,15 @@ const Signup = ({changeLoadingState}) => {
   );
 };
 
-
 const mapStateToProps = ({ views }) => {
   return {
-    isLoading : views.isLoading,
+    isLoading: views.isLoading,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    changeLoadingState : (props) => dispatch(changeLoadingState(props))
+    changeLoadingState: (props) => dispatch(changeLoadingState(props)),
   };
 };
 
