@@ -1,6 +1,7 @@
 package com.example.testlocal.controller;
 
 import com.example.testlocal.domain.dto.UserDTO2;
+
 import com.example.testlocal.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,8 @@ public class SignupController {
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(60 * 10);  //10분
         session.setAttribute("authCode", authCode);
+
+        System.out.println(authCode);
     }
 
     @PostMapping("checkEmailAuthCode")

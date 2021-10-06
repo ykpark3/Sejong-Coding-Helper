@@ -29,12 +29,12 @@ public class RoomService {
         return repository.findById(id).orElseThrow(()-> new InvalidRoomIdException());
     }
 
-    public void deleteRoom(Long id) {
-        repository.deleteById(id);
+    public List<Room> findAllRoomByStudentId(String studentId){
+        return repository.findAllRoomByStudentId(studentId);
     }
 
-    public List<Room> findAllByUserId(String userId){
+    public void deleteRoom(Long id) {
+        repository.deleteById(id);
 
-        return repository.findRoomByUserId(Long.parseLong(userId));
     }
 }

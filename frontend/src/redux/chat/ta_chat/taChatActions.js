@@ -31,10 +31,10 @@ export const addMsgData = (id, sender,msg) => {
     };
 }
 
-export const addRoomData = (id, title, des) => {
+export const addRoomData = (id,roomId, title, des) => {
   return{
     type: ADD_TA_CHATROOM,
-    data:{id:id, title: title, des: des}
+    data:{id:id,roomId:roomId, title: title, des: des}
   };
 }
 

@@ -39,10 +39,8 @@ public class RoomController {
     @DeleteMapping("/room")
     public void deleteRoom(@PathVariable Long id) { roomService.deleteRoom(id);}
 
-
-    @PostMapping("/getRoomList")
-    public List<Room> getRoomList(@RequestBody Map<String, String> map){
-        return roomService.findAllByUserId(map.get("studentNumber"));
+    @PostMapping("/room/studentId/{studentId}")
+    public List<Room> findAllRoomByStudentId(@PathVariable String studentId) {
+        return roomService.findAllRoomByStudentId(studentId);
     }
-
 }

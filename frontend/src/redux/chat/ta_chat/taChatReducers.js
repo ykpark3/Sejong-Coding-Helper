@@ -12,31 +12,23 @@ const initialState = {
   num: 4,
   roomNum:0,
   chats: [
-    {
-      id: 1,
-      sender: 'user',
-      msg: '질문있습니다. 조교님.',
-    },
-    {
-      id: 2,
-      sender: 'ta',
-      msg: '넵넵ㅎㅎ',
-    },
-    {
-      id: 3,
-      sender: 'user',
-      msg: '과제1번 알랴주세용',
-    },
-    {
-      id: 4,
-      sender: 'ta',
-      msg: 'ㅋㅋ안됩니당ㅋㅋ',
-    },
+    // ex
+    // {
+    //   id: 1,
+    //   sender: 'user',
+    //   msg: '질문있습니다. 조교님.',
+    // },
+    // {
+    //   id: 2,
+    //   sender: 'ta',
+    //   msg: '넵넵ㅎㅎ',
+    // },
   ],
   list: [
     // ex
     // {
     //   id: 2,
+    //   roomId: 3,
     //   title: '알고리즘 및 실습',
     //   des: '홍길동 교수 / TA 정성벽',
     // },
@@ -67,6 +59,7 @@ const taChatReducer = (state = initialState, action) => {
         ...state,
         list:state.list.concat({
           id:state.roomNum + 1,
+          roomId:data.roomId,
           title:data.title,
           des:data.des,
         }),

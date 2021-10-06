@@ -39,6 +39,10 @@ public class ChatService {
         return map;
     }
 
+    public List<Chat> findByRoomId(Long id) {
+        return repository.findAllByRoomId(id);
+    }
+
     public List<Chat> findAll(){
         return repository.findAll();
     }

@@ -29,6 +29,9 @@ public class AssistantService {
         return assistantRepository.findById(id).orElseThrow(() -> new InvalidAssistantIdException());
     }
 
+    public List<String> findAllByStudentId(String studentNumber) {
+        return assistantRepository.findAllStudentEmailByStudentNumber(studentNumber);
+    }
     public void deleteAssistant(Long id) {
         assistantRepository.deleteById(id);
     }

@@ -85,14 +85,13 @@ const TaChatRoom = ({
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
+  let studentNumber = getCookie('id');
 
   const getChatRoomList = () => {
-    let studentNumber = getCookie('id');
-
     axios
       .post(
-        API_BASE_URL + '/getRoomList',
-        { studentNumber: studentNumber },
+        API_BASE_URL + '/room/studentId/' + studentNumber,
+        {},
         {
           headers: {
             'Content-type': 'application/json',
@@ -101,13 +100,23 @@ const TaChatRoom = ({
           withCredentials: true,
         },
       )
-      .then((res) => {//res.data.length
-        for (let i = 0; i < 2; i++) {
-          addRoomData(roomNum, res.data[i].title, res.data[i].updateDate);
+      .then((res) => {
+        // 채팅방이 없을 경우.
+        if (res.data.length === 0) {
+          return;
         }
+        let firstRoomId = res.data[0].id;
 
-        console.log('end');
-        connectStomp();
+        for (let i = 0; i < res.data.length; i++) {
+          addRoomData(
+            roomNum,
+            res.data[i].id,
+            res.data[i].title,
+            res.data[i].updateDate,
+          );
+        }
+        // 우선 첫번째 채팅방의 채팅 내역 불러오기.
+        getChatList(firstRoomId, studentNumber);
       })
       .catch((res) => {
         console.log(res);
@@ -115,29 +124,57 @@ const TaChatRoom = ({
       });
   };
 
-  const connectStomp = () => {
+  const getChatList = (roomId) => {
+    axios
+      .post(
+        API_BASE_URL + '/chat/roomId/' + roomId,
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          if (String(res.data[i].user.studentNumber) === studentNumber) {
+            addMsgData(num, 'user', res.data[i].message);
+          } else {
+            addMsgData(num, 'ta', res.data[i].message);
+          }
+        }
+
+        connectStomp(roomId);
+        scrollToBottom();
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  };
+
+  const connectStomp = (roomId) => {
     stomp.connect(
       {},
       () => {
-        stomp.subscribe('/sub/chat/room/' + '12321', (chat) => {
+        stomp.subscribe('/sub/chat/room/' + roomId, (chat) => {
           console.log('msg arrived');
 
-          let data = getCookie('id');
-
-          if (data === null) {
+          if (studentNumber === null) {
             history.push('/');
             return;
           }
 
           var content = JSON.parse(chat.body);
 
-          console.log(content);
-
-          if (data === content.userId) {
+          if (studentNumber === String(content.userId)) {
             addMsgData(num, 'user', content.message);
           } else {
             addMsgData(num, 'ta', content.message);
           }
+          scrollToBottom();
         });
       },
       [],
@@ -145,7 +182,6 @@ const TaChatRoom = ({
   };
 
   useEffect(() => {
-    scrollToBottom();
     getChatRoomList();
   }, []);
 
@@ -166,9 +202,7 @@ const TaChatRoom = ({
       return;
     }
 
-    let data = getCookie('id');
-
-    if (data === null) {
+    if (studentNumber === null) {
       history.push('/');
       return;
     }
@@ -176,13 +210,12 @@ const TaChatRoom = ({
     stomp.send(
       '/pub/chat/message',
       {},
-      JSON.stringify({ roomNo: 12321, userId: data, message: text }),
+      JSON.stringify({ roomId: 1, userId: studentNumber, message: text }),
     );
 
     //addMsgData(num, 'user', text);
     msgInput.current.value = '';
 
-    //getBotResponse(text);
     //scrollToBottom();
   }
 
@@ -241,7 +274,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchChatData: () => dispatch(fetchChatData()),
     addMsgData: (id, sender, msg) => dispatch(addMsgData(id, sender, msg)),
-    addRoomData: (id, title, des) => dispatch(addRoomData(id, title, des)),
+    addRoomData: (id, roomId, title, des) =>
+      dispatch(addRoomData(id, roomId, title, des)),
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
   };
 };

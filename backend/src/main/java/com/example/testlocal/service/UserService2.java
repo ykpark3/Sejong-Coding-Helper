@@ -30,6 +30,10 @@ public class UserService2 {
         return userRepository2.findById(id);
     }
 
+    public Optional<User> findStudentId(Long id){
+        return userRepository2.findById(id);
+    }
+
     public void deleteAccount(Long id) {
         userRepository2.deleteById(id);
     }

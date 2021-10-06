@@ -17,6 +17,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class ChatController {
 
     private final SimpMessagingTemplate template;
@@ -43,6 +44,11 @@ public class ChatController {
         return map.values().toString();
     }
 
+    @PostMapping("/chat/roomId/{roomId}")
+    public List<Chat> findByRoomId(@PathVariable Long roomId) {
+        return chatService.findByRoomId(roomId);
+    }
+
  /*   @PostMapping("/chat/{id}")
     public Chat getChat(@PathVariable Long id) {
         return chatService.findById(id);
@@ -62,7 +68,7 @@ public class ChatController {
 
     @MessageMapping("/chat/message")
     public void message(ChatDTO2 msg){
-        chatService.create(msg);
+        //chatService.create(msg);
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
 }
