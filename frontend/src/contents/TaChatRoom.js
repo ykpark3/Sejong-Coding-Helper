@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useSelector } from 'react';
+import React, { useState, useEffect, useRef, useSelector } from 'react';
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import { Link } from 'react-router-dom';
@@ -16,31 +16,6 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { LOGIN_ORIGIN, LOGIN_SUCCESS } from '../redux/login/loginTypes';
 import Root from './Root';
-
-const chatData = ({ chatsData }) => {
-  const chatItems = chatsData.map((chat) => {
-    if (chat.sender === 'ta') {
-      return <BotChatMsgItem msg={chat.msg} key={chat.id} />;
-    } else if (chat.sender === 'user') {
-      return <UserChatMsgItem msg={chat.msg} key={chat.id} />;
-    }
-  });
-
-  return <>{chatItems}</>;
-};
-
-const listData = ({ list }) => {
-  const listItems = list.map((item) => {
-    return (
-      <li key={item.id}>
-        <p>{item.title}</p>
-        <p>{item.des}</p>
-      </li>
-    );
-  });
-
-  return <>{listItems}</>;
-};
 
 function BotChatMsgItem({ msg }) {
   return (
@@ -71,7 +46,7 @@ var getCookie = function (name) {
 };
 
 const sockJS = new SockJS('http://localhost:8080/websocket');
-const stomp = Stomp.over(sockJS);
+let stomp = Stomp.over(sockJS);
 
 const TaChatRoom = ({
   loginState,
@@ -85,7 +60,42 @@ const TaChatRoom = ({
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
+  const [selectedChatRoomId, setSelectedChatRoomId] = useState(0);
   let studentNumber = getCookie('id');
+
+  const chatData = () => {
+    const chatItems = chatsData.map((chat) => {
+      if (chat.sender === 'ta') {
+        return <BotChatMsgItem msg={chat.msg} key={chat.id} />;
+      } else if (chat.sender === 'user') {
+        return <UserChatMsgItem msg={chat.msg} key={chat.id} />;
+      }
+    });
+
+    return <>{chatItems}</>;
+  };
+
+  const listData = () => {
+    const listItems = list.map((item) => {
+      return (
+        <li
+          key={item.id}
+          onClick={() => {
+            stomp.disconnect(function () {
+              connectStomp(list[item.id - 1].roomId);
+            });
+            //sockJS.close();
+            //connectStomp(list[item.id - 1].roomId);
+          }}
+        >
+          <p>{item.title}</p>
+          <p>{item.des}</p>
+        </li>
+      );
+    });
+
+    return <>{listItems}</>;
+  };
 
   const getChatRoomList = () => {
     axios
@@ -230,7 +240,7 @@ const TaChatRoom = ({
         <div id="secondHorizontalNav">
           <h3 style={{ color: '#008cff' }}> 채팅방 목록</h3>
           <div>
-            <div>{listData({ list })}</div>
+            <div>{listData()}</div>
           </div>
         </div>
 
@@ -238,7 +248,7 @@ const TaChatRoom = ({
           <h3 style={{ color: '#008cff' }}>대화하기</h3>
 
           <div id="taChattingSpace">
-            {chatData({ chatsData })}
+            {chatData()}
             <div ref={scrollRef}></div>
           </div>
 

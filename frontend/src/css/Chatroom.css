@@ -84,6 +84,10 @@ body {
   list-style: none;
 }
 
+#secondHorizontalNav div li:hover{
+  background-color: #b2dcff;
+}
+
 #secondHorizontalNav li p:nth-child(1) {
   font-family: 'nanumB';
   font-size: 18px;
