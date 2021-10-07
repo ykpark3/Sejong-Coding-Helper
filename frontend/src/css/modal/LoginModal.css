@@ -1,16 +1,16 @@
 @font-face {
     font-family: 'nanumB';
     src: url('../../fonts/NanumSquareB.ttf');
-}
-
-@font-face {
+  }
+  
+  @font-face {
     font-family: 'nanumR';
     src: url('../../fonts/NanumSquareR.ttf');
-}
+  }
 
-.modal {
-    position: fixed;
-    top: 0;
+.modal{
+    position:fixed;
+    top:0;
     left: 0;
     width: 100%;
     height: 100%;
@@ -20,15 +20,15 @@
     z-index: 989;
 }
 
-.modal .bg {
-
+.modal .bg{
+    
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
 
 }
 
-.modalBox {
+.modalBox{
     position: absolute;
     background-color: white;
     text-align: center;
@@ -38,21 +38,21 @@
     padding: 15px;
 }
 
-.modalBox p:nth-of-type(1) {
+.modalBox p:nth-of-type(1){
     font-family: nanumB;
     font-size: 20px;
     color: #990000;
 }
 
-.modalBox p:nth-of-type(2) {
+.modalBox p:nth-of-type(2){
     font-family: nanumR;
     font-size: 17px;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
-.modalBox div:nth-of-type(1) {
-
+.modalBox div:nth-of-type(1){
+    
     width: 100%;
     height: 2px;
     border-radius: 5px;
@@ -60,15 +60,15 @@
     background-color: #f1f1f1;
 }
 
-.modalBox button {
+.modalBox button{
 
     width: 100%;
     background-color: white;
-    border: none;
+    border:none;
     color: black;
     font-family: nanumB;
     font-size: 20px;
-    padding: 10px 20px 10px 20px;
+    padding : 10px 20px 10px 20px;
     border-radius: 20px;
     cursor: pointer;
 }

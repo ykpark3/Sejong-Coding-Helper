@@ -6,14 +6,6 @@ import { connect, useDispatch } from 'react-redux';
 const LoadingModal = ({ isLoading }) => {
 
     return (
-<<<<<<< HEAD
-        <div className="loadingModal">
-            <div className="loadingModalbg"/>
-            <div className="loadingModalBox">
-                <img src="img/loading.gif"></img>
-            </div>
-        </div>
-=======
         <>
             {isLoading ?
                 <div className="loadingModal">
@@ -24,7 +16,6 @@ const LoadingModal = ({ isLoading }) => {
                 </div> : null}
         </>
 
->>>>>>> upstream/master
     );
 }
 

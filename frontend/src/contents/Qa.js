@@ -5,9 +5,9 @@ import HorizontalHeader from './HorizontalHeader';
 const Qa = () => {
     return (
         <div>
-            <VerticalHeader/>
-            <HorizontalHeader/>
-            <p> Qa이다!</p>
+            <VerticalHeader />
+            <HorizontalHeader />
+            <p>                            Qa이다!</p>
         </div>
     )
 }

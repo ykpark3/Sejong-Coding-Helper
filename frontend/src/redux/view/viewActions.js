@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import {CHANGE_HEADER_INVERSE, CHANGE_VER_NAV_ITEM} from "./viewTypes"
-=======
 import { CHANGE_HEADER_INVERSE,CHANGE_VER_NAV_ITEM,CHANGE_LOADING_STATE,
 CHAGNE_FIRST_RENDERING } from "./viewTypes"
->>>>>>> upstream/master
 
 export const headerViewer = () => {
     return {
@@ -13,7 +9,7 @@ export const headerViewer = () => {
 
 export const clickedNavItem = () => {
     return {
-        type: CHANGE_VER_NAV_ITEM,
+        type:CHANGE_VER_NAV_ITEM,
     }
 }
 

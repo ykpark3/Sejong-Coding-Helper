@@ -35,5 +35,6 @@ public class RoomService {
 
     public void deleteRoom(Long id) {
         repository.deleteById(id);
+
     }
 }

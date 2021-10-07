@@ -49,16 +49,26 @@ public class UserService {
     public void signUp(UserDTO2 user) {
         // pw를 암호화하는 과정
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository2.save(user.toEntity()).getId();
+        userRepository2.save(user.toEntity());
     }
 
-    // 중복체크
-    public void checkId(String id) {
-        Optional<User> member = userRepository2.findById(id);
+    // id 중복체크
+    public boolean isOverlapStudentNumber(String studentNumber) {
+        Optional<User> member = userRepository2.findByStudentNumber(studentNumber);
         if (member.isPresent()) {
-
-        } else {
+            return true;
         }
+        return false;
+    }
+
+    // email 중복체크
+    public boolean isOverlapEmail(String email) {
+        Optional<User> member = userRepository2.findByEmail(email);
+
+        if (member.isPresent()) {
+            return true;
+        }
+        return false;
     }
 
     public Map<String, String> login(Map<String, String> user) {
@@ -67,7 +77,7 @@ public class UserService {
         String refreshToken = "";
 
         // id확인
-        User checkedUser = userRepository2.findById(user.get("id"))
+        User checkedUser = userRepository2.findByStudentNumber(user.get("id"))
                 .orElseThrow(() -> new IllegalArgumentException("id가 존재하지 않습니다."));
 
         // 비번 확인

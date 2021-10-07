@@ -1,161 +1,225 @@
-import React, {useEffect, useRef, useSelector} from 'react';
+import React, { useState, useEffect, useRef, useSelector } from 'react';
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
-import {Link} from 'react-router-dom';
-import {connect, useDispatch} from 'react-redux';
+import { Link } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
+import axios from 'axios';
+import { API_BASE_URL } from './utils/Constant';
 import {
-    addMsgData,
-    getBotResponse,
-    fetchChatData,
+  addMsgData,
+  addRoomData,
+  getBotResponse,
+  fetchChatData,
 } from '../redux/chat/ta_chat/taChatActions';
 import '../css/Chatroom.css';
 import SockJS from 'sockjs-client';
-<<<<<<< HEAD
-import {Stomp} from '@stomp/stompjs';
-=======
 import { Stomp } from '@stomp/stompjs';
 import { LOGIN_ORIGIN, LOGIN_SUCCESS } from '../redux/login/loginTypes';
 import Root from './Root';
->>>>>>> upstream/master
 
-
-const chatData = ({chatsData}) => {
-    const chatItems = chatsData.map((chat) => {
-        if (chat.sender === 'ta') {
-            return <BotChatMsgItem msg={chat.msg} key={chat.id}/>;
-        } else if (chat.sender === 'user') {
-            return <UserChatMsgItem msg={chat.msg} key={chat.id}/>;
-        }
-    });
-
-    return <>{chatItems}</>;
-};
-
-const listData = ({list}) => {
-    const listItems = list.map((item) => {
-        return (
-            <li key={item.id}>
-                <p>{item.title}</p>
-                <p>{item.des}</p>
-            </li>
-        );
-    });
-
-    return <>{listItems}</>;
-};
-
-function BotChatMsgItem({msg}) {
-    return (
-        <li className="botMsg">
-            <img src="img/taman.png"/>
-            <div>
-                <p>TA 홍길동</p>
-                <p>{msg}</p>
-            </div>
-        </li>
-    );
+function BotChatMsgItem({ msg }) {
+  return (
+    <li className="botMsg">
+      <img src="img/taman.png" />
+      <div>
+        <p>TA 홍길동</p>
+        <p>{msg}</p>
+      </div>
+    </li>
+  );
 }
 
-function UserChatMsgItem({msg}) {
-    return (
-        <li className="userMsg">
-            <div>
-                <p>나</p>
-                <p>{msg}</p>
-            </div>
-        </li>
-    );
+function UserChatMsgItem({ msg }) {
+  return (
+    <li className="userMsg">
+      <div>
+        <p>나</p>
+        <p>{msg}</p>
+      </div>
+    </li>
+  );
 }
 
-<<<<<<< HEAD
-const TaChatRoom = ({num, chatsData, list, addMsgData, getBotResponse}) => {
-    const msgInput = useRef();
-    const scrollRef = useRef();
-
-    useEffect(() => {
-        scrollToBottom();
-
-        stomp.connect({}, () => {
-            stomp.subscribe('/sub/chat/room/' + '12321', function (chat) {
-
-                var content = JSON.parse(chat.body);
-
-                console.log(content);
-
-                addMsgData(num, 'ta', content.message);
-                // chatBox.append(
-                //   '<li>' + content.message + '(' + content.userId + ')</li>',
-                // );
-=======
 var getCookie = function (name) {
   var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
   return value ? value[2] : null;
 };
 
 const sockJS = new SockJS('http://localhost:8080/websocket');
-const stomp = Stomp.over(sockJS);
+let stomp = Stomp.over(sockJS);
 
-const TaChatRoom = ({ loginState, num, chatsData, list, addMsgData, history }) => {
+const TaChatRoom = ({
+  loginState,
+  num,
+  roomNum,
+  chatsData,
+  list,
+  addMsgData,
+  addRoomData,
+  history,
+}) => {
   const msgInput = useRef();
   const scrollRef = useRef();
+  let studentNumber = getCookie('id');
 
   useEffect(() => {
-    
-    scrollToBottom();
+    getChatRoomList();
+  }, []);
 
-    stomp.connect({}, () => {
-      stomp.subscribe('/sub/chat/room/' + '12321', (chat) => {
-        console.log('msg arrived');
+  const chatData = () => {
+    const chatItems = chatsData.map((chat) => {
+      if (chat.sender === 'ta') {
+        return <BotChatMsgItem msg={chat.msg} key={chat.id} />;
+      } else if (chat.sender === 'user') {
+        return <UserChatMsgItem msg={chat.msg} key={chat.id} />;
+      }
+    });
 
-        let data = getCookie('id');
+    return <>{chatItems}</>;
+  };
 
-        if (data === null) {
-          history.push('/');
+
+  const listData = () => {
+    const listItems = list.map((item) => {
+
+      let st = "nonSelectedRoomLi";
+
+      if(window.sessionStorage.getItem("roomId") === String(list[item.id-1].roomId)){
+        st = "selectedRoomLi";
+      }
+      return (
+        <li className={st} key={item.id} onClick={() => {
+          window.sessionStorage.setItem("roomId",list[item.id-1].roomId);
+          window.location.replace('/tachatroom');
+        }}>
+          <p>{item.title}</p>
+          <p>{item.des}</p>
+        </li>
+      );
+    });
+
+    return <>{listItems}</>;
+  };
+
+  const getChatRoomList = () => {
+    axios
+      .post(
+        API_BASE_URL + '/room/studentId/' + studentNumber,
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        // 채팅방이 없을 경우.
+        if (res.data.length === 0) {
           return;
         }
 
-        var content = JSON.parse(chat.body);
+        let firstRoomId = res.data[0].id;
 
-        console.log(content);
-
-        if (data === content.userId) {
-          addMsgData(num, 'user', content.message);
-        } else {
-          addMsgData(num, 'ta', content.message);
+        if(window.sessionStorage.getItem("roomId") === null){
+          window.sessionStorage.setItem("roomId",firstRoomId);
         }
-      });
-    }, []);
 
-  });
+        for (let i = 0; i < res.data.length; i++) {
+          console.log(res.data[i]);
+          addRoomData(
+            roomNum,
+            res.data[i].id,
+            res.data[i].title,
+            res.data[i].updateDate,
+          );
+        }
+        // 우선 첫번째 채팅방의 채팅 내역 불러오기.
+        getChatList(window.sessionStorage.getItem("roomId"), studentNumber);
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  };
+
+  const getChatList = (roomId) => {
+    axios
+      .post(
+        API_BASE_URL + '/chat/roomId/' + roomId,
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          if (String(res.data[i].user.studentNumber) === studentNumber) {
+            addMsgData(num, 'user', res.data[i].message);
+          } else {
+            addMsgData(num, 'ta', res.data[i].message);
+          }
+        }
+
+        connectStomp(roomId);
+        scrollToBottom();
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  };
+
+  const connectStomp = (roomId) => {
+    stomp.connect(
+      {},
+      () => {
+        stomp.subscribe('/sub/chat/room/' + roomId, (chat) => {
+          console.log('msg arrived');
+
+          if (studentNumber === null) {
+            history.push('/');
+            return;
+          }
+
+          var content = JSON.parse(chat.body);
+
+          if (studentNumber === String(content.userId)) {
+            addMsgData(num, 'user', content.message);
+          } else {
+            addMsgData(num, 'ta', content.message);
+          }
+          scrollToBottom();
+        });
+      },
+      [],
+    );
+  };
 
 
   const scrollToBottom = () => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
   };
->>>>>>> upstream/master
 
-            });
-        });
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      sendMsg();
+    }
+  };
 
-    });
+  function sendMsg() {
+    const text = msgInput.current.value;
 
-    const scrollToBottom = () => {
-        scrollRef.current.scrollIntoView({behavior: 'smooth'});
-    };
+    if (text === '') {
+      return;
+    }
 
-<<<<<<< HEAD
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            sendMsg();
-        }
-    };
-
-    function sendMsg() {
-        const text = msgInput.current.value;
-=======
-    let data = getCookie('id');
-
-    if (data === null) {
+    if (studentNumber === null) {
       history.push('/');
       return;
     }
@@ -163,86 +227,51 @@ const TaChatRoom = ({ loginState, num, chatsData, list, addMsgData, history }) =
     stomp.send(
       '/pub/chat/message',
       {},
-      JSON.stringify({ roomNo: 12321, userId: data, message: text }),
+      JSON.stringify({ roomId: window.sessionStorage.getItem("roomId"), userId: studentNumber, message: text }),
     );
 
     //addMsgData(num, 'user', text);
     msgInput.current.value = '';
->>>>>>> upstream/master
 
-        if (text === '') {
-            return;
-        }
+    //scrollToBottom();
+  }
 
-<<<<<<< HEAD
-        stomp.send('/pub/chat/message', {}, JSON.stringify({roomNo: 12321, userId: "user", message: text}));
-=======
   return (
-
     <div style={{ width: '100%' }}>
       <VerticalHeader />
       <HorizontalHeader />
->>>>>>> upstream/master
 
-        addMsgData(num, 'user', text);
-        msgInput.current.value = '';
+      <div id="chatRoomBody">
+        <div id="emptySpace1" />
 
-        //getBotResponse(text);
-        //scrollToBottom();
-    }
-
-    return (
-        <div style={{width: '100%'}}>
-            <VerticalHeader/>
-            <HorizontalHeader/>
-
-            <div id="chatRoomBody">
-                <div id="emptySpace1"/>
-
-                <div id="secondHorizontalNav">
-                    <h3 style={{color: '#008cff'}}> 채팅방 목록</h3>
-                    <div>
-                        <div>{listData({list})}</div>
-                    </div>
-                </div>
-
-                <div id="mainChatting">
-                    <h3 style={{color: '#008cff'}}>대화하기</h3>
-
-                    <div id="taChattingSpace">
-                        {chatData({chatsData})}
-                        <div ref={scrollRef}></div>
-                    </div>
-
-                    <div id="inputForm">
-                        <input
-                            id="taMsgInput"
-                            ref={msgInput} //border: solid 2px #990000;
-                            onKeyPress={handleKeyPress}
-                        ></input>
-                        <button id="taMsgBnt" onClick={() => sendMsg()}>
-                            전 송
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div id="secondHorizontalNav">
+          <h3 style={{ color: '#008cff' }}> 채팅방 목록</h3>
+          <div>
+            <div>{listData()}</div>
+          </div>
         </div>
-<<<<<<< HEAD
-    );
-};
 
-const mapStateToProps = ({taChats}) => {
-    console.log(taChats.chats);
+        <div id="mainChatting">
+          <h3 style={{ color: '#008cff' }}>대화하기</h3>
 
-    return {
-        chatsData: taChats.chats,
-        list: taChats.list,
-        num: taChats.num,
-    };
-=======
+          <div id="taChattingSpace">
+            {chatData()}
+            <div ref={scrollRef}></div>
+          </div>
+
+          <div id="inputForm">
+            <input
+              id="taMsgInput"
+              ref={msgInput} //border: solid 2px #990000;
+              onKeyPress={handleKeyPress}
+            ></input>
+            <button id="taMsgBnt" onClick={() => sendMsg()}>
+              전 송
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-
   );
 };
 
@@ -253,17 +282,19 @@ const mapStateToProps = ({ taChats, login }) => {
     chatsData: taChats.chats,
     list: taChats.list,
     num: taChats.num,
+    roomNum: taChats.roomNum,
     loginState: login.type,
   };
->>>>>>> upstream/master
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchChatData: () => dispatch(fetchChatData()),
-        addMsgData: (id, sender, msg) => dispatch(addMsgData(id, sender, msg)),
-        getBotResponse: (msg) => dispatch(getBotResponse(msg)),
-    };
+  return {
+    fetchChatData: () => dispatch(fetchChatData()),
+    addMsgData: (id, sender, msg) => dispatch(addMsgData(id, sender, msg)),
+    addRoomData: (id, roomId, title, des) =>
+      dispatch(addRoomData(id, roomId, title, des)),
+    getBotResponse: (msg) => dispatch(getBotResponse(msg)),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaChatRoom);

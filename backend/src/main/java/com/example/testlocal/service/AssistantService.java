@@ -32,7 +32,6 @@ public class AssistantService {
     public List<String> findAllByStudentId(String studentNumber) {
         return assistantRepository.findAllStudentEmailByStudentNumber(studentNumber);
     }
-
     public void deleteAssistant(Long id) {
         assistantRepository.deleteById(id);
     }

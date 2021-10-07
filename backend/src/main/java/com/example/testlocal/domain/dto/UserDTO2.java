@@ -14,6 +14,13 @@ public class UserDTO2 {
     private String name;
     private String email;
 
+    public UserDTO2(String studentNumber, String password, String name, String email) {
+        this.studentNumber = studentNumber;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+    }
+
     public User toEntity() {
         // 뭐하는 코등ㅁ ???
         return User.builder().studentNumber(studentNumber).email(email).password(password).name(name).build();

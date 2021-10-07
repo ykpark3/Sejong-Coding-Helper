@@ -5,9 +5,9 @@ import HorizontalHeader from './HorizontalHeader';
 const Curriculum = () => {
     return (
         <div>
-            <VerticalHeader/>
-            <HorizontalHeader/>
-            <p> 커리큘럼이다!!!</p>
+            <VerticalHeader />
+            <HorizontalHeader />
+            <p>                   커리큘럼이다!!!</p>
         </div>
     )
 }
