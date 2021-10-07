@@ -51,7 +51,9 @@ body {
 #secondHorizontalNav div{
   overflow-y: auto;
   height: 100vh;
-  width: fit-content;
+  width: 25vw;
+  max-width: 400px;
+  min-width: 300px;
   background-color: #f6f6f6;
   /* background-color: #ebf6ff; */
 }
@@ -74,7 +76,7 @@ body {
 }
 
 #secondHorizontalNav div li {
-  width: 20vw;
+  /* width: 20vw; */
   font-family: 'nanumB';
   background-color: white;
   margin: 20px;

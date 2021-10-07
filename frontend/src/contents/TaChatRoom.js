@@ -60,8 +60,12 @@ const TaChatRoom = ({
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
-  const [selectedChatRoomId, setSelectedChatRoomId] = useState(0);
   let studentNumber = getCookie('id');
+
+  useEffect(() => {
+    //console.log(window.sessionStorage.getItem("roomId"));
+    getChatRoomList();
+  }, []);
 
   const chatData = () => {
     const chatItems = chatsData.map((chat) => {
@@ -75,19 +79,14 @@ const TaChatRoom = ({
     return <>{chatItems}</>;
   };
 
+
   const listData = () => {
     const listItems = list.map((item) => {
       return (
-        <li
-          key={item.id}
-          onClick={() => {
-            stomp.disconnect(function () {
-              connectStomp(list[item.id - 1].roomId);
-            });
-            //sockJS.close();
-            //connectStomp(list[item.id - 1].roomId);
-          }}
-        >
+        <li key={item.id} onClick={() => {
+          window.sessionStorage.setItem("roomId",list[item.id-1].roomId);
+          window.location.replace('/tachatroom');
+        }}>
           <p>{item.title}</p>
           <p>{item.des}</p>
         </li>
@@ -115,7 +114,12 @@ const TaChatRoom = ({
         if (res.data.length === 0) {
           return;
         }
+
         let firstRoomId = res.data[0].id;
+
+        if(window.sessionStorage.getItem("roomId") === null){
+          window.sessionStorage.setItem("roomId",firstRoomId);
+        }
 
         for (let i = 0; i < res.data.length; i++) {
           addRoomData(
@@ -126,7 +130,7 @@ const TaChatRoom = ({
           );
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
-        getChatList(firstRoomId, studentNumber);
+        getChatList(window.sessionStorage.getItem("roomId"), studentNumber);
       })
       .catch((res) => {
         console.log(res);
@@ -191,9 +195,6 @@ const TaChatRoom = ({
     );
   };
 
-  useEffect(() => {
-    getChatRoomList();
-  }, []);
 
   const scrollToBottom = () => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
