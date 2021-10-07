@@ -30,7 +30,7 @@ const chatData = ({ chatsData }) => {
 const listData = ({ list }) => {
   const listItems = list.map((item) => {
     return (
-      <li key={item.id}>
+      <li className="nonSelectedRoomLi" key={item.id}>
         <p>{item.title}</p>
         <p>{item.des}</p>
       </li>

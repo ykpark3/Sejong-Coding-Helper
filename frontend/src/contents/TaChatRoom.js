@@ -63,7 +63,6 @@ const TaChatRoom = ({
   let studentNumber = getCookie('id');
 
   useEffect(() => {
-    //console.log(window.sessionStorage.getItem("roomId"));
     getChatRoomList();
   }, []);
 
@@ -82,8 +81,14 @@ const TaChatRoom = ({
 
   const listData = () => {
     const listItems = list.map((item) => {
+
+      let st = "nonSelectedRoomLi";
+
+      if(window.sessionStorage.getItem("roomId") === String(list[item.id-1].roomId)){
+        st = "selectedRoomLi";
+      }
       return (
-        <li key={item.id} onClick={() => {
+        <li className={st} key={item.id} onClick={() => {
           window.sessionStorage.setItem("roomId",list[item.id-1].roomId);
           window.location.replace('/tachatroom');
         }}>
@@ -122,6 +127,7 @@ const TaChatRoom = ({
         }
 
         for (let i = 0; i < res.data.length; i++) {
+          console.log(res.data[i]);
           addRoomData(
             roomNum,
             res.data[i].id,
@@ -221,7 +227,7 @@ const TaChatRoom = ({
     stomp.send(
       '/pub/chat/message',
       {},
-      JSON.stringify({ roomId: 1, userId: studentNumber, message: text }),
+      JSON.stringify({ roomId: window.sessionStorage.getItem("roomId"), userId: studentNumber, message: text }),
     );
 
     //addMsgData(num, 'user', text);
