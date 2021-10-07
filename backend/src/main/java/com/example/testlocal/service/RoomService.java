@@ -29,7 +29,7 @@ public class RoomService {
         return repository.findById(id).orElseThrow(()-> new InvalidRoomIdException());
     }
 
-    public List<Room> findAllRoomByStudentId(String studentId){
+    public List<Integer> findAllRoomByStudentId(String studentId){
         return repository.findAllRoomByStudentId(studentId);
     }
 
