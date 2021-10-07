@@ -46,6 +46,10 @@ public class UserService2 {
         return userRepository2.findIsAssistantByStudentNumber(studentNumber);
     }
 
+    public int findUserIdByStudentNumber(String studentNumber){
+        return userRepository2.findUserIdByStudentNumber(studentNumber);
+    }
+
 
 
 }

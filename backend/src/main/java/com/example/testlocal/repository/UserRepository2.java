@@ -14,4 +14,7 @@ public interface UserRepository2 extends JpaRepository< User, Long> {
 
     @Query(value = "select exists (select * from assistant where user_id = (select id from user where student_number = ?1))as isAssistant", nativeQuery = true)
     int findIsAssistantByStudentNumber(String studentNumber);
+
+    @Query(value = "select id from user where student_number = ?1", nativeQuery = true)
+    int findUserIdByStudentNumber(String studentNumber);
 }

@@ -60,6 +60,11 @@ public class LoginController {
         return userService2.findByAssistant(studentNumber);
     }
 
+    @PostMapping("/user/userID/{studentNumber}")
+    public int findUserIdByStudentNumber(@PathVariable String studentNumber) {
+        return userService2.findUserIdByStudentNumber(studentNumber);
+    }
+
     @PostMapping("/logincheck")
     public String loginUser(@RequestBody Map<String, String> map, HttpServletResponse response) {
 
