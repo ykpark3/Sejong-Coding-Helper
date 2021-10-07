@@ -55,8 +55,10 @@ public class LoginController {
         return "delete User" + id.toString();
     }
 
-
-
+    @PostMapping("/user/assistant/{studentNumber}")
+    public int findIsAssistantByStudentNumber(@PathVariable String studentNumber) {
+        return userService2.findByAssistant(studentNumber);
+    }
 
     @PostMapping("/logincheck")
     public String loginUser(@RequestBody Map<String, String> map, HttpServletResponse response) {

@@ -42,8 +42,9 @@ public class UserService2 {
         return userRepository2.findById(id).orElseThrow(() -> new InvalidUserIdException());
     }
 
-
-
+    public int findByAssistant(String studentNumber){
+        return userRepository2.findIsAssistantByStudentNumber(studentNumber);
+    }
 
 
 
