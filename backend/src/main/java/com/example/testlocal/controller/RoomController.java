@@ -39,7 +39,7 @@ public class RoomController {
     public void deleteRoom(@PathVariable Long id) { roomService.deleteRoom(id);}
 
     @PostMapping("/room/studentId/{studentId}")
-    public List<Integer> findAllRoomByStudentId(@PathVariable String studentId) {
+    public List<Room> findAllRoomByStudentId(@PathVariable String studentId) {
         return roomService.findAllRoomByStudentId(studentId);
     }
 }

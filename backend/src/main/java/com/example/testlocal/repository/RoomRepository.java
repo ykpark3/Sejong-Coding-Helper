@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends JpaRepository<Room,Long> {
 
-    @Query(value = "select id from room where user_id = (select id from user where student_number = ?1) or user2_id = (select id from user where student_number = ?1) ", nativeQuery = true)
-    List<Integer> findAllRoomByStudentId(String studentNumber);
+    @Query(value = "select * from room where user_id = (select id from user where student_number = ?1) or user2_id = (select id from user where student_number = ?1) ", nativeQuery = true)
+    List<Room> findAllRoomByStudentId(String studentNumber);
 
 }
 
