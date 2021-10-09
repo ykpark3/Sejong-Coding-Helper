@@ -53,6 +53,7 @@ public class UserService2 {
         Map<String, Object> map = new HashMap<>();
         map.put("name", assistantDTO2.get(0).get("name"));
         map.put("isAssistant", assistantDTO2.get(1).get("name"));
+        map.put("id", findUserIdByStudentNumber(studentNumber));
         return map;
     }
 
