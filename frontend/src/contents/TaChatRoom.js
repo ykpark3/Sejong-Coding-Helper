@@ -63,15 +63,15 @@ const TaChatRoom = ({
   let studentNumber = getCookie('id');
 
   useEffect(() => {
-    getChatRoomList();
+    getIsTa();
   }, []);
 
   const chatData = () => {
     const chatItems = chatsData.map((chat) => {
-      if (chat.sender === 'ta') {
-        return <BotChatMsgItem msg={chat.msg} key={chat.id} />;
-      } else if (chat.sender === 'user') {
+      if (chat.studentNumber === studentNumber) {
         return <UserChatMsgItem msg={chat.msg} key={chat.id} />;
+      } else{
+        return <BotChatMsgItem msg={chat.msg} key={chat.id} />;
       }
     });
 
@@ -101,6 +101,29 @@ const TaChatRoom = ({
     return <>{listItems}</>;
   };
 
+  const getIsTa = () => {
+    axios
+      .post(
+        API_BASE_URL + '/user/assistant/' + studentNumber,
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        window.sessionStorage.setItem("isTa",String(res.data));
+        getChatRoomList();
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  };
+
   const getChatRoomList = () => {
     axios
       .post(
@@ -127,7 +150,6 @@ const TaChatRoom = ({
         }
 
         for (let i = 0; i < res.data.length; i++) {
-          console.log(res.data[i]);
           addRoomData(
             roomNum,
             res.data[i].id,
@@ -137,6 +159,7 @@ const TaChatRoom = ({
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
         getChatList(window.sessionStorage.getItem("roomId"), studentNumber);
+        connectStomp(window.sessionStorage.getItem("roomId"));
       })
       .catch((res) => {
         console.log(res);
@@ -159,14 +182,9 @@ const TaChatRoom = ({
       )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
-          if (String(res.data[i].user.studentNumber) === studentNumber) {
-            addMsgData(num, 'user', res.data[i].message);
-          } else {
-            addMsgData(num, 'ta', res.data[i].message);
-          }
+          console.log( res.data[i]);
+          addMsgData(num, res.data[i].user.name, res.data[i].user.studentNumber , res.data[i].message);
         }
-
-        connectStomp(roomId);
         scrollToBottom();
       })
       .catch((res) => {
@@ -189,11 +207,13 @@ const TaChatRoom = ({
 
           var content = JSON.parse(chat.body);
 
-          if (studentNumber === String(content.userId)) {
-            addMsgData(num, 'user', content.message);
-          } else {
-            addMsgData(num, 'ta', content.message);
-          }
+          //addMsgData(num, data[i].user.name, res.data[i].user.studentNumber , res.data[i].message);
+          console.log(content);
+          // if (studentNumber === String(content.userId)) {
+          //   addMsgData(num, 'user', content.message);
+          // } else {
+          //   addMsgData(num, 'ta', content.message);
+          // }
           scrollToBottom();
         });
       },
@@ -290,7 +310,7 @@ const mapStateToProps = ({ taChats, login }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchChatData: () => dispatch(fetchChatData()),
-    addMsgData: (id, sender, msg) => dispatch(addMsgData(id, sender, msg)),
+    addMsgData: (id,name,studentNumber,msg) => dispatch(addMsgData(id,name,studentNumber,msg)),
     addRoomData: (id, roomId, title, des) =>
       dispatch(addRoomData(id, roomId, title, des)),
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
