@@ -13,7 +13,7 @@ function onConnected() {
 console.log("!!! onConnected");
 
     stompClient.subscribe('/topic/public', onMessageReceived);
-    sendMessage("파이썬이 뭐야");
+    sendMessage('int형을 모르겠어');
 }
 
 function onMessageReceived(payload) {

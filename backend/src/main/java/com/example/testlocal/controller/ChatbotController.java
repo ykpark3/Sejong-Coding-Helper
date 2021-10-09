@@ -53,10 +53,11 @@ public class ChatbotController {
 
         URL url = new URL(apiUrl);
         String message =  getReqMessage(chatMessage);
-        String encodeBase64String = makeSignature(message, secretKey);
+        String encodeBase64String = makeSignature(message);
 
         System.out.println("sendMessage message: "+message);
-        System.out.println("sendMessage encodeBase64String: "+encodeBase64String);
+        //System.out.println("sendMessage encodeBase64String: "+encodeBase64String);
+
 
         // api서버 접속
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -67,12 +68,14 @@ public class ChatbotController {
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 
+        System.out.println("!!! wr: "+wr);
+
         wr.write(message.getBytes("UTF-8"));
         wr.flush();
         wr.close();
         int responseCode = con.getResponseCode();
 
-        BufferedReader br;
+     //   BufferedReader br;
 
         if(responseCode==200) { // 정상 호출
 
@@ -124,12 +127,10 @@ public class ChatbotController {
             chatMessage = con.getResponseMessage();
         }
         return chatMessage;
-
-
     }
 
     //보낼 메세지를 네이버에서 제공해준 암호화로 변경해주는 메소드
-    public static String makeSignature(String message, String secretKey) {
+    public static String makeSignature(String message) {
 
         System.out.println("!!!!! makeSignature");
         String signatureHeader = "";
@@ -162,9 +163,7 @@ public class ChatbotController {
             System.out.println("!!!!error ");
             System.out.println(e);
         }
-
         return signatureHeader;
-
     }
 
     //보낼 메세지를 네이버 챗봇에 포맷으로 변경해주는 메소드
@@ -194,7 +193,7 @@ public class ChatbotController {
 
             JSONObject bubbles_obj = new JSONObject();
 
-            bubbles_obj.put("type", "text");
+            //bubbles_obj.put("type", "text");
 
             JSONObject data_obj = new JSONObject();
             data_obj.put("description", sendMessage);
@@ -215,7 +214,6 @@ public class ChatbotController {
         } catch (Exception e){
             System.out.println("## Exception : " + e);
         }
-
         return requestBody;
     }
 
