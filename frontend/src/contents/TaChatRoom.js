@@ -17,19 +17,19 @@ import { Stomp } from '@stomp/stompjs';
 import { LOGIN_ORIGIN, LOGIN_SUCCESS } from '../redux/login/loginTypes';
 import Root from './Root';
 
-function BotChatMsgItem({ msg }) {
+function BotChatMsgItem({ msg, name }) {
   return (
     <li className="botMsg">
       <img src="img/taman.png" />
       <div>
-        <p>TA 홍길동</p>
+        <p>{name}</p>
         <p>{msg}</p>
       </div>
     </li>
   );
 }
 
-function UserChatMsgItem({ msg }) {
+function UserChatMsgItem({ msg, name }) {
   return (
     <li className="userMsg">
       <div>
@@ -60,6 +60,8 @@ const TaChatRoom = ({
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
+  const [userName, setUserName] = useState('');
+  const [isTa, setTa] = useState(false);
   let studentNumber = getCookie('id');
 
   useEffect(() => {
@@ -68,30 +70,40 @@ const TaChatRoom = ({
 
   const chatData = () => {
     const chatItems = chatsData.map((chat) => {
+      let tempName = chat.name;
+      if (!isTa) {
+        tempName = 'TA ' + chat.name;
+      }
+
       if (chat.studentNumber === studentNumber) {
         return <UserChatMsgItem msg={chat.msg} key={chat.id} />;
-      } else{
-        return <BotChatMsgItem msg={chat.msg} key={chat.id} />;
+      } else {
+        return <BotChatMsgItem msg={chat.msg} name={tempName} key={chat.id} />;
       }
     });
 
     return <>{chatItems}</>;
   };
 
-
   const listData = () => {
     const listItems = list.map((item) => {
+      let st = 'nonSelectedRoomLi';
 
-      let st = "nonSelectedRoomLi";
-
-      if(window.sessionStorage.getItem("roomId") === String(list[item.id-1].roomId)){
-        st = "selectedRoomLi";
+      if (
+        window.sessionStorage.getItem('roomId') ===
+        String(list[item.id - 1].roomId)
+      ) {
+        st = 'selectedRoomLi';
       }
       return (
-        <li className={st} key={item.id} onClick={() => {
-          window.sessionStorage.setItem("roomId",list[item.id-1].roomId);
-          window.location.replace('/tachatroom');
-        }}>
+        <li
+          className={st}
+          key={item.id}
+          onClick={() => {
+            window.sessionStorage.setItem('roomId', list[item.id - 1].roomId);
+            window.location.replace('/tachatroom');
+          }}
+        >
           <p>{item.title}</p>
           <p>{item.des}</p>
         </li>
@@ -115,8 +127,13 @@ const TaChatRoom = ({
         },
       )
       .then((res) => {
-        window.sessionStorage.setItem("isTa",String(res.data));
-        getChatRoomList();
+        setUserName(res.data.name);
+
+        if (String(res.data.isAssistant) === '1') {
+          setTa(true);
+        }
+
+        getChatRoomList(String(res.data.isAssistant));
       })
       .catch((res) => {
         console.log(res);
@@ -124,7 +141,7 @@ const TaChatRoom = ({
       });
   };
 
-  const getChatRoomList = () => {
+  const getChatRoomList = (isTa) => {
     axios
       .post(
         API_BASE_URL + '/room/studentId/' + studentNumber,
@@ -145,21 +162,37 @@ const TaChatRoom = ({
 
         let firstRoomId = res.data[0].id;
 
-        if(window.sessionStorage.getItem("roomId") === null){
-          window.sessionStorage.setItem("roomId",firstRoomId);
+        if (window.sessionStorage.getItem('roomId') === null) {
+          window.sessionStorage.setItem('roomId', firstRoomId);
         }
 
         for (let i = 0; i < res.data.length; i++) {
+
+          let otherName;
+          if (String(res.data[i].user.studentNumber) === studentNumber) {
+            otherName = res.data[i].user2.name;
+          } else {
+            otherName = res.data[i].user.name;
+          }
+
+          // 접속 계정이 TA일 경우와 아닌 경우 다른 UI를 위해.
+          let name;
+          if (isTa === '1') {
+            name = otherName + ' 학생'
+          } else {
+            name = 'TA ' + otherName;
+          }
+
           addRoomData(
             roomNum,
             res.data[i].id,
             res.data[i].title,
-            res.data[i].updateDate,
+            name
           );
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
-        getChatList(window.sessionStorage.getItem("roomId"), studentNumber);
-        connectStomp(window.sessionStorage.getItem("roomId"));
+        getChatList(window.sessionStorage.getItem('roomId'), studentNumber);
+        connectStomp(window.sessionStorage.getItem('roomId'));
       })
       .catch((res) => {
         console.log(res);
@@ -182,8 +215,12 @@ const TaChatRoom = ({
       )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
-          console.log( res.data[i]);
-          addMsgData(num, res.data[i].user.name, res.data[i].user.studentNumber , res.data[i].message);
+          addMsgData(
+            num,
+            res.data[i].user.name,
+            res.data[i].user.studentNumber,
+            res.data[i].message,
+          );
         }
         scrollToBottom();
       })
@@ -207,20 +244,18 @@ const TaChatRoom = ({
 
           var content = JSON.parse(chat.body);
 
-          //addMsgData(num, data[i].user.name, res.data[i].user.studentNumber , res.data[i].message);
-          console.log(content);
-          // if (studentNumber === String(content.userId)) {
-          //   addMsgData(num, 'user', content.message);
-          // } else {
-          //   addMsgData(num, 'ta', content.message);
-          // }
+          addMsgData(
+            num,
+            content.name,
+            String(content.userId),
+            content.message,
+          );
           scrollToBottom();
         });
       },
       [],
     );
   };
-
 
   const scrollToBottom = () => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -247,13 +282,15 @@ const TaChatRoom = ({
     stomp.send(
       '/pub/chat/message',
       {},
-      JSON.stringify({ roomId: window.sessionStorage.getItem("roomId"), userId: studentNumber, message: text }),
+      JSON.stringify({
+        roomId: window.sessionStorage.getItem('roomId'),
+        name: userName,
+        userId: studentNumber,
+        message: text,
+      }),
     );
 
-    //addMsgData(num, 'user', text);
     msgInput.current.value = '';
-
-    //scrollToBottom();
   }
 
   return (
@@ -310,7 +347,8 @@ const mapStateToProps = ({ taChats, login }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchChatData: () => dispatch(fetchChatData()),
-    addMsgData: (id,name,studentNumber,msg) => dispatch(addMsgData(id,name,studentNumber,msg)),
+    addMsgData: (id, name, studentNumber, msg) =>
+      dispatch(addMsgData(id, name, studentNumber, msg)),
     addRoomData: (id, roomId, title, des) =>
       dispatch(addRoomData(id, roomId, title, des)),
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),

@@ -13,6 +13,7 @@ public class ChatDTO2 {
     private Long roomId;
     private Long userId;
     private Timestamp createTime;
+    private String name;
     private String message;
 
     public Timestamp getCreateTime() {
