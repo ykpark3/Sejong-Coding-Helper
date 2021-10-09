@@ -57,9 +57,11 @@ public class LoginController {
 
 
     @PostMapping("/user/assistant/{studentNumber}")
-    public int findIsAssistantByStudentNumber(@PathVariable String studentNumber) {
-        return userService2.findByAssistant(studentNumber);
+    public Map<String, Object> findIsAssistantByStudentNumber(@RequestBody Map<String, Object> map, @PathVariable String studentNumber) {
+        map = userService2.findByAssistant(studentNumber);
+        return map;
     }
+
 
     @PostMapping("/user/userID/{studentNumber}")
     public int findUserIdByStudentNumber(@PathVariable String studentNumber) {
