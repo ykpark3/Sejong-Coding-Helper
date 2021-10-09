@@ -4,6 +4,8 @@ import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.entity.Chat;
 import com.example.testlocal.service.ChatService;
 import com.example.testlocal.service.RoomService;
+import com.example.testlocal.service.UserService;
+import com.example.testlocal.service.UserService2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -23,20 +25,18 @@ public class ChatController {
     private final SimpMessagingTemplate template;
     private final RoomService roomService;
     private final ChatService chatService;
+    private final UserService2 userService;
 
     @GetMapping("/chat")
     public List<Chat> all() { return chatService.findAll();}
 
     @ResponseBody
-    @PostMapping("/chat")
-    public Chat createChat(@RequestBody ChatDTO2 requestDTO){
+    @PostMapping("/chat/create/{studentNumber}")
+    public Chat createChat(@RequestBody ChatDTO2 requestDTO, @PathVariable String studentNumber){
+        Integer id = userService.findUserIdByStudentNumber(studentNumber);
+        requestDTO.setUserId(id.longValue());
         return chatService.create(requestDTO);
     }
-
-/*//    @PostMapping("/chat/{id}")
-//    public Chat getChat(@PathVariable Long id) {
-//        return chatService.findById(id);
-//    }*/
 
     @PostMapping("/chat/{id}")
     public String hello(@RequestBody Map<String, Object> map, @PathVariable Long id) {
@@ -48,11 +48,6 @@ public class ChatController {
     public List<Chat> findByRoomId(@PathVariable Long roomId) {
         return chatService.findByRoomId(roomId);
     }
-
- /*   @PostMapping("/chat/{id}")
-    public Chat getChat(@PathVariable Long id) {
-        return chatService.findById(id);
-    }*/
 
     @DeleteMapping("/chat")
     public void deleteChat(@PathVariable Long id) { chatService.deleteChat(id);}
