@@ -24,10 +24,10 @@ export const fetchChatData = () => {
     };
 }
 
-export const addMsgData = (id,name,studentNumber,msg) => {
+export const addMsgData = (id,name,userId,msg) => {
     return{
       type: ADD_TA_CHATMSG,
-      data:{id:id,name:name,studentNumber:studentNumber, msg: msg}
+      data:{id:id,name:name,userId:userId, msg: msg}
     };
 }
 

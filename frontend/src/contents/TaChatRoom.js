@@ -45,7 +45,7 @@ var getCookie = function (name) {
   return value ? value[2] : null;
 };
 
-const sockJS = new SockJS('http://localhost:8080/websocket');
+const sockJS = new SockJS(API_BASE_URL+'/websocket');
 let stomp = Stomp.over(sockJS);
 
 const TaChatRoom = ({
@@ -60,6 +60,7 @@ const TaChatRoom = ({
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
+  const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [isTa, setTa] = useState(false);
   let studentNumber = getCookie('id');
@@ -75,7 +76,7 @@ const TaChatRoom = ({
         tempName = 'TA ' + chat.name;
       }
 
-      if (chat.studentNumber === studentNumber) {
+      if (chat.userId === userId) {
         return <UserChatMsgItem msg={chat.msg} key={chat.id} />;
       } else {
         return <BotChatMsgItem msg={chat.msg} name={tempName} key={chat.id} />;
@@ -127,13 +128,15 @@ const TaChatRoom = ({
         },
       )
       .then((res) => {
+        console.log(res.data);
+        setUserId(res.data.id);
         setUserName(res.data.name);
 
-        if (String(res.data.isAssistant) === '1') {
+        if (res.data.isAssistant === '1') {
           setTa(true);
         }
 
-        getChatRoomList(String(res.data.isAssistant));
+        getChatRoomList(res.data.isAssistant);
       })
       .catch((res) => {
         console.log(res);
@@ -215,10 +218,11 @@ const TaChatRoom = ({
       )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
+          
           addMsgData(
             num,
             res.data[i].user.name,
-            res.data[i].user.studentNumber,
+            res.data[i].user.id,
             res.data[i].message,
           );
         }
@@ -247,7 +251,7 @@ const TaChatRoom = ({
           addMsgData(
             num,
             content.name,
-            String(content.userId),
+            content.userId,
             content.message,
           );
           scrollToBottom();
@@ -285,7 +289,7 @@ const TaChatRoom = ({
       JSON.stringify({
         roomId: window.sessionStorage.getItem('roomId'),
         name: userName,
-        userId: studentNumber,
+        userId: userId,
         message: text,
       }),
     );
@@ -347,8 +351,8 @@ const mapStateToProps = ({ taChats, login }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchChatData: () => dispatch(fetchChatData()),
-    addMsgData: (id, name, studentNumber, msg) =>
-      dispatch(addMsgData(id, name, studentNumber, msg)),
+    addMsgData: (id, name, userId, msg) =>
+      dispatch(addMsgData(id, name, userId, msg)),
     addRoomData: (id, roomId, title, des) =>
       dispatch(addRoomData(id, roomId, title, des)),
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
