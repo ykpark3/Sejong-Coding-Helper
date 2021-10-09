@@ -63,7 +63,7 @@ public class ChatController {
 
     @MessageMapping("/chat/message")
     public void message(ChatDTO2 msg){
-        //chatService.create(msg);
+        chatService.create(msg);
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
 }
