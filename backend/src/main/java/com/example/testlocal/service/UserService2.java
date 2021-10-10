@@ -57,12 +57,8 @@ public class UserService2 {
         return map;
     }
 
-
-
     public int findUserIdByStudentNumber(String studentNumber){
         return userRepository2.findUserIdByStudentNumber(studentNumber);
     }
-
-
 
 }

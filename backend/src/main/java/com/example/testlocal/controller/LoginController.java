@@ -18,8 +18,8 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-//@CrossOrigin(origins = "http://3.141.167.159:80" , allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http://3.141.167.159" , allowCredentials = "true")
 public class LoginController {
 
     private final UserService userService;
