@@ -32,18 +32,13 @@ public class ChatbotController {
 
     public ChatbotController() {
 
-        System.out.println("ChatbotController!!!!!!!!");
+        System.out.println("!!!!! ChatbotController");
     }
 
     //private final ApiKey apiKey = ApiKey.getInstance();
 
     @Autowired
     private ApiKey apiKey;
-
-
-   // private final String secretKey = apiKey.getSecretKey();
-   // private final String apiUrl = apiKey.getApiUrl();
-
 
     @MessageMapping("/sendMessage") //client -> server & "/app/sendMessage"
     @SendTo("/topic/public")    //server -> client
@@ -55,9 +50,7 @@ public class ChatbotController {
         String message =  getReqMessage(chatMessage);
         String encodeBase64String = makeSignature(message);
 
-        System.out.println("sendMessage message: "+message);
-        //System.out.println("sendMessage encodeBase64String: "+encodeBase64String);
-
+        System.out.println("!!!!! message: "+message);
 
         // api서버 접속
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -68,8 +61,6 @@ public class ChatbotController {
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 
-        System.out.println("!!! wr: "+wr);
-
         wr.write(message.getBytes("UTF-8"));
         wr.flush();
         wr.close();
@@ -79,7 +70,7 @@ public class ChatbotController {
 
         if(responseCode==200) { // 정상 호출
 
-            System.out.println("정상 호출 !!!!!!!!");
+            System.out.println("!!!!! 정상 호출");
 
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
@@ -90,13 +81,13 @@ public class ChatbotController {
                 jsonString = decodedString; //jsonString에 값 받아오기
             }
 
-            System.out.println("!!!!!!!jsonstring:   "+jsonString);
+            System.out.println("!!!!! jsonstring:   "+jsonString);
 
             //받아온 값을 세팅하는 부분
             JSONParser jsonParser = new JSONParser();
             //JSONParser jsonParser = new JSONParser(jsonString);
             try {
-                System.out.println("!!!try");
+                System.out.println("!!!!! try");
 
                 JSONObject jsonObject = (JSONObject)jsonParser.parse(jsonString);
 
@@ -114,7 +105,7 @@ public class ChatbotController {
                 System.out.println("!!!!! chatMessage: " + chatMessage);
 
             } catch (Exception e) {
-                System.out.println("!!!!!error");
+                System.out.println("!!!!! error");
                 e.printStackTrace();
             }
 
@@ -123,7 +114,7 @@ public class ChatbotController {
 
         else {  // 에러 발생
 
-            System.out.println("!!!!!error 22");
+            System.out.println("!!!!! error 22");
             chatMessage = con.getResponseMessage();
         }
         return chatMessage;
@@ -141,26 +132,22 @@ public class ChatbotController {
             byte[] secrete_key_bytes = secretKey.getBytes(StandardCharsets.UTF_8);
          //   byte[] secrete_key_bytes = secretKey.getBytes("UTF_8");
 
-
             SecretKeySpec secretKeySpec = new SecretKeySpec(secrete_key_bytes, "HmacSHA256");
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(secretKeySpec);
 
-            System.out.println("makeSignature message: "+message);
 
             byte[] signature  = mac.doFinal(message.getBytes(StandardCharsets.UTF_8));
            // byte[] signature  = mac.doFinal(message.getBytes("UTF-8"));
-            System.out.println("signature: "+signature);
 
             //String signatureHeader = Base64.getEncoder().encodeToString(signature);
             signatureHeader= Base64.encodeBase64String(signature);
             //  signatureHeader = Base64.encodeToString(signature, Base64.NO_WRAP);
-            System.out.println("!!!!signitureHeader:  "+signatureHeader);
 
             return signatureHeader;
 
         } catch (Exception e){
-            System.out.println("!!!!error ");
+            System.out.println("!!!!! error ");
             System.out.println(e);
         }
         return signatureHeader;
@@ -171,9 +158,7 @@ public class ChatbotController {
 
         String requestBody = "";
 
-        System.out.println("!!!!! getReqMessage !!!!!");
-
-        System.out.println("sendMessage: "+sendMessage);
+        System.out.println("!!!!! getReqMessage");
 
         //sendMessage = "파이썬이 뭐야";
 
@@ -209,7 +194,6 @@ public class ChatbotController {
 
             requestBody = jsonObject.toString();
 
-            System.out.println("!!! requestBody:   "+requestBody);
 
         } catch (Exception e){
             System.out.println("## Exception : " + e);
