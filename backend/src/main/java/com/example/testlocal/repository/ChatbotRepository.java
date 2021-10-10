@@ -13,4 +13,6 @@ public interface ChatbotRepository extends JpaRepository<Chatbot, Long> {
 
     @Query(value = "select * from chatbot where user_id = ?1", nativeQuery = true)
     List<Chatbot> findAllByUserId(Long userId);
+
+
 }

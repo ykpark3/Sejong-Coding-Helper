@@ -2,6 +2,8 @@ package com.example.testlocal.controller;
 
 import com.example.testlocal.config.ApiKey;
 import com.example.testlocal.domain.dto.ChatbotDTO;
+import com.example.testlocal.domain.entity.Chat;
+import com.example.testlocal.domain.entity.Chatbot;
 import com.example.testlocal.service.ChatService;
 import com.example.testlocal.service.ChatbotService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
@@ -47,7 +50,7 @@ public class ChatbotController {
     //@MessageMapping("/sendMessage") //client -> server & "/app/sendMessage"
     //@SendTo("/topic/public")    //server -> client
 
-    @PostMapping("/chatbotMessage/{userId}")
+    @PostMapping("/chatbotMessage/send/{userId}")
     public String sendMessage(@RequestBody Map<String, Object> map, @PathVariable Long userId) throws IOException {
 
         String chatMessage = (String)map.get("message");
@@ -186,6 +189,11 @@ public class ChatbotController {
             System.out.println("## Exception : " + e);
         }
         return requestBody;
+    }
+
+    @PostMapping("/chatbotMessage/get/{userId}")
+    public List<Chatbot> findAllByUserId(@PathVariable Long userId) {
+        return chatbotService.findByUserId(userId);
     }
 
 }
