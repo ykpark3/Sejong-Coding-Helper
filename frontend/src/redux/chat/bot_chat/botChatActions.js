@@ -33,9 +33,6 @@ export const addMsgData = (id, sender,msg) => {
 
 export const getBotResponse = (msg) => {
 
-
-  msg = "엔샵 박태순 최고";
-
   return{
     type: GET_BOT_RESPONSE,
     data:{

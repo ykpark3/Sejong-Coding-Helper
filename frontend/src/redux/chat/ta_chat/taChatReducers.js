@@ -9,7 +9,7 @@ import {
 } from './taChatTypes';
 
 const initialState = {
-  num: 4,
+  num: 0,
   roomNum:0,
   chats: [
     // ex

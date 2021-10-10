@@ -10,6 +10,8 @@ import {
 } from '../redux/chat/bot_chat/botChatActions';
 import Root from './Root';
 import '../css/Chatroom.css';
+import axios from 'axios';
+import { API_BASE_URL } from './utils/Constant';
 
 const chatData = ({ chatsData }) => {
   // useEffect(()=>{
@@ -91,8 +93,26 @@ const BotChatRoom = ({ num, chatsData, list, addMsgData, getBotResponse }) => {
     addMsgData(num, 'user', text);
     msgInput.current.value = '';
 
-    getBotResponse(text);
-    //scrollToBottom();
+    axios
+      .post(
+        API_BASE_URL + '/chatbotMessage',
+        {message:text},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+        getBotResponse(res.data);
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
   }
 
   return (

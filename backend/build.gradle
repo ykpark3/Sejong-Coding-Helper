@@ -37,10 +37,7 @@ dependencies {
 
     //web socket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
-
-	//web socket
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
 	//mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'

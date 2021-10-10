@@ -8,28 +8,20 @@ import {
 } from './botChatTypes';
 
 const initialState = {
-  num: 4,
+  num: 0,
   chats: [
-    {
-      id: 1,
-      sender: 'bot',
-      msg: 'hihi',
-    },
-    {
-      id: 2,
-      sender: 'user',
-      msg: 'hihihihihi',
-    },
-    {
-      id: 3,
-      sender: 'bot',
-      msg: '안녕ㅋㅋ',
-    },
-    {
-      id: 4,
-      sender: 'user',
-      msg: '어쩔ㅋㅋ',
-    },
+    
+    //EX
+    // {
+    //   id: 1,
+    //   sender: 'bot',
+    //   msg: 'hihi',
+    // },
+    // {
+    //   id: 2,
+    //   sender: 'user',
+    //   msg: 'hihihihihi',
+    // },
   ],
   list:[
     {
