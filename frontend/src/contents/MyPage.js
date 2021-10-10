@@ -6,13 +6,14 @@ import { connect, useDispatch } from 'react-redux';
 import { changeType } from '../redux/login/loginActions';
 import Root from './Root';
 import { LOGIN_BEFORE, LOGIN_SUCCESS } from '../redux/login/loginTypes';
+import { API_BASE_URL } from './utils/Constant';
 
 const MyPage = ({ history, loginState, changeType }) => {
 
   const logout = () => {
     axios
       .post(
-        'http://localhost:8080/userlogout',
+        API_BASE_URL +'/userlogout',
         {},
         {
           headers: {

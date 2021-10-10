@@ -9,17 +9,20 @@ import {
 } from './taChatTypes';
 
 const initialState = {
-  num: 4,
+  num: 0,
   roomNum:0,
   chats: [
     // ex
     // {
     //   id: 1,
-    //   sender: 'user',
+    //   name : '정상뷰'
+    //   userId: 123,
     //   msg: '질문있습니다. 조교님.',
     // },
     // {
     //   id: 2,
+    //   name : '정상뷰'
+    //   userId: 123,
     //   sender: 'ta',
     //   msg: '넵넵ㅎㅎ',
     // },
@@ -48,7 +51,8 @@ const taChatReducer = (state = initialState, action) => {
         ...state,
         chats: state.chats.concat({
           id: state.num + 1,
-          sender: data.sender,
+          name : data.name,
+          userId: data.userId,
           msg: data.msg,
         }),
         num: state.num + 1,
