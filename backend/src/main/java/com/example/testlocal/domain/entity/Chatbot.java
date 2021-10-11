@@ -33,7 +33,7 @@ public class Chatbot {
     private Timestamp createTime;
 
     @ManyToOne
-    @JoinColumn(name = "chatboot_room_id", nullable = false)
+    @JoinColumn(name = "chatbot_room_id", nullable = false)
     private ChatbotRoom room;
 
     @ManyToOne

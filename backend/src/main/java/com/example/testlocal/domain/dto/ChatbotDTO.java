@@ -15,10 +15,11 @@ public class ChatbotDTO {
     private Timestamp createTime;
     private String message;
 
-    public ChatbotDTO(Long userId, String chatMessage) {
+    public ChatbotDTO(Long userId,Long chatbotRoomId, String chatMessage) {
         this.userId = userId;
         this.createTime = getCreateTime();
         this.message = chatMessage;
+        this.chatbotRoomId = chatbotRoomId;
     }
 
     public Timestamp getCreateTime() {

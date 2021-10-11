@@ -49,10 +49,11 @@ public class ChatbotController {
     //@MessageMapping("/sendMessage") //client -> server & "/app/sendMessage"
     //@SendTo("/topic/public")    //server -> client
 
-    @PostMapping("/chatbotMessage/send/{userId}")
-    public String sendMessage(@RequestBody Map<String, Object> map, @PathVariable Long userId) throws IOException {
+    @PostMapping("/chatbotMessage/send/{roomId}/{userId}")
+    public String sendMessage(@RequestBody Map<String, Object> map,@PathVariable Long roomId, @PathVariable Long userId) throws IOException {
 
         String chatMessage = (String)map.get("message");
+        String sendMessage = chatMessage;
         URL url = new URL(apiUrl);
         String message =  getReqMessage(chatMessage);
         String encodeBase64String = makeSignature(message);
@@ -99,7 +100,8 @@ public class ChatbotController {
                 String description = "";
                 description = (String)data.get("description");
                 chatMessage = description;
-                chatbotService.create(new ChatbotDTO(userId ,chatMessage));
+                chatbotService.create(new ChatbotDTO(userId,roomId, sendMessage));
+                chatbotService.create(new ChatbotDTO(4L ,roomId, chatMessage));
             } catch (Exception e) {
                 e.printStackTrace();
             }
