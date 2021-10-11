@@ -9,6 +9,7 @@ import com.example.testlocal.service.ChatbotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,7 +18,12 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -96,7 +102,6 @@ public class ChatbotController {
             JSONParser jsonParser = new JSONParser();
             //JSONParser jsonParser = new JSONParser(jsonString);
             try {
-
                 JSONObject jsonObject = (JSONObject)jsonParser.parse(jsonString);
 
                 // "bubbles": [ {"type": "text",
@@ -113,6 +118,7 @@ public class ChatbotController {
                 chatbotService.create(new ChatbotDTO(CHATBOT_ID ,roomId, chatMessage));
 
             } catch (Exception e) {
+
                 e.printStackTrace();
             }
 
