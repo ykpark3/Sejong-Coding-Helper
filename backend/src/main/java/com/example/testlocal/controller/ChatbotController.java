@@ -42,6 +42,7 @@ import static com.example.testlocal.config.ApiKey.secretKey;
 public class ChatbotController {
 
     private final ChatbotService chatbotService;
+    private final Long CHATBOT_ID = 4L;
     //private final ApiKey apiKey = ApiKey.getInstance();
 
     private ApiKey apiKey;
@@ -101,7 +102,7 @@ public class ChatbotController {
                 description = (String)data.get("description");
                 chatMessage = description;
                 chatbotService.create(new ChatbotDTO(userId,roomId, sendMessage));
-                chatbotService.create(new ChatbotDTO(4L ,roomId, chatMessage));
+                chatbotService.create(new ChatbotDTO(CHATBOT_ID ,roomId, chatMessage));
             } catch (Exception e) {
                 e.printStackTrace();
             }
