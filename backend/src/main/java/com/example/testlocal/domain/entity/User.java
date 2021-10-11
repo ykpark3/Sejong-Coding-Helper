@@ -1,43 +1,48 @@
 package com.example.testlocal.domain.entity;
 
-import lombok.*;
+import com.example.testlocal.domain.dto.UserDTO2;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
+@Entity(name = "user")
 @Table(name = "user")
-public class UserEntity implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long key;
+    @Column(name = "id", nullable = false)
+    private long id;
 
-    private String id,password,name,studentNumber;
+    @Column(name = "student_number", nullable = false)
+    private String studentNumber;
 
-    @Builder
-    public UserEntity(String studentNumber,String id,String password,String name){
-        this.id = id;
-        this.password = password;
-        this.name = name;
-        this.studentNumber = studentNumber;
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    public User(UserDTO2 userDTO) {
+        this.studentNumber = userDTO.getStudentNumber();
+        this.password = userDTO.getPassword();
+        this.name = userDTO.getName();
+        this.email = userDTO.getEmail();
     }
-
-
-    //
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -46,7 +51,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return id;
+        return studentNumber;
     }
 
     @Override
@@ -68,4 +73,5 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

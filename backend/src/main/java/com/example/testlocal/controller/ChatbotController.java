@@ -1,9 +1,10 @@
 package com.example.testlocal.controller;
 
 import com.example.testlocal.config.ApiKey;
-import com.fasterxml.jackson.annotation.JacksonInject;
+
+import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.hibernate.service.spi.InjectService;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,6 +13,11 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -24,33 +30,32 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+import java.util.Map;
+
+
 import static com.example.testlocal.config.ApiKey.apiUrl;
 import static com.example.testlocal.config.ApiKey.secretKey;
 
-@Controller
+
+@RestController
+@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class ChatbotController {
-
-    public ChatbotController() {
-
-        System.out.println("!!!!! ChatbotController");
-    }
 
     //private final ApiKey apiKey = ApiKey.getInstance();
 
-    @Autowired
     private ApiKey apiKey;
 
-    @MessageMapping("/sendMessage") //client -> server & "/app/sendMessage"
-    @SendTo("/topic/public")    //server -> client
-    public String sendMessage(@Payload String chatMessage) throws IOException {
+    //@MessageMapping("/sendMessage") //client -> server & "/app/sendMessage"
+    //@SendTo("/topic/public")    //server -> client
+    @PostMapping("/chatbotMessage")
+    public String sendMessage(@RequestBody Map<String, Object> map) throws IOException {
 
-        System.out.println("!!!!! sendMessage");
+        String chatMessage = (String)map.get("message");
 
         URL url = new URL(apiUrl);
         String message =  getReqMessage(chatMessage);
         String encodeBase64String = makeSignature(message);
-
-        System.out.println("!!!!! message: "+message);
 
         // api서버 접속
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -66,11 +71,7 @@ public class ChatbotController {
         wr.close();
         int responseCode = con.getResponseCode();
 
-     //   BufferedReader br;
-
         if(responseCode==200) { // 정상 호출
-
-            System.out.println("!!!!! 정상 호출");
 
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
@@ -81,14 +82,10 @@ public class ChatbotController {
                 jsonString = decodedString; //jsonString에 값 받아오기
             }
 
-            System.out.println("!!!!! jsonstring:   "+jsonString);
-
             //받아온 값을 세팅하는 부분
             JSONParser jsonParser = new JSONParser();
             //JSONParser jsonParser = new JSONParser(jsonString);
             try {
-                System.out.println("!!!!! try");
-
                 JSONObject jsonObject = (JSONObject)jsonParser.parse(jsonString);
 
                 // "bubbles": [ {"type": "text",
@@ -102,10 +99,8 @@ public class ChatbotController {
                 description = (String)data.get("description");
                 chatMessage = description;
 
-                System.out.println("!!!!! chatMessage: " + chatMessage);
-
             } catch (Exception e) {
-                System.out.println("!!!!! error");
+
                 e.printStackTrace();
             }
 
@@ -113,8 +108,6 @@ public class ChatbotController {
         }
 
         else {  // 에러 발생
-
-            System.out.println("!!!!! error 22");
             chatMessage = con.getResponseMessage();
         }
         return chatMessage;
@@ -123,9 +116,7 @@ public class ChatbotController {
     //보낼 메세지를 네이버에서 제공해준 암호화로 변경해주는 메소드
     public static String makeSignature(String message) {
 
-        System.out.println("!!!!! makeSignature");
         String signatureHeader = "";
-
 
         // 요청 Signature 헤더
         try {
@@ -135,7 +126,6 @@ public class ChatbotController {
             SecretKeySpec secretKeySpec = new SecretKeySpec(secrete_key_bytes, "HmacSHA256");
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(secretKeySpec);
-
 
             byte[] signature  = mac.doFinal(message.getBytes(StandardCharsets.UTF_8));
            // byte[] signature  = mac.doFinal(message.getBytes("UTF-8"));
@@ -147,7 +137,6 @@ public class ChatbotController {
             return signatureHeader;
 
         } catch (Exception e){
-            System.out.println("!!!!! error ");
             System.out.println(e);
         }
         return signatureHeader;
@@ -157,8 +146,6 @@ public class ChatbotController {
     public static String getReqMessage(String sendMessage) {
 
         String requestBody = "";
-
-        System.out.println("!!!!! getReqMessage");
 
         //sendMessage = "파이썬이 뭐야";
 

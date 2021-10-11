@@ -8,7 +8,6 @@ build/
 #ignore properties file
 application-API-KEY.properties
 
-
 ### STS ###
 .apt_generated
 .classpath

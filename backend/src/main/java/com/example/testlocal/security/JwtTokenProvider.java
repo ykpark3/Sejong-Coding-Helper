@@ -19,16 +19,16 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private String secretKey = "byukbyubyubyukkk";
-    private long tokenValidTime = 30*60*1000L;
+    private long tokenValidTime = 30 * 60 * 1000L;
     private final UserDetailsService userDetailsService;
 
-    protected void init(){
+    protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String userPk, Long time){
+    public String createToken(String userPk, Long time) {
 
-        tokenValidTime = time*60*1000L;
+        tokenValidTime = time * 60 * 1000L;
 
         Claims claims = Jwts.claims().setSubject(userPk);
         Date now = new Date();

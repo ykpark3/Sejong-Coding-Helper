@@ -7,8 +7,11 @@ import {
   addMsgData,
   getBotResponse,
   fetchChatData,
-} from '../redux/chat/chatActions';
+} from '../redux/chat/bot_chat/botChatActions';
+import Root from './Root';
 import '../css/Chatroom.css';
+import axios from 'axios';
+import { API_BASE_URL } from './utils/Constant';
 
 const chatData = ({ chatsData }) => {
   // useEffect(()=>{
@@ -26,10 +29,23 @@ const chatData = ({ chatsData }) => {
   return <>{chatItems}</>;
 };
 
+const listData = ({ list }) => {
+  const listItems = list.map((item) => {
+    return (
+      <li className="nonSelectedRoomLi" key={item.id}>
+        <p>{item.title}</p>
+        <p>{item.des}</p>
+      </li>
+    );
+  });
+
+  return <>{listItems}</>;
+};
+
 function BotChatMsgItem({ msg }) {
   return (
     <li className="botMsg">
-      <img src="img/logo.png"/>
+      <img src="img/logo.png" />
       <div>
         <p>세종 코딩 헬퍼</p>
         <p>{msg}</p>
@@ -49,7 +65,7 @@ function UserChatMsgItem({ msg }) {
   );
 }
 
-const ChatRoom = ({ num, chatsData, addMsgData, getBotResponse }) => {
+const BotChatRoom = ({ num, chatsData, list, addMsgData, getBotResponse }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
 
@@ -58,15 +74,14 @@ const ChatRoom = ({ num, chatsData, addMsgData, getBotResponse }) => {
   });
 
   const scrollToBottom = () => {
-    console.log('h');
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleKeyPress = (e) =>{
-    if (e.key === "Enter") {
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
       sendMsg();
     }
-  }
+  };
 
   function sendMsg() {
     const text = msgInput.current.value;
@@ -78,38 +93,39 @@ const ChatRoom = ({ num, chatsData, addMsgData, getBotResponse }) => {
     addMsgData(num, 'user', text);
     msgInput.current.value = '';
 
-    getBotResponse(text);
-    //scrollToBottom();
+    axios
+      .post(
+        API_BASE_URL + '/chatbotMessage',
+        {message:text},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+        getBotResponse(res.data);
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
   }
 
   return (
     <div style={{ width: '100%' }}>
-      <VerticalHeader/>
-      <HorizontalHeader/>
+      <VerticalHeader />
+      <HorizontalHeader />
 
       <div id="chatRoomBody">
         <div id="emptySpace1" />
 
         <div id="secondHorizontalNav">
           <h3>실시간 키워드 정보</h3>
-          <div>
-            <li>
-              <p>C언어 변수</p>
-              <p>기본적인 변수 선언, 변수 할당</p>
-            </li>
-            <li>
-              <p>관계 연산자</p>
-              <p>관계 연산자의 결과 확인, 변수에 값을 저장하는 대입 연산자.</p>
-            </li>
-            <li>
-              <p>조건문의 종류</p>
-              <p>조건식에 따라 실행하는 명령문의 흐름 제어문</p>
-            </li>
-            <li>
-              <p>오류 코드 printf</p>
-              <p>주로 C코드 출력문에서의 문법 오류</p>
-            </li>
-          </div>
+          <div>{listData({ list })}</div>
         </div>
 
         <div id="mainChatting">
@@ -121,8 +137,14 @@ const ChatRoom = ({ num, chatsData, addMsgData, getBotResponse }) => {
           </div>
 
           <div id="inputForm">
-            <input id="msgInput" ref={msgInput} onKeyPress={handleKeyPress}></input>
-            <button onClick={() => sendMsg()}>전 송</button>
+            <input
+              id="msgInput"
+              ref={msgInput}
+              onKeyPress={handleKeyPress}
+            ></input>
+            <button id="msgBnt" onClick={() => sendMsg()}>
+              전 송
+            </button>
           </div>
         </div>
       </div>
@@ -130,12 +152,13 @@ const ChatRoom = ({ num, chatsData, addMsgData, getBotResponse }) => {
   );
 };
 
-const mapStateToProps = ({ chats }) => {
-  console.log(chats.items);
+const mapStateToProps = ({ botChats }) => {
+  //console.log(botChats.chats);
 
   return {
-    chatsData: chats.items,
-    num: chats.num,
+    chatsData: botChats.chats,
+    list: botChats.list,
+    num: botChats.num,
   };
 };
 
@@ -147,4 +170,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChatRoom);
+export default connect(mapStateToProps, mapDispatchToProps)(BotChatRoom);
