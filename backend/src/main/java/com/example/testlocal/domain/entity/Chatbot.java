@@ -40,10 +40,11 @@ public class Chatbot {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Chatbot(ChatbotDTO requestDTO, ChatbotRoomService roomService, UserService2 userService) {
+    public Chatbot(ChatbotDTO requestDTO, UserService2 userService,ChatbotRoomService roomService) {
         this.message = requestDTO.getMessage();
         this.createTime = requestDTO.getCreateTime();
         this.user = userService.findById(requestDTO.getUserId());
+        this.room = roomService.findById(requestDTO.getChatbotRoomId());
     }
 
 

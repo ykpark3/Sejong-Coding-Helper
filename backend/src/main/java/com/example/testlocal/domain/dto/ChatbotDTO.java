@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class ChatbotDTO {
     private Long userId;
+    private Long chatbotRoomId;
     private Timestamp createTime;
     private String message;
 

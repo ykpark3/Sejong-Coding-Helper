@@ -19,9 +19,10 @@ import java.util.Map;
 public class ChatbotService {
     private final ChatbotRepository repository;
     private final UserService2 userService;
+    private final ChatbotRoomService chatbotRoomService;
 
     public Chatbot create(ChatbotDTO chatbotDTO){
-        Chatbot chat = new Chatbot(chatbotDTO, userService);
+        Chatbot chat = new Chatbot(chatbotDTO, userService, chatbotRoomService);
         return repository.save(chat);
     }
 
