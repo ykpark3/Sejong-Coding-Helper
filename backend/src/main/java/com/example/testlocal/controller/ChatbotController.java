@@ -7,6 +7,7 @@ import com.example.testlocal.domain.entity.Chatbot;
 import com.example.testlocal.service.ChatService;
 import com.example.testlocal.service.ChatbotService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -36,6 +37,7 @@ import static com.example.testlocal.config.ApiKey.apiUrl;
 import static com.example.testlocal.config.ApiKey.secretKey;
 
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -46,6 +48,12 @@ public class ChatbotController {
     //private final ApiKey apiKey = ApiKey.getInstance();
 
     private ApiKey apiKey;
+
+    @PostMapping("/chatbotMessage/userId/{userId}")
+    public List<Chatbot> findAllByUserId(@PathVariable Long userId) {
+        System.out.printf("안녕");
+        return chatbotService.findByUserId(userId);
+    }
 
     //@MessageMapping("/sendMessage") //client -> server & "/app/sendMessage"
     //@SendTo("/topic/public")    //server -> client
@@ -103,6 +111,7 @@ public class ChatbotController {
                 chatMessage = description;
                 chatbotService.create(new ChatbotDTO(userId,roomId, sendMessage));
                 chatbotService.create(new ChatbotDTO(CHATBOT_ID ,roomId, chatMessage));
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -193,9 +202,6 @@ public class ChatbotController {
         return requestBody;
     }
 
-    @PostMapping("/chatbotMessage/get/{userId}")
-    public List<Chatbot> findAllByUserId(@PathVariable Long userId) {
-        return chatbotService.findByUserId(userId);
-    }
+
 
 }
