@@ -1,10 +1,7 @@
 package com.example.testlocal.service;
 
-import com.example.testlocal.domain.dto.AssistantDTO2;
 import com.example.testlocal.domain.dto.UserDTO2;
-import com.example.testlocal.domain.entity.Chat;
 import com.example.testlocal.domain.entity.User;
-import com.example.testlocal.exception.InvalidChatIdException;
 import com.example.testlocal.exception.InvalidUserIdException;
 import com.example.testlocal.repository.UserRepository2;
 import lombok.RequiredArgsConstructor;
