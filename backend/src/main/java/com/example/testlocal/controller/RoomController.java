@@ -44,4 +44,5 @@ public class RoomController {
     public List<Room> findAllRoomByStudentId(@PathVariable String studentId) {
         return roomService.findAllRoomByStudentId(studentId);
     }
+
 }

@@ -2,6 +2,8 @@ package com.example.testlocal.domain.entity;
 
 import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.dto.ChatbotDTO;
+import com.example.testlocal.service.ChatbotRoomService;
+import com.example.testlocal.service.ChatbotService;
 import com.example.testlocal.service.RoomService;
 import com.example.testlocal.service.UserService2;
 import lombok.AllArgsConstructor;
@@ -31,10 +33,14 @@ public class Chatbot {
     private Timestamp createTime;
 
     @ManyToOne
+    @JoinColumn(name = "chatboot_room_id", nullable = false)
+    private ChatbotRoom room;
+
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Chatbot(ChatbotDTO requestDTO, UserService2 userService) {
+    public Chatbot(ChatbotDTO requestDTO, ChatbotRoomService roomService, UserService2 userService) {
         this.message = requestDTO.getMessage();
         this.createTime = requestDTO.getCreateTime();
         this.user = userService.findById(requestDTO.getUserId());
