@@ -19,10 +19,13 @@ public interface UserRepository2 extends JpaRepository< User, Long> {
 
     Optional<User> findById(String id);
 
-    @Query(value = "select name from user where student_number = ?1 union select exists (select * from assistant where user_id = (select id from user where student_number = ?1))as isAssistant", nativeQuery = true)
+    @Query(value = "select name from user where student_number = ?1 " +
+            "union select exists (" +
+            "select * from assistant where user_id = (" +
+            "select id from user where student_number = ?1))as isAssistant", nativeQuery = true)
     List<Map<String, Object>> findIsAssistantByStudentNumber(String studentNumber);
-//@Query(value = "select exists (select * from assistant where user_id = (select id from user where student_number = ?1))as isAssistant", nativeQuery = true)
 
     @Query(value = "select id from user where student_number = ?1", nativeQuery = true)
     int findUserIdByStudentNumber(String studentNumber);
+
 }

@@ -41,7 +41,6 @@ import static com.example.testlocal.config.ApiKey.secretKey;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class ChatbotController {
 
-
     private final ChatbotService chatbotService;
     //private final ApiKey apiKey = ApiKey.getInstance();
 
