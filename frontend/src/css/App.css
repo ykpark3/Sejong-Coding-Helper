@@ -154,7 +154,7 @@ a{
   padding:  5px;
 
   /* 이미지  */
-  image-rendering: -webkit-optimize-contrast;
+  /* image-rendering: -webkit-optimize-contrast; */
   transform: translateZ(0);
   backface-visibility: hidden;
 }

@@ -6,10 +6,27 @@ import {
   LOGIN_BEFORE,
   LOGIN_ORIGIN,
   CHANGE_SIGNUP_AUTH,
+  CHANGE_USER_NAME,
+  CHANGE_USER_ID
 } from './loginTypes';
 import Cookies from 'js-cookie';
 import { refreshLoginToken } from '../../contents/utils/LoginUtils';
 import { API_BASE_URL } from '../../contents/utils/Constant';
+
+export const changeUserId = (userId) => {
+  return {
+    type: CHANGE_USER_ID,
+    data: { userId: userId },
+  };
+};
+
+export const changeUserName = (userName) => {
+  return {
+    type: CHANGE_USER_NAME,
+    data: { userName: userName },
+  };
+};
+
 
 export const changeType = (type) => {
   return {

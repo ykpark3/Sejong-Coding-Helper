@@ -11,6 +11,7 @@ import {
   getBotResponse,
   fetchChatData,
 } from '../redux/chat/ta_chat/taChatActions';
+import { changeUserId, changeUserName } from '../redux/login/loginActions';
 import '../css/Chatroom.css';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
@@ -50,6 +51,8 @@ let stomp = Stomp.over(sockJS);
 
 const TaChatRoom = ({
   loginState,
+  userId,
+  userName,
   num,
   roomNum,
   chatsData,
@@ -57,11 +60,11 @@ const TaChatRoom = ({
   addMsgData,
   addRoomData,
   history,
+  changeUserId,
+  changeUserName
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
-  const [userId, setUserId] = useState('');
-  const [userName, setUserName] = useState('');
   const [isTa, setTa] = useState(false);
   let studentNumber = getCookie('id');
 
@@ -129,8 +132,8 @@ const TaChatRoom = ({
       )
       .then((res) => {
         console.log(res.data);
-        setUserId(res.data.id);
-        setUserName(res.data.name);
+        changeUserId(res.data.id);
+        changeUserName(res.data.name);
 
         if (res.data.isAssistant === '1') {
           setTa(true);
@@ -305,7 +308,7 @@ const TaChatRoom = ({
       <div id="chatRoomBody">
         <div id="emptySpace1" />
 
-        <div id="secondHorizontalNav">
+        <div class="secondHorizontalNav">
           <h3 style={{ color: '#008cff' }}> 채팅방 목록</h3>
           <div>
             <div>{listData()}</div>
@@ -345,6 +348,8 @@ const mapStateToProps = ({ taChats, login }) => {
     num: taChats.num,
     roomNum: taChats.roomNum,
     loginState: login.type,
+    userName : login.userName,
+    userId:login.userId,
   };
 };
 
@@ -356,6 +361,9 @@ const mapDispatchToProps = (dispatch) => {
     addRoomData: (id, roomId, title, des) =>
       dispatch(addRoomData(id, roomId, title, des)),
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
+    changeUserId: (id) => dispatch(changeUserId(id)),
+    changeUserName: (name) => dispatch(changeUserName(name)),
+    
   };
 };
 
