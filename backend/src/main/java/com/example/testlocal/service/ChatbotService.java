@@ -26,7 +26,8 @@ public class ChatbotService {
         return repository.save(chat);
     }
 
-    public List<Chatbot> findByUserId(Long id) {
-        return repository.findAllByUserId(id);
+
+    public List<Chatbot> findByRoomId(Long id) {
+        return repository.findAllByRoomId(id);
     }
 }
