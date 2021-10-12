@@ -15,8 +15,8 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-@CrossOrigin(origins = "http://3.141.167.159" , allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://3.141.167.159" , allowCredentials = "true")
 public class ChatbotRoomController {
 
     private final ChatbotRoomService chatbotRoomService;

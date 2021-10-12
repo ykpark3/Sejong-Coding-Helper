@@ -9,6 +9,8 @@ import {
 
 const initialState = {
   num: 0,
+  cRoomId : -1,
+  pRoomId : -1,
   chats: [
     
     //EX

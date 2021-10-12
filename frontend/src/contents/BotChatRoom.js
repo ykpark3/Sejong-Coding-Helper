@@ -65,13 +65,66 @@ function UserChatMsgItem({ msg }) {
   );
 }
 
+var getCookie = function (name) {
+  var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return value ? value[2] : null;
+};
+
 const BotChatRoom = ({ num, chatsData, list, addMsgData, getBotResponse }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
+  let studentNumber = getCookie('id');
 
   useEffect(() => {
     scrollToBottom();
+    getBotChatRoomList();
   });
+
+  const getBotChatRoomList = () => {
+
+    axios
+      .post(
+        API_BASE_URL + '/chatbotRoom/studentId/' + studentNumber,
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  }
+
+  const getBotChatList = () => {
+    axios
+      .post(
+        API_BASE_URL + '/chatbotRoom/studentId/' + studentNumber,
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+
+  }
 
   const scrollToBottom = () => {
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
