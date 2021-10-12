@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public interface ChatbotRepository extends JpaRepository<Chatbot, Long> {
 
-    @Query(value = "select * from chatbot where user_id = ?1", nativeQuery = true)
-    List<Chatbot> findAllByUserId(Long userId);
+    @Query(value = "select * from chatbot where chatbot_room_id = ?1", nativeQuery = true)
+    List<Chatbot> findAllByRoomId(Long roomId);
 
 
 }

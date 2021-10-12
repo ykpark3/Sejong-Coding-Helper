@@ -49,10 +49,9 @@ public class ChatbotController {
 
     private ApiKey apiKey;
 
-    @PostMapping("/chatbotMessage/userId/{userId}")
-    public List<Chatbot> findAllByUserId(@PathVariable Long userId) {
-        System.out.printf("안녕");
-        return chatbotService.findByUserId(userId);
+    @PostMapping("/chatbotMessage/roomId/{roomId}")
+    public List<Chatbot> findAllByRoomId(@PathVariable Long roomId) {
+        return chatbotService.findByRoomId(roomId);
     }
 
     //@MessageMapping("/sendMessage") //client -> server & "/app/sendMessage"
