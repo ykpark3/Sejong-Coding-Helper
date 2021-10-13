@@ -1,7 +1,9 @@
 package com.example.testlocal.controller;
 
+import com.example.testlocal.domain.dto.ChatbotRoomDTO;
 import com.example.testlocal.domain.dto.UserDTO2;
 
+import com.example.testlocal.service.ChatbotRoomService;
 import com.example.testlocal.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
@@ -30,6 +34,7 @@ public class SignupController {
 
     private final JavaMailSender javaMailSender;
     private final UserService userService;
+    private final ChatbotRoomService chatbotRoomService;
 
     @PostMapping("/sendSejongEmail")
     public void sendSejongEmail(@RequestBody Map<String, String> map, HttpServletRequest request) throws MessagingException {
@@ -82,7 +87,11 @@ public class SignupController {
             return "denied";
         }
         // db에 저장하는 구문
-        userService.signUp(new UserDTO2(map.get("studentNumber"), map.get("pwd"), map.get("name"), map.get("email")));
+        long id = userService.signUp(new UserDTO2(map.get("studentNumber"), map.get("pwd"), map.get("name"), map.get("email")));
+        System.out.println(id);
+        chatbotRoomService.create(new ChatbotRoomDTO(id,4L,"C", "0"));
+        chatbotRoomService.create(new ChatbotRoomDTO(id,4L,"P", "0"));
+
         return "accepted";
     }
 

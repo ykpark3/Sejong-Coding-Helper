@@ -46,10 +46,11 @@ public class UserService {
     }
 
     @Transactional
-    public void signUp(UserDTO2 user) {
+    public Long signUp(UserDTO2 user) {
         // pw를 암호화하는 과정
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository2.save(user.toEntity());
+        long id = userRepository2.save(user.toEntity()).getId();
+        return id;
     }
 
     // id 중복체크

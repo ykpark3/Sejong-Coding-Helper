@@ -99,6 +99,7 @@ const BotChatRoom = ({
   let studentNumber = getCookie('id');
 
   useEffect(() => {
+    clearChatList();
     getUserInfo();
     getBotChatRoomList(); console.log("qwe");
   }, []);
