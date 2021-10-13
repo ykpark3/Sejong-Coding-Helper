@@ -46,7 +46,7 @@ var getCookie = function (name) {
   return value ? value[2] : null;
 };
 
-const sockJS = new SockJS(API_BASE_URL+'/websocket');
+const sockJS = new SockJS('https://www.sju-coding-helper.site:8080'+'/websocket');
 let stomp = Stomp.over(sockJS);
 
 const TaChatRoom = ({
@@ -308,7 +308,7 @@ const TaChatRoom = ({
       <div id="chatRoomBody">
         <div id="emptySpace1" />
 
-        <div class="secondHorizontalNav">
+        <div className="secondHorizontalNav">
           <h3 style={{ color: '#008cff' }}> 채팅방 목록</h3>
           <div>
             <div>{listData()}</div>

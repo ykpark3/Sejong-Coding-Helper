@@ -108,6 +108,13 @@ public class UserService {
                 if (cookie.getName().equals("refreshToken")) {
                     refreshToken = cookie.getValue();
 
+                    String username = jwtTokenProvider.getUserPk(refreshToken);
+
+                    // 리프레쉬 토큰의 유저 id와 쿠키의 id를 비교.
+                   if(!id.equals(username)){
+                        throw new IllegalArgumentException("토큰 오류");
+                    }
+
                     if (jwtTokenProvider.validateToken(refreshToken)) {
                         accessToken = jwtTokenProvider.createToken(id, 60L);
                         refreshToken = jwtTokenProvider.createToken(id, 120L);
