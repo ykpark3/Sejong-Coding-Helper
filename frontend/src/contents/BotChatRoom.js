@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useSelector } from 'react';
+import React, { useEffect, useRef, useSelector, useState } from 'react';
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,9 @@ import {
   addMsgData,
   getBotResponse,
   fetchChatData,
+  changeCRoomId,
+  changePRoomId,
+  clearChatList,
 } from '../redux/chat/bot_chat/botChatActions';
 import Root from './Root';
 import '../css/Chatroom.css';
@@ -80,16 +83,24 @@ const BotChatRoom = ({
   getBotResponse,
   userId,
   userName,
+  pRoomId,
+  cRoomId,
   changeUserName,
   changeUserId,
+  changeCRoomId,
+  changePRoomId,
+  clearChatList,
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
+  const [pBntStyleClass, setPBntStyleClass] = useState('navQuestionBnt');
+  const [cBntStyleClass, setCBntStyleClass] = useState('navQuestionBnt');
+
   let studentNumber = getCookie('id');
 
   useEffect(() => {
     getUserInfo();
-    getBotChatRoomList();
+    getBotChatRoomList(); console.log("qwe");
   }, []);
 
   const getUserInfo = () => {
@@ -106,7 +117,6 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-        console.log(res.data);
         changeUserId(res.data.id);
         changeUserName(res.data.name);
       })
@@ -130,8 +140,42 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-        getBotChatList(res.data[0].id);
-        window.sessionStorage.setItem('bRoomId', res.data[0].id);
+
+        let cRoomId;
+
+        // C와 P 각각에 맞게 룸아이디 대입.
+        if (res.data[0].title === 'C') {
+          cRoomId = res.data[0].id;
+          changeCRoomId(res.data[0].id);
+          changePRoomId(res.data[1].id);
+        } else {
+          cRoomId = res.data[1].id;
+          changeCRoomId(res.data[1].id);
+          changePRoomId(res.data[0].id);
+        }
+
+        // 맨처음 접속일 경우 c언어가 디폴트
+        if (window.sessionStorage.getItem('bRoomId') === null) {
+          window.sessionStorage.setItem('bRoomId', cRoomId);
+        }
+
+        let roomId = window.sessionStorage.getItem('bRoomId');
+        let isCRoom = false;
+
+        // C언어 채팅룸이라면,
+        if(String(cRoomId) === roomId){
+          isCRoom = true;
+        }
+
+        // UI 바꾸기 처리.
+        if(isCRoom){
+          setCBntStyleClass('navQuestionSelectedBnt');
+        } else{
+          setPBntStyleClass('navQuestionSelectedBnt');
+        }
+
+        getBotChatList(roomId);
+
       })
       .catch((res) => {
         console.log(res);
@@ -153,7 +197,6 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-        console.log(res.data);
 
         for (let i = 0; i < res.data.length; i++) {
           let name = 'user';
@@ -228,12 +271,26 @@ const BotChatRoom = ({
         <div className="secondHorizontalNav">
           <h3>질문 설정</h3>
 
-          <button className="navQuestionBnt">
+          <button className={cBntStyleClass}
+            onClick={() => {
+              window.sessionStorage.setItem('bRoomId', cRoomId);
+              clearChatList();
+              getBotChatList(cRoomId);
+              setCBntStyleClass('navQuestionSelectedBnt');
+              setPBntStyleClass('navQuestionBnt');
+            }}>
             <img src="img/c.png" />
             C언어 질문하기
           </button>
 
-          <button className="navQuestionBnt">
+          <button className={pBntStyleClass}
+            onClick={() => {
+              window.sessionStorage.setItem('bRoomId', pRoomId);
+              clearChatList();
+              getBotChatList(pRoomId);
+              setPBntStyleClass('navQuestionSelectedBnt');
+              setCBntStyleClass('navQuestionBnt');
+            }}>
             <img src="img/python.png" />
             파이썬 질문하기
           </button>
@@ -274,6 +331,8 @@ const mapStateToProps = ({ botChats, login }) => {
     num: botChats.num,
     userName: login.userName,
     userId: login.userId,
+    pRoomId: botChats.pRoomId,
+    cRoomId: botChats.cRoomId,
   };
 };
 
@@ -284,6 +343,9 @@ const mapDispatchToProps = (dispatch) => {
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
+    changeCRoomId: (id) => dispatch(changeCRoomId(id)),
+    changePRoomId: (id) => dispatch(changePRoomId(id)),
+    clearChatList: () => dispatch(clearChatList()),
   };
 };
 

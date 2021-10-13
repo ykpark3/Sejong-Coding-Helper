@@ -6,6 +6,9 @@ import {
   FETCH_CHATDATA_FAILURE,
   ADD_BOT_CHATMSG,
   GET_BOT_RESPONSE,
+  CHAGNE_CROOM_ID,
+  CHAGNE_PROOM_ID,
+  CLEAR_CHAT_LIST,
 } from './botChatTypes';
 
 // const fetChatData = () => {
@@ -16,6 +19,26 @@ import {
 //         // .catch(error=>console.log(error))
 //     }
 // }
+
+export const clearChatList = () => {
+  return{
+    type:CLEAR_CHAT_LIST,
+  }
+}
+
+export const changeCRoomId = (id) => {
+  return{
+    type:CHAGNE_CROOM_ID,
+    data:{cRoomId : id}
+  }
+}
+
+export const changePRoomId = (id) => {
+  return{
+    type:CHAGNE_PROOM_ID,
+    data:{pRoomId : id}
+  }
+}
 
 export const fetchChatData = () => {
     return {
