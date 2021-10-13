@@ -61,7 +61,8 @@ public class JwtTokenProvider {
     public boolean validateToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
+            //String username = getUserPk(jwtToken);
+            return (!claims.getBody().getExpiration().before(new Date()));
         } catch (Exception e) {
             return false;
         }
