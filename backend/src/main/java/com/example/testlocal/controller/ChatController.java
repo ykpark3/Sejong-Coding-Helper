@@ -1,5 +1,6 @@
 package com.example.testlocal.controller;
 
+import com.example.testlocal.config.Constants;
 import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.entity.Chat;
 import com.example.testlocal.service.ChatService;
@@ -19,8 +20,8 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-//@CrossOrigin(origins = "http://3.141.167.159" , allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = Constants.URL , allowCredentials = "true")
 public class ChatController {
 
     private final SimpMessagingTemplate template;
