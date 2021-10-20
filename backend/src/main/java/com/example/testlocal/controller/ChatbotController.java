@@ -57,6 +57,12 @@ public class ChatbotController {
 
     private ApiKey apiKey;
 
+    @PostMapping("/chatbotMessage/compiler/gcc")
+    public String sendInGcc() {
+        System.out.printf("hi");
+        return chatbotService.sendGcc();
+    }
+
     @PostMapping("/chatbotMessage/roomId/{roomId}")
     public List<Chatbot> findAllByRoomId(@PathVariable Long roomId) {
         return chatbotService.findByRoomId(roomId);

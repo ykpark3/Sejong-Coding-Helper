@@ -62,7 +62,7 @@ public class ChatController {
         msg.setMessage(roomService.findById(msg.getRoomId()).getTitle() + " 채팅방에 참여하였습니다.");
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
-
+//
     @MessageMapping("/chat/message")
     public void message(ChatDTO2 msg){
         chatService.create(msg);
