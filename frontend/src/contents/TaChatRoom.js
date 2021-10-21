@@ -46,7 +46,7 @@ var getCookie = function (name) {
   return value ? value[2] : null;
 };
 
-const sockJS = new SockJS('https://www.sju-coding-helper.site:8080'+'/websocket');
+const sockJS = new SockJS(API_BASE_URL+'/websocket');
 let stomp = Stomp.over(sockJS);
 
 const TaChatRoom = ({
