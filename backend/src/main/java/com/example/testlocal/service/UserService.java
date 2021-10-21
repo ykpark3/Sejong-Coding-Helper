@@ -102,6 +102,12 @@ public class UserService {
         String refreshToken = "";
         System.out.println(cookies);
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (cookies != null && cookies.length > 0) {
 
             for (Cookie cookie : cookies) {

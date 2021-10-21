@@ -25,7 +25,7 @@ function App() {
     <Provider store={store}>
       <div className="App">
         <BrowserRouter>
-          <Route path="/" component={Root} />
+          {/* <Route path="/" component={Root} /> */}
           <LoadingModal/>
 
           <Route path="/" component={Main} exact />

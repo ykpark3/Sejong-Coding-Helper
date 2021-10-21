@@ -11,11 +11,18 @@ import {
   getBotResponse,
   fetchChatData,
 } from '../redux/chat/ta_chat/taChatActions';
-import { changeUserId, changeUserName } from '../redux/login/loginActions';
+import {
+  changeUserId,
+  changeUserName,
+  changeType,
+  onLoginSuccess,
+} from '../redux/login/loginActions';
 import '../css/Chatroom.css';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import { LOGIN_ORIGIN, LOGIN_SUCCESS } from '../redux/login/loginTypes';
+import { LOGIN_ORIGIN, LOGIN_BEFORE } from '../redux/login/loginTypes';
+import { changeLoadingState } from '../redux/view/viewActions';
+import { root2 } from './Root2';
 import Root from './Root';
 
 function BotChatMsgItem({ msg, name }) {
@@ -46,7 +53,7 @@ var getCookie = function (name) {
   return value ? value[2] : null;
 };
 
-const sockJS = new SockJS(API_BASE_URL+'/websocket');
+const sockJS = new SockJS(API_BASE_URL + '/websocket');
 let stomp = Stomp.over(sockJS);
 
 const TaChatRoom = ({
@@ -61,7 +68,11 @@ const TaChatRoom = ({
   addRoomData,
   history,
   changeUserId,
-  changeUserName
+  changeUserName,
+
+  onLoginSuccess,
+  changeType,
+  changeLoadingState,
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
@@ -69,7 +80,16 @@ const TaChatRoom = ({
   let studentNumber = getCookie('id');
 
   useEffect(() => {
-    getIsTa();
+    const auth = async () => {
+
+      const result = await root2(onLoginSuccess,changeType,changeLoadingState);
+      console.log(result + ' three');
+      if (result === 'success') {
+        getIsTa();
+      }
+    };
+
+    auth();
   }, []);
 
   const chatData = () => {
@@ -131,7 +151,6 @@ const TaChatRoom = ({
         },
       )
       .then((res) => {
-        console.log(res.data);
         changeUserId(res.data.id);
         changeUserName(res.data.name);
 
@@ -173,7 +192,6 @@ const TaChatRoom = ({
         }
 
         for (let i = 0; i < res.data.length; i++) {
-
           let otherName;
           if (String(res.data[i].user.studentNumber) === studentNumber) {
             otherName = res.data[i].user2.name;
@@ -184,17 +202,12 @@ const TaChatRoom = ({
           // 접속 계정이 TA일 경우와 아닌 경우 다른 UI를 위해.
           let name;
           if (isTa === '1') {
-            name = otherName + ' 학생'
+            name = otherName + ' 학생';
           } else {
             name = 'TA ' + otherName;
           }
 
-          addRoomData(
-            roomNum,
-            res.data[i].id,
-            res.data[i].title,
-            name
-          );
+          addRoomData(roomNum, res.data[i].id, res.data[i].title, name);
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
         getChatList(window.sessionStorage.getItem('roomId'), studentNumber);
@@ -221,7 +234,6 @@ const TaChatRoom = ({
       )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
-          
           addMsgData(
             num,
             res.data[i].user.name,
@@ -251,12 +263,7 @@ const TaChatRoom = ({
 
           var content = JSON.parse(chat.body);
 
-          addMsgData(
-            num,
-            content.name,
-            content.userId,
-            content.message,
-          );
+          addMsgData(num, content.name, content.userId, content.message);
           scrollToBottom();
         });
       },
@@ -348,8 +355,8 @@ const mapStateToProps = ({ taChats, login }) => {
     num: taChats.num,
     roomNum: taChats.roomNum,
     loginState: login.type,
-    userName : login.userName,
-    userId:login.userId,
+    userName: login.userName,
+    userId: login.userId,
   };
 };
 
@@ -363,7 +370,10 @@ const mapDispatchToProps = (dispatch) => {
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
-    
+
+    changeType: (type) => dispatch(changeType(type)),
+    changeLoadingState: (props) => dispatch(changeLoadingState(props)),
+    onLoginSuccess: (props) => dispatch(onLoginSuccess(props)),
   };
 };
 

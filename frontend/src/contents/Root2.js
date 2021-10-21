@@ -13,11 +13,7 @@ import {
   changeFirstRendering,
 } from '../redux/view/viewActions';
 
-export const root = ({
-  onLoginSuccess,
-  changeType,
-  changeLoadingState,
-}) => {
+export const root2 = (onLoginSuccess, changeType, changeLoadingState) => {
   function loginCallback(type, id) {
     if (type === LOGIN_SUCCESS) {
       onLoginSuccess(LOGIN_SUCCESS, id);
@@ -28,31 +24,22 @@ export const root = ({
     }
   }
 
-  // 새로고침 이후에서만 slient 로그인
-  // if (loginState==LOGIN_ORIGIN) {
-  try {
-    changeLoadingState(true);
-    refreshLoginToken(loginCallback);
-    // changeFirstRendering(false);
-  } catch (e) {
-    console.log(e);
-  }
+  // function yayOrNay() {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(()=>{      resolve("Qwe");},2000);
+  //   });
   // }
 
-  return null;
+  // 새로고침 이후에서만 slient 로그인
+  async function fetchData() {
+    try {
+      changeLoadingState(true);
+      const result = await refreshLoginToken(loginCallback);
+      console.log(result + ' two');
+      return result;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return fetchData();
 };
-
-const mapStateToProps = ({}) => {
-  return {
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    changeType: (type) => dispatch(changeType(type)),
-    changeLoadingState: (props) => dispatch(changeLoadingState(props)),
-    onLoginSuccess: (props) => dispatch(onLoginSuccess(props)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(root);
