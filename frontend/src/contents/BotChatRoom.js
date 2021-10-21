@@ -16,7 +16,10 @@ import '../css/Chatroom.css';
 import axios from 'axios';
 import { API_BASE_URL } from './utils/Constant';
 import { CHATBOT_ID } from './utils/Constant';
-import { changeUserId, changeUserName } from '../redux/login/loginActions';
+import { changeUserId, changeUserName,changeType,onLoginSuccess, } from '../redux/login/loginActions';
+import { root2 } from './Root2';
+import { changeLoadingState } from '../redux/view/viewActions';
+
 
 const chatData = ({ chatsData }) => {
   // useEffect(()=>{
@@ -90,6 +93,10 @@ const BotChatRoom = ({
   changeCRoomId,
   changePRoomId,
   clearChatList,
+
+  onLoginSuccess,
+  changeType,
+  changeLoadingState,
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
@@ -99,9 +106,19 @@ const BotChatRoom = ({
   let studentNumber = getCookie('id');
 
   useEffect(() => {
-    clearChatList();
-    getUserInfo();
-    getBotChatRoomList(); console.log("qwe");
+
+    // 동기로 리프래쉬토큰 검증.
+    const auth = async () => {
+      const result = await root2(onLoginSuccess,changeType,changeLoadingState);
+
+      if (result === 'success') {
+        clearChatList();
+        getUserInfo();
+        getBotChatRoomList();
+      }
+    };
+
+    auth();
   }, []);
 
   const getUserInfo = () => {
@@ -347,6 +364,10 @@ const mapDispatchToProps = (dispatch) => {
     changeCRoomId: (id) => dispatch(changeCRoomId(id)),
     changePRoomId: (id) => dispatch(changePRoomId(id)),
     clearChatList: () => dispatch(clearChatList()),
+
+    changeType: (type) => dispatch(changeType(type)),
+    changeLoadingState: (props) => dispatch(changeLoadingState(props)),
+    onLoginSuccess: (props) => dispatch(onLoginSuccess(props)),
   };
 };
 

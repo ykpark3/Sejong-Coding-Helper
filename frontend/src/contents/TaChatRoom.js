@@ -80,16 +80,18 @@ const TaChatRoom = ({
   let studentNumber = getCookie('id');
 
   useEffect(() => {
-    const auth = async () => {
 
+    // 동기로 리프래쉬토큰 검증.
+    const auth = async () => {
       const result = await root2(onLoginSuccess,changeType,changeLoadingState);
-      console.log(result + ' three');
+      //console.log(result + ' three');
       if (result === 'success') {
         getIsTa();
       }
     };
 
     auth();
+
   }, []);
 
   const chatData = () => {
