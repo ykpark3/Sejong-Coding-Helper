@@ -23,7 +23,6 @@ const loginReducer = (state = initialState, action) => {
         return {
             ...state,
             type:LOGIN_SUCCESS,
-            id:data.id,
         }
     case LOGIN_FAIL:
         return{

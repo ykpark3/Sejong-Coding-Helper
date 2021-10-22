@@ -27,9 +27,9 @@ public class ChatbotRoomController {
         return chatbotRoomService.create(requestDTO);
     }
 
-    @PostMapping("/chatbotRoom/studentId/{studentId}")
-    public List<ChatbotRoom> findAllRoomByStudentId(@PathVariable String studentId) {
-        return chatbotRoomService.findAllRoomByStudentId(studentId);
+    @PostMapping("/chatbotRoom/studentId")
+    public List<ChatbotRoom> findAllRoomByStudentId(@CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken) {
+        return chatbotRoomService.findAllRoomByStudentId(refreshToken);
     }
 
 }

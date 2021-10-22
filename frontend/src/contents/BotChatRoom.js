@@ -124,7 +124,7 @@ const BotChatRoom = ({
   const getUserInfo = () => {
     axios
       .post(
-        API_BASE_URL + '/user/assistant/' + studentNumber,
+        API_BASE_URL + '/user/assistant',
         {},
         {
           headers: {
@@ -147,7 +147,7 @@ const BotChatRoom = ({
   const getBotChatRoomList = () => {
     axios
       .post(
-        API_BASE_URL + '/chatbotRoom/studentId/' + studentNumber,
+        API_BASE_URL + '/chatbotRoom/studentId',
         {},
         {
           headers: {

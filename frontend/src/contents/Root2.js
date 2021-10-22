@@ -8,15 +8,11 @@ import {
   LOGIN_ORIGIN,
 } from '../redux/login/loginTypes';
 import { refreshLoginToken } from './utils/LoginUtils';
-import {
-  changeLoadingState,
-  changeFirstRendering,
-} from '../redux/view/viewActions';
 
 export const root2 = (onLoginSuccess, changeType, changeLoadingState) => {
-  function loginCallback(type, id) {
+  function loginCallback(type) {
     if (type === LOGIN_SUCCESS) {
-      onLoginSuccess(LOGIN_SUCCESS, id);
+      onLoginSuccess(LOGIN_SUCCESS);
       changeLoadingState(false);
     } else if (type === LOGIN_BEFORE) {
       changeType(LOGIN_BEFORE);

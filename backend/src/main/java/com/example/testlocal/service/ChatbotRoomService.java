@@ -10,6 +10,7 @@ import com.example.testlocal.exception.InvalidUserIdException;
 import com.example.testlocal.repository.ChatbotRepository;
 import com.example.testlocal.repository.ChatbotRoomRepository;
 import com.example.testlocal.repository.RoomRepository;
+import com.example.testlocal.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,15 @@ public class ChatbotRoomService {
 
     private final ChatbotRoomRepository repository;
     private final UserService2 userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public ChatbotRoom create(ChatbotRoomDTO roomDTO){
         ChatbotRoom room = new ChatbotRoom(roomDTO, userService);
         return repository.save(room);
     }
 
-    public List<ChatbotRoom> findAllRoomByStudentId(String studentId){
+    public List<ChatbotRoom> findAllRoomByStudentId(String refreshToken){
+        String studentId = jwtTokenProvider.getUserPk(refreshToken);
         return repository.findAllRoomByStudentId(studentId);
     }
 

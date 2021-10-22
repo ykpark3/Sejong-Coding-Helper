@@ -4,6 +4,7 @@ import com.example.testlocal.domain.dto.UserDTO2;
 import com.example.testlocal.domain.entity.User;
 import com.example.testlocal.exception.InvalidUserIdException;
 import com.example.testlocal.repository.UserRepository2;
+import com.example.testlocal.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class UserService2 {
 
     private final UserRepository2 userRepository2;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public User create(UserDTO2 requestDTO){
         User user = new User(requestDTO);
@@ -44,12 +46,13 @@ public class UserService2 {
         return userRepository2.findById(id).orElseThrow(() -> new InvalidUserIdException());
     }
 
-    public Map<String, Object> findByAssistant(String studentNumber){
-
+    public Map<String, Object> findByAssistant(String refreshToken){
+        String studentNumber = jwtTokenProvider.getUserPk(refreshToken);
         List<Map<String, Object>> assistantDTO2 = userRepository2.findIsAssistantByStudentNumber(studentNumber);
         Map<String, Object> map = new HashMap<>();
         map.put("name", assistantDTO2.get(0).get("name"));
         map.put("isAssistant", assistantDTO2.get(1).get("name"));
+        map.put("studentNumber",studentNumber);
         map.put("id", findUserIdByStudentNumber(studentNumber));
         return map;
     }

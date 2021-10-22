@@ -48,11 +48,6 @@ function UserChatMsgItem({ msg, name }) {
   );
 }
 
-var getCookie = function (name) {
-  var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-  return value ? value[2] : null;
-};
-
 //const sockJS = new SockJS(API_BASE_URL + '/websocket');
 //const stomp = Stomp.over(sockJS);
 const stomp = Stomp.over(() => new SockJS(API_BASE_URL + '/websocket'));
@@ -78,7 +73,6 @@ const TaChatRoom = ({
   const msgInput = useRef();
   const scrollRef = useRef();
   const [isTa, setTa] = useState(false);
-  let studentNumber = getCookie('id');
 
   useEffect(() => {
     // 동기로 리프래쉬토큰 검증.
@@ -145,7 +139,7 @@ const TaChatRoom = ({
   const getIsTa = () => {
     axios
       .post(
-        API_BASE_URL + '/user/assistant/' + studentNumber,
+        API_BASE_URL + '/user/assistant',
         {},
         {
           headers: {
@@ -163,7 +157,7 @@ const TaChatRoom = ({
           setTa(true);
         }
 
-        getChatRoomList(res.data.isAssistant);
+        getChatRoomList(res.data.isAssistant, res.data.studentNumber);
       })
       .catch((res) => {
         console.log(res);
@@ -171,10 +165,10 @@ const TaChatRoom = ({
       });
   };
 
-  const getChatRoomList = (isTa) => {
+  const getChatRoomList = (isTa, studentNumber) => {
     axios
       .post(
-        API_BASE_URL + '/room/studentId/' + studentNumber,
+        API_BASE_URL + '/room/studentId',
         {},
         {
           headers: {
@@ -261,11 +255,6 @@ const TaChatRoom = ({
         stomp.subscribe('/sub/chat/room/' + roomId, (chat) => {
           console.log('msg arrived');
 
-          if (studentNumber === null) {
-            history.push('/');
-            return;
-          }
-
           var content = JSON.parse(chat.body);
 
           addMsgData(num, content.name, content.userId, content.message);
@@ -290,11 +279,6 @@ const TaChatRoom = ({
     const text = msgInput.current.value;
 
     if (text === '') {
-      return;
-    }
-
-    if (studentNumber === null) {
-      history.push('/');
       return;
     }
 
