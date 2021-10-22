@@ -58,7 +58,7 @@ export const refreshLoginToken = async function (callback) {
         //console.log('login request end');
       });
 
-      console.log(result) + ' one';
+     //console.log(result) + ' one';
       return result;
 
   } catch (e) {

@@ -35,7 +35,7 @@ export const root2 = (onLoginSuccess, changeType, changeLoadingState) => {
     try {
       changeLoadingState(true);
       const result = await refreshLoginToken(loginCallback);
-      console.log(result + ' two');
+      //console.log(result + ' two');
       return result;
     } catch (e) {
       console.log(e);

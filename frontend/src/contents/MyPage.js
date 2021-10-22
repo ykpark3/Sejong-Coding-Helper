@@ -62,7 +62,6 @@ const MyPage = ({
     <div>
       <VerticalHeader />
       {/* <HorizontalHeader /> */}
-      <Root />
       myPage입니다 ㅅㄱmyPage입니다 ㅅㄱmyPage입니다 ㅅㄱ
       <button style={{ zIndex: '999' }} onClick={() => logout()}>
         로그 아웃

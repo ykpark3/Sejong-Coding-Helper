@@ -53,8 +53,9 @@ var getCookie = function (name) {
   return value ? value[2] : null;
 };
 
-const sockJS = new SockJS(API_BASE_URL + '/websocket');
-let stomp = Stomp.over(sockJS);
+//const sockJS = new SockJS(API_BASE_URL + '/websocket');
+//const stomp = Stomp.over(sockJS);
+const stomp = Stomp.over(() => new SockJS(API_BASE_URL + '/websocket'));
 
 const TaChatRoom = ({
   loginState,
@@ -80,10 +81,13 @@ const TaChatRoom = ({
   let studentNumber = getCookie('id');
 
   useEffect(() => {
-
     // 동기로 리프래쉬토큰 검증.
     const auth = async () => {
-      const result = await root2(onLoginSuccess,changeType,changeLoadingState);
+      const result = await root2(
+        onLoginSuccess,
+        changeType,
+        changeLoadingState,
+      );
       //console.log(result + ' three');
       if (result === 'success') {
         getIsTa();
@@ -91,7 +95,6 @@ const TaChatRoom = ({
     };
 
     auth();
-
   }, []);
 
   const chatData = () => {
@@ -274,7 +277,7 @@ const TaChatRoom = ({
   };
 
   const scrollToBottom = () => {
-    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    scrollRef.current.scrollIntoView({ behavior: 'auto' });
   };
 
   const handleKeyPress = (e) => {
