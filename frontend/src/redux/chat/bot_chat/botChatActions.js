@@ -9,6 +9,7 @@ import {
   CHAGNE_CROOM_ID,
   CHAGNE_PROOM_ID,
   CLEAR_CHAT_LIST,
+  CHAGNE_NOW_BOTROOM_ID,
 } from './botChatTypes';
 
 // const fetChatData = () => {
@@ -23,6 +24,13 @@ import {
 export const clearChatList = () => {
   return{
     type:CLEAR_CHAT_LIST,
+  }
+}
+
+export const changeNowBotRoomId = (nowRoomId) => {
+  return{
+    type:  CHAGNE_NOW_BOTROOM_ID,
+    data:{nowRoomId : nowRoomId}
   }
 }
 

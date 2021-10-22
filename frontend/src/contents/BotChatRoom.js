@@ -9,6 +9,7 @@ import {
   fetchChatData,
   changeCRoomId,
   changePRoomId,
+  changeNowBotRoomId,
   clearChatList,
 } from '../redux/chat/bot_chat/botChatActions';
 import Root from './Root';
@@ -16,15 +17,16 @@ import '../css/Chatroom.css';
 import axios from 'axios';
 import { API_BASE_URL } from './utils/Constant';
 import { CHATBOT_ID } from './utils/Constant';
-import { changeUserId, changeUserName,changeType,onLoginSuccess, } from '../redux/login/loginActions';
+import {
+  changeUserId,
+  changeUserName,
+  changeType,
+  onLoginSuccess,
+} from '../redux/login/loginActions';
 import { root2 } from './Root2';
 import { changeLoadingState } from '../redux/view/viewActions';
 
-
 const chatData = ({ chatsData }) => {
-  // useEffect(()=>{
-  //   fetChatData()
-  // }, [])
 
   const chatItems = chatsData.map((chat) => {
     if (chat.sender === 'bot') {
@@ -73,11 +75,6 @@ function UserChatMsgItem({ msg }) {
   );
 }
 
-var getCookie = function (name) {
-  var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-  return value ? value[2] : null;
-};
-
 const BotChatRoom = ({
   num,
   chatsData,
@@ -86,12 +83,14 @@ const BotChatRoom = ({
   getBotResponse,
   userId,
   userName,
+  nowRoomId,
   pRoomId,
   cRoomId,
   changeUserName,
   changeUserId,
   changeCRoomId,
   changePRoomId,
+  changeNowBotRoomId,
   clearChatList,
 
   onLoginSuccess,
@@ -103,13 +102,14 @@ const BotChatRoom = ({
   const [pBntStyleClass, setPBntStyleClass] = useState('navQuestionBnt');
   const [cBntStyleClass, setCBntStyleClass] = useState('navQuestionBnt');
 
-  let studentNumber = getCookie('id');
-
   useEffect(() => {
-
     // 동기로 리프래쉬토큰 검증.
     const auth = async () => {
-      const result = await root2(onLoginSuccess,changeType,changeLoadingState);
+      const result = await root2(
+        onLoginSuccess,
+        changeType,
+        changeLoadingState,
+      );
 
       if (result === 'success') {
         clearChatList();
@@ -158,7 +158,6 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-
         let cRoomId;
 
         // C와 P 각각에 맞게 룸아이디 대입.
@@ -172,28 +171,23 @@ const BotChatRoom = ({
           changePRoomId(res.data[0].id);
         }
 
-        // 맨처음 접속일 경우 c언어가 디폴트
-        if (window.sessionStorage.getItem('bRoomId') === null) {
-          window.sessionStorage.setItem('bRoomId', cRoomId);
-        }
+        getRoomIdSession().then((roomId) => {
+          let isCRoom = false;
 
-        let roomId = window.sessionStorage.getItem('bRoomId');
-        let isCRoom = false;
+          // C언어 채팅룸이라면,
+          if (String(cRoomId) === String(roomId)) {
+            isCRoom = true;
+          }
 
-        // C언어 채팅룸이라면,
-        if(String(cRoomId) === roomId){
-          isCRoom = true;
-        }
+          // UI 바꾸기 처리.
+          if (isCRoom) {
+            setCBntStyleClass('navQuestionSelectedBnt');
+          } else {
+            setPBntStyleClass('navQuestionSelectedBnt');
+          }
 
-        // UI 바꾸기 처리.
-        if(isCRoom){
-          setCBntStyleClass('navQuestionSelectedBnt');
-        } else{
-          setPBntStyleClass('navQuestionSelectedBnt');
-        }
-
-        getBotChatList(roomId);
-
+          getBotChatList(roomId);
+        });
       })
       .catch((res) => {
         console.log(res);
@@ -215,7 +209,6 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-
         for (let i = 0; i < res.data.length; i++) {
           let name = 'user';
 
@@ -228,6 +221,47 @@ const BotChatRoom = ({
 
         scrollToBottom();
       })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  };
+
+  const getRoomIdSession = async function () {
+    let roomId = await axios
+      .post(
+        API_BASE_URL + '/chatbotRoom/roomSessionId',
+        {},
+        {
+          headers: {
+            'Content-Type': `application/json`,
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        changeNowBotRoomId(res.data);
+        return res.data;
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+    return roomId;
+  };
+
+  const setRoomIdSession = async function (roomId) {
+    await axios
+      .post(
+        API_BASE_URL + '/chatbotRoom/roomSessionId/' + roomId,
+        {},
+        {
+          headers: {
+            'Content-Type': `application/json`,
+          },
+          withCredentials: true,
+        },
+      )
       .catch((res) => {
         console.log(res);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
@@ -251,14 +285,12 @@ const BotChatRoom = ({
       return;
     }
 
-    let bRoomId = window.sessionStorage.getItem('bRoomId');
-
     addMsgData(num, 'user', text);
     msgInput.current.value = '';
 
     axios
       .post(
-        API_BASE_URL + '/chatbotMessage/send/' + bRoomId + '/' + userId,
+        API_BASE_URL + '/chatbotMessage/send/' + nowRoomId + '/' + userId,
         { message: text },
         {
           headers: {
@@ -289,26 +321,32 @@ const BotChatRoom = ({
         <div className="secondHorizontalNav">
           <h3>질문 설정</h3>
 
-          <button className={cBntStyleClass}
+          <button
+            className={cBntStyleClass}
             onClick={() => {
-              window.sessionStorage.setItem('bRoomId', cRoomId);
+              setRoomIdSession(cRoomId);
+              changeNowBotRoomId(cRoomId);
               clearChatList();
               getBotChatList(cRoomId);
               setCBntStyleClass('navQuestionSelectedBnt');
               setPBntStyleClass('navQuestionBnt');
-            }}>
+            }}
+          >
             <img src="img/c.png" />
             C언어 질문하기
           </button>
 
-          <button className={pBntStyleClass}
+          <button
+            className={pBntStyleClass}
             onClick={() => {
-              window.sessionStorage.setItem('bRoomId', pRoomId);
+              setRoomIdSession(pRoomId);
+              changeNowBotRoomId(pRoomId);
               clearChatList();
               getBotChatList(pRoomId);
               setPBntStyleClass('navQuestionSelectedBnt');
               setCBntStyleClass('navQuestionBnt');
-            }}>
+            }}
+          >
             <img src="img/python.png" />
             파이썬 질문하기
           </button>
@@ -349,6 +387,7 @@ const mapStateToProps = ({ botChats, login }) => {
     num: botChats.num,
     userName: login.userName,
     userId: login.userId,
+    nowRoomId: botChats.nowRoomId,
     pRoomId: botChats.pRoomId,
     cRoomId: botChats.cRoomId,
   };
@@ -363,6 +402,7 @@ const mapDispatchToProps = (dispatch) => {
     changeUserName: (name) => dispatch(changeUserName(name)),
     changeCRoomId: (id) => dispatch(changeCRoomId(id)),
     changePRoomId: (id) => dispatch(changePRoomId(id)),
+    changeNowBotRoomId: (id) => dispatch(changeNowBotRoomId(id)),
     clearChatList: () => dispatch(clearChatList()),
 
     changeType: (type) => dispatch(changeType(type)),

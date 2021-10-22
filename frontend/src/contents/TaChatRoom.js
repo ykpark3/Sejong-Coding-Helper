@@ -10,6 +10,7 @@ import {
   addRoomData,
   getBotResponse,
   fetchChatData,
+  changeNowRoomId,
 } from '../redux/chat/ta_chat/taChatActions';
 import {
   changeUserId,
@@ -58,6 +59,7 @@ const TaChatRoom = ({
   userName,
   num,
   roomNum,
+  nowRoomId,
   chatsData,
   list,
   addMsgData,
@@ -65,6 +67,7 @@ const TaChatRoom = ({
   history,
   changeUserId,
   changeUserName,
+  changeNowRoomId,
 
   onLoginSuccess,
   changeType,
@@ -112,10 +115,7 @@ const TaChatRoom = ({
     const listItems = list.map((item) => {
       let st = 'nonSelectedRoomLi';
 
-      if (
-        window.sessionStorage.getItem('roomId') ===
-        String(list[item.id - 1].roomId)
-      ) {
+      if (String(nowRoomId) === String(list[item.id - 1].roomId)) {
         st = 'selectedRoomLi';
       }
       return (
@@ -123,7 +123,7 @@ const TaChatRoom = ({
           className={st}
           key={item.id}
           onClick={() => {
-            window.sessionStorage.setItem('roomId', list[item.id - 1].roomId);
+            setRoomIdSession(list[item.id - 1].roomId);
             window.location.replace('/tachatroom');
           }}
         >
@@ -184,12 +184,6 @@ const TaChatRoom = ({
           return;
         }
 
-        let firstRoomId = res.data[0].id;
-
-        if (window.sessionStorage.getItem('roomId') === null) {
-          window.sessionStorage.setItem('roomId', firstRoomId);
-        }
-
         for (let i = 0; i < res.data.length; i++) {
           let otherName;
           if (String(res.data[i].user.studentNumber) === studentNumber) {
@@ -209,8 +203,11 @@ const TaChatRoom = ({
           addRoomData(roomNum, res.data[i].id, res.data[i].title, name);
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
-        getChatList(window.sessionStorage.getItem('roomId'), studentNumber);
-        connectStomp(window.sessionStorage.getItem('roomId'));
+
+        getRoomIdSession().then((nowRoomId) => {
+          getChatList(nowRoomId, studentNumber);
+          connectStomp(nowRoomId);
+        });
       })
       .catch((res) => {
         console.log(res);
@@ -265,6 +262,47 @@ const TaChatRoom = ({
     );
   };
 
+  const getRoomIdSession = async function () {
+    let roomId = await axios
+      .post(
+        API_BASE_URL + '/room/roomSessionId',
+        {},
+        {
+          headers: {
+            'Content-Type': `application/json`,
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        changeNowRoomId(res.data);
+        return res.data;
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+    return roomId;
+  };
+
+  const setRoomIdSession = async function (roomId) {
+    await axios
+      .post(
+        API_BASE_URL + '/room/roomSessionId/' + roomId,
+        {},
+        {
+          headers: {
+            'Content-Type': `application/json`,
+          },
+          withCredentials: true,
+        },
+      )
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  };
+
   const scrollToBottom = () => {
     scrollRef.current.scrollIntoView({ behavior: 'auto' });
   };
@@ -281,12 +319,12 @@ const TaChatRoom = ({
     if (text === '') {
       return;
     }
-
+    console.log(nowRoomId);
     stomp.send(
       '/pub/chat/message',
       {},
       JSON.stringify({
-        roomId: window.sessionStorage.getItem('roomId'),
+        roomId: nowRoomId,
         name: userName,
         userId: userId,
         message: text,
@@ -343,6 +381,7 @@ const mapStateToProps = ({ taChats, login }) => {
     list: taChats.list,
     num: taChats.num,
     roomNum: taChats.roomNum,
+    nowRoomId: taChats.nowRoomId,
     loginState: login.type,
     userName: login.userName,
     userId: login.userId,
@@ -359,6 +398,7 @@ const mapDispatchToProps = (dispatch) => {
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
+    changeNowRoomId: (nowRoomId) => dispatch(changeNowRoomId(nowRoomId)),
 
     changeType: (type) => dispatch(changeType(type)),
     changeLoadingState: (props) => dispatch(changeLoadingState(props)),

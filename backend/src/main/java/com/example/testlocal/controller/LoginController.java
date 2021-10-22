@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -125,7 +126,7 @@ public class LoginController {
     }
 
     @PostMapping("/userlogout")
-    public String logout(HttpServletResponse response) {
+    public String logout(HttpServletResponse response,HttpServletRequest request) {
         System.out.println("qwe");
 
         Cookie cookie = new Cookie("refreshToken", null);
@@ -133,6 +134,10 @@ public class LoginController {
         cookie.setPath("/"); // 모든 경로에서 삭제 됬음을 알린다.
 
         response.addCookie(cookie);
+
+        // 세션 삭제
+        HttpSession session = request.getSession();
+        session.invalidate(); // 세션 삭제
 
         return "logout";
     }
