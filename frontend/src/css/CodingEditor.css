@@ -1,0 +1,69 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #f6f6f6;
+}
+
+@font-face {
+  font-family: 'nanumRR';
+  src: url('../fonts/NanumSquareRoundR.ttf');
+}
+
+@font-face {
+  font-family: 'nanumRB';
+  src: url('../fonts/NanumSquareRoundEB.ttf');
+}
+
+@font-face {
+  font-family: 'nanumB';
+  src: url('../fonts/NanumSquareB.ttf');
+}
+
+@font-face {
+  font-family: 'nanumR';
+  src: url('../fonts/NanumSquareR.ttf');
+}
+
+#editorContainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+#editorBox{
+    width: 50vw;
+    /* height: 100vh; */
+    position: relative;
+    top: 0px;
+    padding: 0px 20px 0px 30px;
+    background-color: white;
+    margin: 0 0px 0px 80px;
+    overflow: auto;
+}
+
+#outputBox{
+    width: 50vw;    
+    height: 100vh;
+    background-color: blue;
+}
+
+.codingEditor{
+    height: 90vh;
+}
+
+#editorBox h1 {
+    font-family: 'nanumB';
+    padding-left: 25px;
+    padding-top: 30px;
+    font-size: 20px;
+    color: #990000;
+  }
+
+

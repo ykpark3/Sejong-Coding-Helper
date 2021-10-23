@@ -35,9 +35,9 @@ function App() {
           <UserRoute path="/myPage"  component={MyPage} exact/>
 
           <Route path="/signup" component={Signup} />
-          {/* <SignupRoute path="/signupDetails" component={SignupDetails}/> */}
-          <Route path="/signupDetails" component={SignupDetails}/>
-          <Route path="/signupComplete" component={SignupComplete}/> 
+          <SignupRoute path="/signupDetails" component={SignupDetails}/>
+          {/* <Route path="/signupDetails" component={SignupDetails}/> */}
+          <SignupRoute path="/signupComplete" component={SignupComplete}/> 
 
           <Route path="/login" component={Login} />
           <Route path="/curri" component={Curriculum} />
