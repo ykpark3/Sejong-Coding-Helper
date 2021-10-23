@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,9 +58,10 @@ public class LoginController {
     }
 
 
-    @PostMapping("/user/assistant/{studentNumber}")
-    public Map<String, Object> findIsAssistantByStudentNumber(@RequestBody Map<String, Object> map, @PathVariable String studentNumber) {
-        map = userService2.findByAssistant(studentNumber);
+    @PostMapping("/user/assistant")
+    public Map<String, Object> findIsAssistantByStudentNumber(@CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken) {
+
+        Map<String, Object> map = userService2.findByAssistant(refreshToken);
         return map;
     }
 
@@ -86,13 +88,7 @@ public class LoginController {
         refreshCookie.setSecure(false);
         refreshCookie.setHttpOnly(true);
 
-        Cookie idCookie = new Cookie("id", map.get("id"));
-        idCookie.setMaxAge(30 * 24 * 60 * 60);   //30일
-        idCookie.setPath("/");
-        idCookie.setSecure(false);
-
         response.addCookie(refreshCookie);
-        response.addCookie(idCookie);
 
         // 싸인업
 //        userService.signUp(new UserDto(map.get("studentId"),map.get("id"),map.get("pwd"),map.get("name")));
@@ -102,7 +98,8 @@ public class LoginController {
     }
 
     @PostMapping("/refreshLoginToken")
-    public String refreshLoginToken(@RequestBody Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
+    public String refreshLoginToken( @CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken,
+                                    HttpServletResponse response) {
 
 //        try {
 //            Thread.sleep(3000);
@@ -111,9 +108,11 @@ public class LoginController {
 //        }
 
         String accessToken = "";
-        String refreshToken = "";
 
-        Map<String, String> resultMap = userService.refreshToken(map.get("id"), request.getCookies());
+        if(refreshToken.equals("-1"))
+            throw new IllegalArgumentException("토큰 오류");
+
+        Map<String, String> resultMap = userService.refreshToken(refreshToken);
         accessToken = resultMap.get("accessToken");
         refreshToken = resultMap.get("refreshToken");
 
@@ -128,20 +127,18 @@ public class LoginController {
     }
 
     @PostMapping("/userlogout")
-    public String logout(HttpServletResponse response) {
+    public String logout(HttpServletResponse response,HttpServletRequest request) {
         System.out.println("qwe");
 
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
         cookie.setPath("/"); // 모든 경로에서 삭제 됬음을 알린다.
 
-
-        Cookie cookie2 = new Cookie("id", null);
-        cookie2.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
-        cookie2.setPath("/"); // 모든 경로에서 삭제 됬음을 알린다.
-
         response.addCookie(cookie);
-        response.addCookie(cookie2);
+
+        // 세션 삭제
+        HttpSession session = request.getSession();
+        session.invalidate(); // 세션 삭제
 
         return "logout";
     }

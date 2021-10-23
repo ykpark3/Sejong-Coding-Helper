@@ -22,7 +22,6 @@ public class AssistantController {
 
     final private AssistantService assistantService;
 
-
     // 유저 조회
     @GetMapping("/assistant")
     public List<Assistant> all() {

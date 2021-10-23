@@ -4,6 +4,7 @@ import com.example.testlocal.domain.dto.RoomDTO;
 import com.example.testlocal.domain.entity.Room;
 import com.example.testlocal.exception.InvalidRoomIdException;
 import com.example.testlocal.repository.RoomRepository;
+import com.example.testlocal.security.JwtTokenProvider;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.List;
 public class RoomService {
     private final RoomRepository repository;
     private final UserService2 userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public Room create(RoomDTO roomDTO){
         Room room = new Room(roomDTO, userService);
@@ -29,7 +31,8 @@ public class RoomService {
         return repository.findById(id).orElseThrow(()-> new InvalidRoomIdException());
     }
 
-    public List<Room> findAllRoomByStudentId(String studentId){
+    public List<Room> findAllRoomByStudentId(String refreshToken){
+        String studentId = jwtTokenProvider.getUserPk(refreshToken);
         return repository.findAllRoomByStudentId(studentId);
     }
 

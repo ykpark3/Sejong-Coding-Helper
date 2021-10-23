@@ -6,11 +6,13 @@ import {
   ADD_TA_CHATMSG,
   ADD_TA_CHATROOM,
   GET_TA_RESPONSE,
+  CHANGE_NOW_TA_CHATROOM
 } from './taChatTypes';
 
 const initialState = {
   num: 0,
   roomNum:0,
+  nowRoomId:-1,
   chats: [
     // ex
     // {
@@ -57,6 +59,12 @@ const taChatReducer = (state = initialState, action) => {
         }),
         num: state.num + 1,
       };
+      
+      case CHANGE_NOW_TA_CHATROOM:
+        return{
+          ...state,
+          nowRoomId:data.nowRoomId,
+        }
 
     case ADD_TA_CHATROOM:
       return{

@@ -116,6 +116,7 @@ a{
 .verNavItemClicked{
   padding-bottom: 0.5px;
   background-color:#008cff;
+  cursor: pointer;
 }
 
 .verNavItem:hover{

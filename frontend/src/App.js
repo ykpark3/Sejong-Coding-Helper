@@ -25,7 +25,7 @@ function App() {
     <Provider store={store}>
       <div className="App">
         <BrowserRouter>
-          <Route path="/" component={Root} />
+          {/* <Route path="/" component={Root} /> */}
           <LoadingModal/>
 
           <Route path="/" component={Main} exact />
@@ -35,9 +35,9 @@ function App() {
           <UserRoute path="/myPage"  component={MyPage} exact/>
 
           <Route path="/signup" component={Signup} />
-          {/* <SignupRoute path="/signupDetails" component={SignupDetails}/> */}
-          <Route path="/signupDetails" component={SignupDetails}/>
-          <Route path="/signupComplete" component={SignupComplete}/> 
+          <SignupRoute path="/signupDetails" component={SignupDetails}/>
+          {/* <Route path="/signupDetails" component={SignupDetails}/> */}
+          <SignupRoute path="/signupComplete" component={SignupComplete}/> 
 
           <Route path="/login" component={Login} />
           <Route path="/curri" component={Curriculum} />

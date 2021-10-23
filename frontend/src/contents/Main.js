@@ -10,7 +10,6 @@ const Main = () => {
     <div id="mainBg">
       <VerticalHeader />
       <HorizontalHeader />
-      <Root/>
 
       <div id="mainBody">
         <h1 id="mainBanner2">SJ CODING HELPER</h1>

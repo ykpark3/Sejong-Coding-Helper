@@ -84,6 +84,7 @@ body {
   border-radius: 10px;
   padding: 12px;
   list-style: none;
+  cursor: pointer;
 }
 
 .secondHorizontalNav div .selectedRoomLi {
@@ -95,6 +96,7 @@ body {
   border-radius: 10px;
   padding: 10px;
   list-style: none;
+  cursor: pointer;
 }
 
 .secondHorizontalNav div li:hover {
@@ -126,6 +128,7 @@ body {
   justify-content: center;
   text-align: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .secondHorizontalNav .navQuestionBnt:hover {
@@ -146,6 +149,7 @@ body {
   justify-content: center;
   text-align: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .secondHorizontalNav .navQuestionBnt img {

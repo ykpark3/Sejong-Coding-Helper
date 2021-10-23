@@ -41,10 +41,9 @@ export const changeSignupAuth = (props) => {
   };
 };
 
-export const onLoginSuccess = (id) => {
+export const onLoginSuccess = () => {
   return {
     type: LOGIN_SUCCESS,
-    data: { id: id },
   };
 };
 

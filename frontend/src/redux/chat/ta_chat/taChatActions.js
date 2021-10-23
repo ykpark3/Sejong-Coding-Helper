@@ -7,6 +7,7 @@ import {
   ADD_TA_CHATMSG,
   ADD_TA_CHATROOM,
   GET_TA_RESPONSE,
+  CHANGE_NOW_TA_CHATROOM,
 } from './taChatTypes';
 
 // const fetChatData = () => {
@@ -22,6 +23,13 @@ export const fetchChatData = () => {
     return {
         type: FETCH_CHATDATA_SUCCESS,
     };
+}
+
+export const changeNowRoomId = (nowRoomId) => {
+  return{
+    type: CHANGE_NOW_TA_CHATROOM,
+    data:{nowRoomId:nowRoomId}
+  };
 }
 
 export const addMsgData = (id,name,userId,msg) => {

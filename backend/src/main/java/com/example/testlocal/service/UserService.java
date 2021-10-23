@@ -23,17 +23,17 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository2 userRepository2;
 
-    public User create(UserDTO2 requestDTO){
+    public User create(UserDTO2 requestDTO) {
         User user = new User(requestDTO);
         return userRepository2.save(user);
     }
 
     // 전체 유저 읽기
-    public List<User> read(){
+    public List<User> read() {
         return userRepository2.findAll();
     }
 
-    public Optional<User> readOne(Long id){
+    public Optional<User> readOne(Long id) {
         return userRepository2.findById(id);
     }
 
@@ -97,25 +97,16 @@ public class UserService {
 
     }
 
-    public Map<String, String> refreshToken(String id, Cookie[] cookies) {
+    public Map<String, String> refreshToken(String refreshToken) {
         String accessToken = "";
-        String refreshToken = "";
-        System.out.println(cookies);
 
-        if (cookies != null && cookies.length > 0) {
+        String username = jwtTokenProvider.getUserPk(refreshToken);
 
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refreshToken")) {
-                    refreshToken = cookie.getValue();
-
-                    if (jwtTokenProvider.validateToken(refreshToken)) {
-                        accessToken = jwtTokenProvider.createToken(id, 60L);
-                        refreshToken = jwtTokenProvider.createToken(id, 120L);
-                    } else {
-                        throw new IllegalArgumentException("토큰 오류");
-                    }
-                }
-            }
+        if (jwtTokenProvider.validateToken(refreshToken)) {
+            accessToken = jwtTokenProvider.createToken(username, 60L);
+            refreshToken = jwtTokenProvider.createToken(username, 120L);
+        } else {
+            throw new IllegalArgumentException("토큰 오류");
         }
 
         if (refreshToken == null || "".equals(refreshToken)) {

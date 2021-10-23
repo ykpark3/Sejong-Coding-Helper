@@ -4,6 +4,7 @@ import com.example.testlocal.domain.dto.AssistantDTO;
 import com.example.testlocal.domain.entity.Assistant;
 import com.example.testlocal.exception.InvalidAssistantIdException;
 import com.example.testlocal.repository.AssistantRepository;
+import com.example.testlocal.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class AssistantService {
 
     final private AssistantRepository assistantRepository;
     final private UserService2 userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public Assistant create(AssistantDTO requestDTO){
         Assistant assistant = new Assistant(requestDTO, userService);
@@ -29,7 +31,8 @@ public class AssistantService {
         return assistantRepository.findById(id).orElseThrow(() -> new InvalidAssistantIdException());
     }
 
-    public List<String> findAllByStudentId(String studentNumber) {
+    public List<String> findAllByStudentId(String token) {
+        String studentNumber = jwtTokenProvider.getUserPk(token);
         return assistantRepository.findAllStudentEmailByStudentNumber(studentNumber);
     }
     public void deleteAssistant(Long id) {

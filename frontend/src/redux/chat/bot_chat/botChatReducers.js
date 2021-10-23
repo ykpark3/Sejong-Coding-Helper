@@ -7,11 +7,13 @@ import {
   GET_BOT_RESPONSE,
   CHAGNE_CROOM_ID,
   CHAGNE_PROOM_ID,
-  CLEAR_CHAT_LIST
+  CLEAR_CHAT_LIST,
+  CHAGNE_NOW_BOTROOM_ID,
 } from './botChatTypes';
 
 const initialState = {
   num: 0,
+  nowRoomId:-1,
   cRoomId: -1,
   pRoomId: -1,
   chats: [
@@ -78,6 +80,12 @@ const botChatReducer = (state = initialState, action) => {
   switch (type) {
     case FETCH_CHATDATA_SUCCESS:
       return state;
+
+    case CHAGNE_NOW_BOTROOM_ID:
+      return{
+        ...state,
+        nowRoomId:data.nowRoomId,
+      }
 
     case CLEAR_CHAT_LIST:
       return {
