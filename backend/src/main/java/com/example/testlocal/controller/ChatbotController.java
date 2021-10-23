@@ -58,9 +58,9 @@ public class ChatbotController {
     private ApiKey apiKey;
 
     @PostMapping("/chatbotMessage/compiler/gcc")
-    public String sendInGcc() {
+    public String sendInGcc(@RequestBody Map<String, String> map) {
         System.out.printf("hi");
-        return chatbotService.sendGcc();
+        return chatbotService.sendGcc(map);
     }
 
     @PostMapping("/chatbotMessage/roomId/{roomId}")

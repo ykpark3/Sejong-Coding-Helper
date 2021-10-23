@@ -10,6 +10,7 @@ import com.example.testlocal.repository.ChatRepository;
 import com.example.testlocal.repository.ChatbotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,11 +35,13 @@ public class ChatbotService {
         return repository.findAllByRoomId(id);
     }
 
-    public String sendGcc(){
+    public String sendGcc(Map<String, String> map){
 
         try {
             OutputStream output = new FileOutputStream("./test4.c");
-            String str = "#include<stdio.h>\n" + "int main()" + '{' + "printf(\"1244\")" + ';' + '}';
+
+            //String str = "#include<stdio.h>\n" + "int main()" + '{' + "printf(\"1244\")" + ';' + '}';
+            String str = map.get("gcc");
             byte[] by = str.getBytes();
             System.out.printf(str.getBytes().toString());
             output.write(by);
