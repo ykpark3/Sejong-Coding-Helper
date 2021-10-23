@@ -35,33 +35,4 @@ public class ChatbotService {
         return repository.findAllByRoomId(id);
     }
 
-    public String sendGcc(Map<String, String> map){
-
-        try {
-            OutputStream output = new FileOutputStream("./test4.c");
-
-            //String str = "#include<stdio.h>\n" + "int main()" + '{' + "printf(\"1244\")" + ';' + '}';
-            String str = map.get("gcc");
-            byte[] by = str.getBytes();
-            System.out.printf(str.getBytes().toString());
-            output.write(by);
-        } catch (Exception e) {
-            e.getStackTrace();
-        }
-
-        GccCompiler compiler = new GccCompiler();
-
-        String result = compiler.execCommand("gcc test4.c");
-
-        File f = new File("./a.out");
-
-        if (f.exists()) {
-            result = compiler.execCommand("./a.out");
-            f.delete();
-        } else {
-            result = compiler.execCommand("gcc test4.c");
-        }
-
-        return result;
     }
-}
