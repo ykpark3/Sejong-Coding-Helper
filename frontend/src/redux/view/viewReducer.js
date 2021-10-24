@@ -15,7 +15,7 @@ const viewReducer = (state = intialViewState, action) => {
   switch (action.type) {
     case CHANGE_HEADER_INVERSE:
       let isNowMain = false;
-      console.log(currentUrl);
+
       if (currentUrl === BASE_URL + '/') isNowMain = true;
       else isNowMain = false;
 

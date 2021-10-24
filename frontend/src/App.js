@@ -11,7 +11,7 @@ import UserRoute from './router/UserRoute';
 import SignupRoute from './router/SignupRoute';
 import MyPage from './contents/MyPage';
 import Qa from './contents/Qa';
-import Curriculum from './contents/Curriculum';
+import CodingEditor from './contents/CodingEditor';
 import TaChatRoom from './contents/TaChatRoom';
 import Root from './contents/Root';
 import Signup from './contents/Signup';
@@ -40,7 +40,7 @@ function App() {
           <SignupRoute path="/signupComplete" component={SignupComplete}/> 
 
           <Route path="/login" component={Login} />
-          <Route path="/curri" component={Curriculum} />
+          <Route path="/codingEditor" component={CodingEditor} />
           <Route path="/qa" component={Qa} />
         </BrowserRouter>
       </div>

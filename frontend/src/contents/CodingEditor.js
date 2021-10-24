@@ -5,7 +5,8 @@ import Editor from '@monaco-editor/react';
 import '../css/CodingEditor.css';
 import axios from 'axios';
 import { API_BASE_URL,API_COMPILER_URL } from './utils/Constant';
-const Curriculum = () => {
+
+const CodingEditor = () => {
   const editorRef = useRef(null);
 
   function showValue() {
@@ -69,23 +70,10 @@ const Curriculum = () => {
         <h1>결 과</h1>
         <div id="outputLine">
             <h3>qweqwe</h3>
-            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>            <h3>qweqwe</h3>
-            <h3>qweqwe</h3>
-
         </div>
       </div>
     </div>
   );
 };
 
-export default Curriculum;
+export default CodingEditor;

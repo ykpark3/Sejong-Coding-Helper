@@ -73,7 +73,7 @@ const VerticalHeader = ({ clickedNavNum, clickedNavItem,history }) => {
        {/* 리로드가 필요해서 a 태그씀. */}
       <a onClick={() => window.location.replace("tachatroom")}>
         <div className={clicked2}>
-          {isLong && <img className="logoImg" src="img/coding.png" />}
+          {isLong && <img className="logoImg" src="img/question1.png" />}
 
           {isLong && (
             <p className="header_title">
@@ -96,14 +96,14 @@ const VerticalHeader = ({ clickedNavNum, clickedNavItem,history }) => {
         </div>
       </a>
 
-      <Link to="/curri">
+      <Link to="/codingEditor">
         <div className={clicked3}>
-          {isLong && <img className="logoImg" src="img/curri.png" />}
+          {isLong && <img className="logoImg" src="img/coding.png" />}
 
-          {isLong && <p className="header_title">커리 큘럼</p>}
+          {isLong && <p className="header_title">코딩 하기</p>}
 
           {isShort && <p className="header_title"  style={{ paddingBottom: paddingBottomInShort, 
-            paddingTop:paddingTopInShort }}>커리 큘럼</p>}
+            paddingTop:paddingTopInShort }}>코딩 하기</p>}
 
           <hr className="header_line" />
         </div>
