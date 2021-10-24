@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class GccCompiler {
@@ -23,7 +24,7 @@ public class GccCompiler {
 
     public String execCommand(String[] cmd) throws IOException, InterruptedException, TimeoutException {
 
-        String output = new ProcessExecutor().command(cmd)
+        String output = new ProcessExecutor().command(cmd).timeout(10, TimeUnit.SECONDS)
                 .readOutput(true).execute()
                 .outputUTF8();
 
