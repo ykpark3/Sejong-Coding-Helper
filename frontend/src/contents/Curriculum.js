@@ -4,7 +4,7 @@ import HorizontalHeader from './HorizontalHeader';
 import Editor from '@monaco-editor/react';
 import '../css/CodingEditor.css';
 import axios from 'axios';
-import { API_BASE_URL } from './utils/Constant';
+import { API_BASE_URL,API_COMPILER_URL } from './utils/Constant';
 const Curriculum = () => {
   const editorRef = useRef(null);
 
@@ -13,7 +13,7 @@ const Curriculum = () => {
     const code = editorRef.current.getValue();
     axios
       .post(
-        API_BASE_URL + '/compiler/c',
+        API_COMPILER_URL + '/compiler/c',
         { code: code },
         {
           headers: {
@@ -23,7 +23,9 @@ const Curriculum = () => {
           withCredentials: true,
         },
       )
-      .then((res) => {})
+      .then((res) => {
+        console.log(res.data);
+      })
       .catch((res) => {
         console.log(res);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
