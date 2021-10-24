@@ -22,8 +22,8 @@ public class CompilerController {
    private final CompilerService compilerService;
 
     @PostMapping("/compiler/c")
-    public void compileInC(@RequestBody Map<String, String> map){
-        System.out.printf(compilerService.sendGcc(map.get("code")));
+    public String compileInC(@RequestBody Map<String, String> map){
+        return compilerService.sendGcc(map.get("code"));
     }
 
 
