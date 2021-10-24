@@ -1,2 +1,2 @@
 #include<stdio.h> 
- int main(){ printf("hello world");}
+ int main(){ int a=3; printf("%d",a); }
