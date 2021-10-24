@@ -80,13 +80,13 @@ a{
 
 #mainBanner{
   font-family: "GmB";
-  font-size: 2vw;
+  font-size: max(20px, 2vw);
   color: white;
 }
 
 #mainBanner2{
   font-family: "GmB";
-  font-size: 5vw;
+  font-size: max(50px, 5vw);
   color: white;
 }
 
@@ -94,7 +94,7 @@ a{
   margin-top: 60px;
   width: fit-content;
   font-family: "GmB";
-  font-size: 2vw;
+  font-size: max(15px, 2vw);
   padding: 20px;
   background-color: #990000;
   color: white;

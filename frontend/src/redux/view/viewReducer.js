@@ -49,7 +49,7 @@ const viewReducer = (state = intialViewState, action) => {
           num = 2;
           break;
 
-        case BASE_URL + '/curri':
+        case BASE_URL + '/codingEditor':
           num = 3;
           break;
 

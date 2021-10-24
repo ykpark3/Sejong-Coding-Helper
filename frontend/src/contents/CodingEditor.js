@@ -1,21 +1,32 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import Editor from '@monaco-editor/react';
 import '../css/CodingEditor.css';
 import axios from 'axios';
-import { API_BASE_URL,API_COMPILER_URL } from './utils/Constant';
+import {
+  API_BASE_URL,
+  API_COMPILER_URL,
+  C_COMPILER_BASE_CODE,
+  P_COMPILER_BASE_CODE,
+} from './utils/Constant';
 
 const CodingEditor = () => {
   const editorRef = useRef(null);
+  const [codeInput, setCodeInput] = useState('');
+  const [codeOutput, setCodeOutput] = useState('');
+  const [codeLang, setCodeLang] = useState('c');
+  const [baseCode, setBaseCode] = useState(C_COMPILER_BASE_CODE);
 
   function showValue() {
     //alert(editorRef.current.getValue());
     const code = editorRef.current.getValue();
+    setCodeOutput(''); // 결과창 초기화.
+
     axios
       .post(
         API_COMPILER_URL + '/compiler/c',
-        { code: code },
+        { code: code, input: codeInput },
         {
           headers: {
             'Content-type': 'application/json',
@@ -26,6 +37,7 @@ const CodingEditor = () => {
       )
       .then((res) => {
         console.log(res.data);
+        setCodeOutput(res.data);
       })
       .catch((res) => {
         console.log(res);
@@ -45,32 +57,64 @@ const CodingEditor = () => {
       <div id="editorBox">
         <div id="codingTopNav">
           <h1>코딩하기</h1>
-          <button
-            onClick={() => {
-              showValue();
-            }}
-          >
-            컴파일
-          </button>
+
+          <div id="compilerBntGroup">
+            <p className="complierLangRadioBntP">C</p>
+            <input
+              className="complierLangRadioBnt"
+              type="radio"
+              value="c"
+              checked={codeLang === 'c'}
+              onChange={(e) => {
+                setCodeLang(e.target.value);
+                setBaseCode(C_COMPILER_BASE_CODE);
+              }}
+            ></input>
+            <div style={{ width: '20px' }}></div>
+            <p className="complierLangRadioBntP">P</p>
+            <input
+              className="complierLangRadioBnt"
+              type="radio"
+              value="python"
+              checked={codeLang === 'python'}
+              onChange={(e) => {
+                setCodeLang(e.target.value);
+                setBaseCode(P_COMPILER_BASE_CODE);
+              }}
+            />
+
+            <button
+              onClick={() => {
+                showValue();
+              }}
+            >
+              실 행
+            </button>
+          </div>
         </div>
 
         <div id="codingInnerBox">
           <Editor
             className="codingEditor"
             theme="vs-dark"
-            defaultLanguage="c"
+            language={codeLang}
             onMount={handleEditorDidMount}
-            defaultValue="//coding here"
+            value={baseCode}
+            
           />
         </div>
       </div>
       <div id="outputBox">
         <h1>입력값 설정</h1>
-        <div id="inputLine"></div>
+
+        <textarea
+          id="inputLine"
+          onChange={(e) => {
+            setCodeInput(e.target.value);
+          }}
+        ></textarea>
         <h1>결 과</h1>
-        <div id="outputLine">
-            <h3>qweqwe</h3>
-        </div>
+        <textarea id="outputLine" value={codeOutput} readOnly></textarea>
       </div>
     </div>
   );
