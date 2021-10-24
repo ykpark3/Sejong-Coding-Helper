@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-
     @Query(value = "select * from chat where room_id = ?1", nativeQuery = true)
     List<Chat> findAllByRoomId(Long roomId);
 

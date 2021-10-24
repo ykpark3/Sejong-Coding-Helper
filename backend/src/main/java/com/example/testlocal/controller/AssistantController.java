@@ -1,5 +1,6 @@
 package com.example.testlocal.controller;
 
+import com.example.testlocal.config.Constants;
 import com.example.testlocal.domain.dto.AssistantDTO;
 import com.example.testlocal.domain.entity.Assistant;
 import com.example.testlocal.domain.entity.User;
@@ -15,8 +16,8 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-//@CrossOrigin(origins = "http://3.141.167.159" , allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = Constants.URL  , allowCredentials = "true")
 public class AssistantController {
 
     final private AssistantService assistantService;

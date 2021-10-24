@@ -1,5 +1,6 @@
 package com.example.testlocal.controller;
 
+import com.example.testlocal.config.Constants;
 import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.entity.Chat;
 import com.example.testlocal.service.ChatService;
@@ -19,8 +20,8 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-//@CrossOrigin(origins = "http://3.141.167.159" , allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = Constants.URL , allowCredentials = "true")
 public class ChatController {
 
     private final SimpMessagingTemplate template;
@@ -61,7 +62,7 @@ public class ChatController {
         msg.setMessage(roomService.findById(msg.getRoomId()).getTitle() + " 채팅방에 참여하였습니다.");
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
-
+//
     @MessageMapping("/chat/message")
     public void message(ChatDTO2 msg){
         chatService.create(msg);
