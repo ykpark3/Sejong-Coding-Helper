@@ -9,6 +9,7 @@ import { LOGIN_BEFORE, LOGIN_SUCCESS } from '../redux/login/loginTypes';
 import { API_BASE_URL } from './utils/Constant';
 import { changeLoadingState } from '../redux/view/viewActions';
 import { root2 } from './Root2';
+import '../css/MyPage.css';
 
 const MyPage = ({
   history,
@@ -23,7 +24,7 @@ const MyPage = ({
 
     // 동기로 리프래쉬토큰 검증.
     const auth = async () => {
-      const result = await root2(onLoginSuccess,changeType,changeLoadingState);
+      const result = await root2(onLoginSuccess, changeType, changeLoadingState);
       //console.log(result + ' three');
       if (result === 'success') {
         //adding user info
@@ -61,11 +62,51 @@ const MyPage = ({
   return (
     <div>
       <VerticalHeader />
-      {/* <HorizontalHeader /> */}
-      myPage입니다 ㅅㄱmyPage입니다 ㅅㄱmyPage입니다 ㅅㄱ
-      <button style={{ zIndex: '999' }} onClick={() => logout()}>
-        로그 아웃
-      </button>
+      <HorizontalHeader />
+
+      <div id="myPageBox">
+        <h3>My Page</h3>
+        <div style={{ width: '100%', height: '50px' }} />
+        <div id="myInfoSector">
+
+          <img src="img/sjulogo.png" />
+
+          <div id="myInfoColumn">
+            <p>이 름</p>
+            <p>구 분</p>
+            <p>학 번</p>
+            <p>이메일</p>
+          </div>
+
+          <div id="myInfoValue">
+            <p>정상부</p>
+            <p>학생</p>
+            <p>17011748</p>
+            <p>jsb10080@naver.com</p>
+          </div>
+
+        </div>
+
+        <div style={{ height: '80px' }}>
+
+        </div>
+
+        <div id="myInfoBntSector">
+          <button onClick={() => logout()}>
+            로그 아웃
+          </button>
+
+          <button onClick={() => {}}>
+            비밀번호 변경
+          </button>
+
+          <button onClick={() => {}}>
+            회원 탈퇴
+          </button>
+        </div>
+      </div>
+
+      <div style={{ width: '100%', height: '50px' }} />
     </div>
   );
 };

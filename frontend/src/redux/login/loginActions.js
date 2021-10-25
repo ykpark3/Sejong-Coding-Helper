@@ -6,6 +6,7 @@ import {
   LOGIN_BEFORE,
   LOGIN_ORIGIN,
   CHANGE_SIGNUP_AUTH,
+  CHANGE_SIGNUP_AUTH2,
   CHANGE_USER_NAME,
   CHANGE_USER_ID
 } from './loginTypes';
@@ -37,6 +38,13 @@ export const changeType = (type) => {
 export const changeSignupAuth = (props) => {
   return {
     type: CHANGE_SIGNUP_AUTH,
+    data: { signupAuth: props },
+  };
+};
+
+export const changeSignupAuth2 = (props) => {
+  return {
+    type: CHANGE_SIGNUP_AUTH2,
     data: { signupAuth: props },
   };
 };

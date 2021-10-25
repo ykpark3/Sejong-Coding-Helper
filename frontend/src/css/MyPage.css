@@ -9,9 +9,12 @@
     height: 100%;
     background-color: #f6f6f6;
   }
-
   
-@font-face {
+  a {
+    text-decoration: none;
+  }
+  
+  @font-face {
     font-family: 'nanumB';
     src: url('../fonts/NanumSquareRoundEB.ttf');
   }
@@ -31,14 +34,14 @@
     font-weight: normal;
     font-style: normal;
   }
-
-  #qaBox {
+  
+  #myPageBox {
     width: 700px;
     height: fit-content;
     position: relative;
-    top: 50px;
+    top: 100px;
     background-color: white;
-    margin: 0 auto 10px auto;
+    margin: 0 auto 100px auto;
     padding: 20px;
     border-radius: 10px;
     display: flex;
@@ -49,13 +52,13 @@
     text-align: center;
   }
 
-  #qaBox h3 {
+  #myPageBox h3 {
     font-family: 'GmB';
-    font-size: 27px;
+    font-size: 36px;
     margin-bottom: 50px;
   }
 
-  #qaBox img {
+  #myPageBox img {
     width: 125px;
     height: 125px;
   
@@ -70,43 +73,61 @@
     backface-visibility: hidden;
   }
 
-  #qaNoticeBox {
-    width: 600px;
-    /* border:#990000 solid 2px; */
-    background-color: #f6f6f6;
-  
-    margin: 0px auto 50px auto;
-    padding: 30px;
-    border-radius: 10px;
+  #myInfoSector{
+      width: 80%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+  }
+
+  #myInfoColumn{
     display: flex;
     flex-direction: column;
-  
-    text-align: left;
-  }
-
-  #qaNoticeBox .notice {
+    text-align: start;
     font-family: 'nanumB';
     font-size: 20px;
-    margin-bottom: 30px;
-    text-align: center;
   }
 
-  #qaNoticeBox a {
-    width: 370px;
+  #myInfoValue{
+    display: flex;    
+    flex-direction: column;
+    text-align: start;
+    font-family: 'nanumR';
+    font-size: 20px;
+  }
+
+  #myInfoColumn p,
+  #myInfoValue p{
+      margin: 10px 0px 10px 0px;
+      text-align: start;
+  }
+
+  #myInfoBntSector{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+  #myPageBox button {
+    width: 30%;
     height: fit-content;
     font-family: 'nanumB';
     font-size: 17px;
-    margin: 20px auto 0px auto;
-    padding: 15px 0 15px 0;
+    margin: 20px auto 20px auto;
+    padding: 10px 0 10px 0;
   
     background-color: #990000;
     color: white;
     border-style: none;
-    border-radius: 30px;
+    border-radius: 7px;
     cursor: pointer;
     text-align: center;
   }
-  
-  #qaNoticeBox a:hover{
+
+  #myPageBox button:hover{
     background-color: #ff7777;
   }
+      
+
+  

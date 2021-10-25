@@ -3,11 +3,11 @@ import { connect, useDispatch } from 'react-redux';
 import { Route, Router } from 'react-router'
 import { Redirect } from 'react-router'
 
-const SignupRoute = ({signupAuth, component: Component, ...rest }) => {
+const SignupRoute = ({signupAuth,signupAuth2, component: Component, ...rest }) => {
     return (
         <Route {...rest} render={props => {
 
-            if (signupAuth) {
+            if (signupAuth || signupAuth2) {
                 return <Component {...props} />
             }
             else {
@@ -20,6 +20,7 @@ const SignupRoute = ({signupAuth, component: Component, ...rest }) => {
 const mapStateToProps = ({ login }) => {
     return {
         signupAuth: login.signupAuth,
+        signupAuth2: login.signupAuth2,
     };
 };
 

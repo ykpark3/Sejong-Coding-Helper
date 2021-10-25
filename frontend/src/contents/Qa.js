@@ -36,11 +36,11 @@ const Qa = () => {
                         긍정적으로 봐주시는 모든 세종대 학우들에게 감사합니다!<br/>세종대 학우들 모두 화이팅!😀😀😀😀
                     </div>
 
-                    <a class="button" target='_blank' href="https://forms.gle/s19qJw3S19PjeBz69" >
+                    <a target='_blank' href="https://forms.gle/s19qJw3S19PjeBz69" >
                         문의 {"&"} 피드백하기
                     </a>
 
-                    <a class="button" target='_blank' href="https://forms.gle/UYzZCyCeCf3SP3xo6" >
+                    <a target='_blank' href="https://forms.gle/UYzZCyCeCf3SP3xo6" >
                         조교 계정으로 전환하기
                     </a>
                 </div>
