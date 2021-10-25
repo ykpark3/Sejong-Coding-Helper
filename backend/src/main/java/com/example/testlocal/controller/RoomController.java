@@ -47,6 +47,12 @@ public class RoomController {
     public List<Room> findAllRoomByStudentId(HttpServletRequest request, @CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken) {
 
         List<Room> result = roomService.findAllRoomByStudentId(refreshToken);
+
+        // 생성된 채팅 방이 없을 경우.
+        if(result.isEmpty()){
+            return null;
+        }
+
         HttpSession session = request.getSession();
         String roomId = (String)session.getAttribute("roomId");
 

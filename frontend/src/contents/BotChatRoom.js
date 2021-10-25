@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useSelector, useState } from 'react';
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import { Link } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { connect} from 'react-redux';
 import {
   addMsgData,
   getBotResponse,
@@ -12,7 +12,6 @@ import {
   changeNowBotRoomId,
   clearChatList,
 } from '../redux/chat/bot_chat/botChatActions';
-import Root from './Root';
 import '../css/Chatroom.css';
 import axios from 'axios';
 import { API_BASE_URL } from './utils/Constant';
@@ -112,6 +111,8 @@ const BotChatRoom = ({
       );
 
       if (result === 'success') {
+        // 로딩창 true
+        changeLoadingState(true);
         clearChatList();
         getUserInfo();
         getBotChatRoomList();
@@ -140,6 +141,7 @@ const BotChatRoom = ({
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -191,6 +193,7 @@ const BotChatRoom = ({
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -219,10 +222,12 @@ const BotChatRoom = ({
           addMsgData(num, name, res.data[i].message);
         }
 
+        changeLoadingState(false);
         scrollToBottom();
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -285,6 +290,7 @@ const BotChatRoom = ({
       return;
     }
 
+    changeLoadingState(true);
     addMsgData(num, 'user', text);
     msgInput.current.value = '';
 
@@ -304,6 +310,7 @@ const BotChatRoom = ({
         console.log(res.data);
         getBotResponse(res.data);
         scrollToBottom();
+        changeLoadingState(false);
       })
       .catch((res) => {
         console.log(res);
@@ -324,6 +331,7 @@ const BotChatRoom = ({
           <button
             className={cBntStyleClass}
             onClick={() => {
+              changeLoadingState(true);
               setRoomIdSession(cRoomId);
               changeNowBotRoomId(cRoomId);
               clearChatList();
@@ -339,6 +347,7 @@ const BotChatRoom = ({
           <button
             className={pBntStyleClass}
             onClick={() => {
+              changeLoadingState(true);
               setRoomIdSession(pRoomId);
               changeNowBotRoomId(pRoomId);
               clearChatList();

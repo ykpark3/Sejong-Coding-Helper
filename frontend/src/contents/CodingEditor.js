@@ -4,6 +4,8 @@ import HorizontalHeader from './HorizontalHeader';
 import Editor from '@monaco-editor/react';
 import '../css/CodingEditor.css';
 import axios from 'axios';
+import { connect} from 'react-redux';
+import { changeLoadingState } from '../redux/view/viewActions';
 import {
   API_BASE_URL,
   API_COMPILER_URL,
@@ -11,7 +13,7 @@ import {
   P_COMPILER_BASE_CODE,
 } from './utils/Constant';
 
-const CodingEditor = () => {
+const CodingEditor = ({changeLoadingState}) => {
   const editorRef = useRef(null);
   const [codeInput, setCodeInput] = useState('');
   const [codeOutput, setCodeOutput] = useState('');
@@ -22,7 +24,7 @@ const CodingEditor = () => {
     //alert(editorRef.current.getValue());
     const code = editorRef.current.getValue();
     setCodeOutput(''); // 결과창 초기화.
-
+    changeLoadingState(true);
     axios
       .post(
         API_COMPILER_URL + '/compiler/c',
@@ -38,8 +40,10 @@ const CodingEditor = () => {
       .then((res) => {
         console.log(res.data);
         setCodeOutput(res.data);
+        changeLoadingState(false);
       })
       .catch((res) => {
+        changeLoadingState(false);
         console.log(res);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
@@ -120,4 +124,16 @@ const CodingEditor = () => {
   );
 };
 
-export default CodingEditor;
+const mapStateToProps = ({}) => {
+
+  return {
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeLoadingState: (props) => dispatch(changeLoadingState(props)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CodingEditor);

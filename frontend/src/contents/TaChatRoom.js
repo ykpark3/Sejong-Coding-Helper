@@ -87,6 +87,7 @@ const TaChatRoom = ({
       );
       //console.log(result + ' three');
       if (result === 'success') {
+        changeLoadingState(true);
         getIsTa();
       }
     };
@@ -161,6 +162,7 @@ const TaChatRoom = ({
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -181,6 +183,7 @@ const TaChatRoom = ({
       .then((res) => {
         // 채팅방이 없을 경우.
         if (res.data.length === 0) {
+          changeLoadingState(false);
           return;
         }
 
@@ -211,6 +214,7 @@ const TaChatRoom = ({
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -238,9 +242,11 @@ const TaChatRoom = ({
           );
         }
         scrollToBottom();
+        changeLoadingState(false);
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
