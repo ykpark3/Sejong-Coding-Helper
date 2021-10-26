@@ -1,8 +1,6 @@
 package com.example.testlocal.repository;
 
-import com.example.testlocal.domain.dto.AssistantDTO;
 import com.example.testlocal.domain.entity.Assistant;
-import com.example.testlocal.domain.entity.Chat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

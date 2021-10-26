@@ -1,10 +1,7 @@
 package com.example.testlocal.domain.entity;
 
-import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.dto.ChatbotDTO;
 import com.example.testlocal.service.ChatbotRoomService;
-import com.example.testlocal.service.ChatbotService;
-import com.example.testlocal.service.RoomService;
 import com.example.testlocal.service.UserService2;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

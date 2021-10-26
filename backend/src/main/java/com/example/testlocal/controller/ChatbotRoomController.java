@@ -2,11 +2,8 @@ package com.example.testlocal.controller;
 
 import com.example.testlocal.config.Constants;
 import com.example.testlocal.domain.dto.ChatbotRoomDTO;
-import com.example.testlocal.domain.dto.RoomDTO;
 import com.example.testlocal.domain.entity.ChatbotRoom;
-import com.example.testlocal.domain.entity.Room;
 import com.example.testlocal.service.ChatbotRoomService;
-import com.example.testlocal.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
