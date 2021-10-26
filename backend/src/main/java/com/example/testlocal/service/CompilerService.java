@@ -22,13 +22,13 @@ public class CompilerService {
     @SneakyThrows
     public String sendGcc(String code, String input) {
         createInputFile(input);
-        createCFile(code);
+        createFile(code, CFileName);
         return executeGccCompiler();
     }
 
-    public void createCFile(String code){
+    public void createFile(String code, String fileName){
         try {
-            OutputStream output = new FileOutputStream(CFileName);
+            OutputStream output = new FileOutputStream(fileName);
             byte[] bytes = code.getBytes();
             output.write(bytes);
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class CompilerService {
     @SneakyThrows
     public String sendPython(String code, String input) {
         createInputFile(input);
-        createCFile(code);
+        //createFile(code, );
         return executeGccCompiler();
     }
 
