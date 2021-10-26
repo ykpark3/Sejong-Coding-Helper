@@ -1,6 +1,6 @@
 package com.example.testlocal.service;
 
-import com.example.testlocal.domain.vo.GccCompiler;
+import com.example.testlocal.domain.vo.RenderScriptProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,7 @@ public class CompilerService {
     public final String CExeDirectory = "./hi";
     public final String InputFileName = "test.txt";
     public final String InputFileDirectory = "./test.txt";
+    public final String PythonFileName = "test.py";
 
     @SneakyThrows
     public String sendGcc(String code, String input) {
@@ -49,7 +50,7 @@ public class CompilerService {
     }
 
     public String executeGccCompiler() throws IOException, InterruptedException, TimeoutException {
-        GccCompiler compiler = new GccCompiler();
+        RenderScriptProcessor compiler = new RenderScriptProcessor();
 
         List createdList = new ArrayList<String>();
         createdList.add("gcc");
@@ -82,7 +83,7 @@ public class CompilerService {
     @SneakyThrows
     public String sendPython(String code, String input) {
         createInputFile(input);
-        //createFile(code, );
+        createFile(code, PythonFileName);
         return executeGccCompiler();
     }
 

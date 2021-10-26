@@ -1,7 +1,6 @@
 package com.example.testlocal.domain.vo;
 
 import org.zeroturnaround.exec.InvalidExitValueException;
-import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.ProcessResult;
 
 import java.io.BufferedReader;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class GccCompiler {
+public class RenderScriptProcessor {
     private StringBuffer buffer;
     private Process process;
     private ProcessBuilder processBuilder;
@@ -27,7 +26,7 @@ public class GccCompiler {
         boolean success = false;
 
         try {
-            output = new ProcessExecutor().directory(new File("./")).command(cmd).timeout(30, TimeUnit.SECONDS)
+            output = new org.zeroturnaround.exec.ProcessExecutor().directory(new File("./")).command(cmd).timeout(30, TimeUnit.SECONDS)
                     .redirectErrorStream(true)
                     .readOutput(true)
                     .execute()
