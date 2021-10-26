@@ -16,6 +16,7 @@ public class CompilerService {
 
     public final String CFileName = "test4.c";
     public final String CExeDirectory = "./hi";
+    public final String PythonExeDirectory = "./test.py";
     public final String InputFileName = "test.txt";
     public final String InputFileDirectory = "./test.txt";
     public final String PythonFileName = "test.py";
@@ -24,7 +25,7 @@ public class CompilerService {
     public String sendGcc(String code, String input) {
         createInputFile(input);
         createFile(code, CFileName);
-        return executeGccCompiler();
+        return executeCompiler("C");
     }
 
     public void createFile(String code, String fileName){
@@ -49,9 +50,21 @@ public class CompilerService {
         }
     }
 
-    public String executeGccCompiler() throws IOException, InterruptedException, TimeoutException {
+    public String executeCompiler(String type) throws IOException, InterruptedException, TimeoutException {
         RenderScriptProcessor compiler = new RenderScriptProcessor();
 
+        switch (type){
+            case "C":
+                return executeGccCompiler(compiler);
+            case "Python":
+                return executePythonCompiler(compiler);
+            default:
+                return "error";
+        }
+    }
+
+    @SneakyThrows
+    public String executeGccCompiler(RenderScriptProcessor compiler){
         List createdList = new ArrayList<String>();
         createdList.add("gcc");
         createdList.add("-o");
@@ -71,7 +84,7 @@ public class CompilerService {
             executeCommendCFile.add(CExeDirectory+"<"+InputFileDirectory);
             result = compiler.execCommand(executeCommendCFile);
         }
-         else {
+        else {
             result = compiler.execCommand(createdList);
         }
 
@@ -81,10 +94,29 @@ public class CompilerService {
     }
 
     @SneakyThrows
+    public String executePythonCompiler(RenderScriptProcessor compiler){
+
+        File exePythonFile = new File(PythonExeDirectory);
+        File textPythonFile = new File(InputFileName);
+        String result;
+
+        List<String> executeCommendCFile = new ArrayList<String>();
+        executeCommendCFile.add("/bin/sh");
+        executeCommendCFile.add("-c");
+        executeCommendCFile.add("python "+PythonFileName+"<"+InputFileDirectory);
+        result = compiler.execCommand(executeCommendCFile);
+
+        textPythonFile.delete();
+        exePythonFile.delete();
+        return result;
+    }
+
+
+    @SneakyThrows
     public String sendPython(String code, String input) {
         createInputFile(input);
         createFile(code, PythonFileName);
-        return executeGccCompiler();
+        return executeCompiler("Python");
     }
 
 }
