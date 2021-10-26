@@ -1,13 +1,12 @@
 package com.example.testlocal.domain.vo;
 
+import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.ProcessResult;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -22,11 +21,24 @@ public class GccCompiler {
     private StringBuffer errorReadBuffer;
     private ProcessResult processResult;
 
-    public String execCommand(String[] cmd) throws IOException, InterruptedException, TimeoutException {
+    public String execCommand(List<String> cmd) throws IOException, InterruptedException, TimeoutException {
+        String output="";
 
-        String output = new ProcessExecutor().command(cmd).timeout(10, TimeUnit.SECONDS)
-                .readOutput(true).execute()
-                .outputUTF8();
+        boolean success = false;
+
+        try {
+            output = new ProcessExecutor().directory(new File("./")).command(cmd)
+                    .redirectErrorStream(true)
+                    .readOutput(true)
+                    .execute()
+                    .outputUTF8();
+            success = true;
+
+        }
+        catch (InvalidExitValueException e) {
+            System.out.println("Process exited with " + e.getExitValue());
+            output = e.getResult().outputUTF8();
+        }
 
         return output;
 
@@ -36,9 +48,10 @@ public class GccCompiler {
             list.add("1");
 
             processBuilder = new ProcessBuilder(list);
-            //process = Runtime.getRuntime().exec(nargs2);
+            //Process process = Runtime.getRuntime().exec(cmd);
             process = processBuilder.start();
 
+          //Process process = Runtime.getRuntime().exec(cmd);
             bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             errorBufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             String line = null;

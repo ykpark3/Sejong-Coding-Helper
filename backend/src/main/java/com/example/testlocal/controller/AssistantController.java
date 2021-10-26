@@ -48,4 +48,5 @@ public class AssistantController {
         assistantService.deleteAssistant(id);
         return "delete Assistant" + id.toString();
     }
+
 }

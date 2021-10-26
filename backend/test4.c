@@ -1,2 +1,2 @@
 #include<stdio.h> 
- int main(){ int a=3; printf("%d",a); }
+ int main(){ int a,b; scanf("%d %d", &a, &b); printf("%d  %d",a,b); }
