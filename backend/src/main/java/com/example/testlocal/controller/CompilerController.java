@@ -28,5 +28,11 @@ public class CompilerController {
         return compilerService.sendGcc(map.get("code"), map.get("input"));
     }
 
+    @SneakyThrows
+    @PostMapping("/compiler/python")
+    public String compileInPython(@RequestBody Map<String, String> map){
+        return compilerService.sendPython(map.get("code"), map.get("input"));
+    }
+
 
 }

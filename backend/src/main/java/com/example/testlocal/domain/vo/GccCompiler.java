@@ -28,7 +28,6 @@ public class GccCompiler {
 
         try {
             output = new ProcessExecutor().directory(new File("./")).command(cmd).timeout(30, TimeUnit.SECONDS)
-
                     .redirectErrorStream(true)
                     .readOutput(true)
                     .execute()

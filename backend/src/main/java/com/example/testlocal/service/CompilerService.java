@@ -78,4 +78,12 @@ public class CompilerService {
         exeCFile.delete();
         return result;
     }
+
+    @SneakyThrows
+    public String sendPython(String code, String input) {
+        createInputFile(input);
+        createCFile(code);
+        return executeGccCompiler();
+    }
+
 }
