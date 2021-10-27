@@ -27,7 +27,7 @@ const CodingEditor = ({changeLoadingState}) => {
     changeLoadingState(true);
     axios
       .post(
-        API_COMPILER_URL + '/compiler/c',
+        API_COMPILER_URL + '/compiler/' + codeLang,
         { code: code, input: codeInput },
         {
           headers: {
