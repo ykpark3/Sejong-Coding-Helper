@@ -19,6 +19,11 @@ const MyPage = ({
   changeLoadingState,
 }) => {
 
+  const [userName,setUserName] = useState('');
+  const [isTa,setTa] = useState('학생');
+  const [userId,setId] = useState('');
+  const [userEmail,setEmail] = useState('');
+  
 
   useEffect(() => {
 
@@ -27,13 +32,46 @@ const MyPage = ({
       const result = await root2(onLoginSuccess, changeType, changeLoadingState);
       //console.log(result + ' three');
       if (result === 'success') {
-        //adding user info
+        changeLoadingState(true);
+        getUserInfo();
       }
     };
 
     auth();
 
   }, []);
+
+  const getUserInfo = () => {
+    axios
+      .post(
+        API_BASE_URL + '/user/assistant',
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        setId(res.data.studentNumber);
+        setUserName(res.data.name);
+        setEmail(res.data.email);
+
+        if (res.data.isAssistant === '1') {
+          setTa('TA 조교');
+        }
+        changeLoadingState(false);
+
+      })
+      .catch((res) => {
+        console.log(res);
+        changeLoadingState(false);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  };
+
 
   const logout = () => {
     axios
@@ -79,10 +117,10 @@ const MyPage = ({
           </div>
 
           <div id="myInfoValue">
-            <p>정상부</p>
-            <p>학생</p>
-            <p>17011748</p>
-            <p>jsb10080@naver.com</p>
+            <p>{userName}</p>
+            <p>{isTa}</p>
+            <p>{userId}</p>
+            <p>{userEmail}</p>
           </div>
 
         </div>

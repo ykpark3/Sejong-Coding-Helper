@@ -361,7 +361,7 @@ const BotChatRoom = ({
           </button>
 
           <h3>실시간 키워드 정보</h3>
-          <div>{listData({ list })}</div>
+          <div className="navInner2Div">{listData({ list })}</div>
         </div>
         <div id="mainChatting">
           <h3>대화하기</h3>

@@ -24,6 +24,7 @@ import { Stomp } from '@stomp/stompjs';
 import { LOGIN_ORIGIN, LOGIN_BEFORE } from '../redux/login/loginTypes';
 import { changeLoadingState } from '../redux/view/viewActions';
 import { root2 } from './Root2';
+import ChatRoomDeniedModal from './modal/ChatRoomDeniedModal';
 import Root from './Root';
 
 function BotChatMsgItem({ msg, name }) {
@@ -76,6 +77,7 @@ const TaChatRoom = ({
   const msgInput = useRef();
   const scrollRef = useRef();
   const [isTa, setTa] = useState(false);
+  const [modalOn, setModalOn] = useState(false);
 
   useEffect(() => {
     // 동기로 리프래쉬토큰 검증.
@@ -345,12 +347,19 @@ const TaChatRoom = ({
       <VerticalHeader />
       <HorizontalHeader />
 
+      <>
+        {modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}
+      </>
+
       <div id="chatRoomBody">
         <div id="emptySpace1" />
 
         <div className="secondHorizontalNav">
-          <h3 style={{ color: '#008cff' }}> 채팅방 목록</h3>
-          <div>
+          <div id="navInnerDiv">
+            <h3 style={{ color: '#008cff' }}> 채팅방 목록</h3>
+            <div onClick={()=>{setModalOn(true);}}>+</div>
+          </div>
+          <div className="navInner2Div">
             <div>{listData()}</div>
           </div>
         </div>
