@@ -26,7 +26,7 @@ public class RenderScriptProcessor {
         boolean success = false;
 
         try {
-            output = new org.zeroturnaround.exec.ProcessExecutor().directory(new File("./")).command(cmd).timeout(30, TimeUnit.SECONDS)
+            output = new org.zeroturnaround.exec.ProcessExecutor().directory(new File("./")).command(cmd).timeout(3, TimeUnit.SECONDS)
                     .redirectErrorStream(true)
                     .readOutput(true)
                     .execute()

@@ -103,7 +103,7 @@ public class CompilerService {
         List<String> executeCommendCFile = new ArrayList<String>();
         executeCommendCFile.add("/bin/sh");
         executeCommendCFile.add("-c");
-        executeCommendCFile.add("python "+PythonFileName+"<"+InputFileDirectory);
+        executeCommendCFile.add("python3 "+PythonFileName+"<"+InputFileDirectory);
         result = compiler.execCommand(executeCommendCFile);
 
         textPythonFile.delete();
