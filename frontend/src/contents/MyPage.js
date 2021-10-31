@@ -9,6 +9,8 @@ import { LOGIN_BEFORE, LOGIN_SUCCESS } from '../redux/login/loginTypes';
 import { API_BASE_URL } from './utils/Constant';
 import { changeLoadingState } from '../redux/view/viewActions';
 import { root2 } from './Root2';
+import PwModifyingModal from './modal/PwModifyingModal';
+import WithdrawalModal from './modal/WithdrawalModal';
 import '../css/MyPage.css';
 
 const MyPage = ({
@@ -23,8 +25,9 @@ const MyPage = ({
   const [isTa,setTa] = useState('학생');
   const [userId,setId] = useState('');
   const [userEmail,setEmail] = useState('');
+  const [pwModalOn, setPwModalOn] = useState(false);
+  const [withdrawalModalOn, setWithdrawalModalOn] = useState(false);
   
-
   useEffect(() => {
 
     // 동기로 리프래쉬토큰 검증.
@@ -102,6 +105,9 @@ const MyPage = ({
       <VerticalHeader />
       <HorizontalHeader />
 
+      <>{pwModalOn ? <PwModifyingModal setModalOn={setPwModalOn} /> : ''}</>
+      <>{withdrawalModalOn ? <WithdrawalModal setModalOn={setWithdrawalModalOn} /> : ''}</>
+
       <div id="myPageBox">
         <h3>My Page</h3>
         <div style={{ width: '100%', height: '50px' }} />
@@ -134,11 +140,11 @@ const MyPage = ({
             로그 아웃
           </button>
 
-          <button onClick={() => {}}>
+          <button onClick={() => {setPwModalOn(true)}}>
             비밀번호 변경
           </button>
 
-          <button onClick={() => {}}>
+          <button onClick={() => {setWithdrawalModalOn(true)}}>
             회원 탈퇴
           </button>
         </div>

@@ -25,6 +25,7 @@ import { LOGIN_ORIGIN, LOGIN_BEFORE } from '../redux/login/loginTypes';
 import { changeLoadingState } from '../redux/view/viewActions';
 import { root2 } from './Root2';
 import ChatRoomDeniedModal from './modal/ChatRoomDeniedModal';
+import ChatRoomAddingModal from './modal/ChatRoomAddingModal';
 import Root from './Root';
 
 function BotChatMsgItem({ msg, name }) {
@@ -78,6 +79,7 @@ const TaChatRoom = ({
   const scrollRef = useRef();
   const [isTa, setTa] = useState(false);
   const [modalOn, setModalOn] = useState(false);
+  const [roomPlusmodalOn, setRoomPlusModalOn] = useState(false);
 
   useEffect(() => {
     // 동기로 리프래쉬토큰 검증.
@@ -347,9 +349,8 @@ const TaChatRoom = ({
       <VerticalHeader />
       <HorizontalHeader />
 
-      <>
-        {modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}
-      </>
+      <>{modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}</>
+      <>{roomPlusmodalOn ? <ChatRoomAddingModal setModalOn={setRoomPlusModalOn} /> : ''}</>
 
       <div id="chatRoomBody">
         <div id="emptySpace1" />
@@ -357,7 +358,17 @@ const TaChatRoom = ({
         <div className="secondHorizontalNav">
           <div id="navInnerDiv">
             <h3 style={{ color: '#008cff' }}> 채팅방 목록</h3>
-            <div onClick={()=>{setModalOn(true);}}>+</div>
+            <div
+              onClick={() => {
+                if (!isTa) {
+                  setModalOn(true);
+                } else{
+                  setRoomPlusModalOn(true);
+                }
+              }}
+            >
+              +
+            </div>
           </div>
           <div className="navInner2Div">
             <div>{listData()}</div>
