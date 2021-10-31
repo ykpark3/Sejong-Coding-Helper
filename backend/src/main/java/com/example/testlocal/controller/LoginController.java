@@ -143,4 +143,20 @@ public class LoginController {
         return "logout";
     }
 
+    @PostMapping("/update/pw")
+    public String checkPw(@CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken,
+                          @RequestBody Map<String, String> map) {
+
+        String result = userService.updatePw(refreshToken,map.get("nowPwd"),map.get("newPwd"));
+        return result;
+    }
+
+    @PostMapping("/delete/user")
+    public String deleteUser(@CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken,
+                          @RequestBody Map<String, String> map) {
+
+        String result = userService.deleteUser(refreshToken,map.get("nowPwd"));
+        return result;
+    }
+
 }

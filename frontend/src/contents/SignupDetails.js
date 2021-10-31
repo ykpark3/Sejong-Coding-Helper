@@ -51,7 +51,7 @@ const SignupDetails = ({ signupAuth2, changeSignupAuth, changeSignupAuth2, chang
     }
 
     if (!reg_pw.test(pw)) {
-      alert('🙄❗❓ 패스워드를 다시 확인해주세요. ❓❗🙄');
+      alert('🙄❗❓ 패스워드는 4글자 이상으로 입력해주세요. ❓❗🙄');
       return;
     }
 

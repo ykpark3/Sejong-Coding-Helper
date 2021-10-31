@@ -14,4 +14,5 @@ public interface AssistantRepository extends JpaRepository<Assistant, Long> {
 
     @Query(value = "select student_email from assistant where user_id = (select id from user where student_number = ?1)", nativeQuery = true)
     List<String> findAllStudentEmailByStudentNumber(String StudentNumber);
+
 }

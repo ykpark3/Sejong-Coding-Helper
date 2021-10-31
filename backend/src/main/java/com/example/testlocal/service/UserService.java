@@ -97,6 +97,46 @@ public class UserService {
 
     }
 
+    @Transactional
+    public String updatePw(String refreshToken,String nowPwd,String newPwd) {
+
+        String username = jwtTokenProvider.getUserPk(refreshToken);
+
+        // id확인
+        User checkedUser = userRepository2.findByStudentNumber(username)
+                .orElseThrow(() -> new IllegalArgumentException("id가 존재하지 않습니다."));
+
+        // 비번 확인
+        if (!passwordEncoder.matches(nowPwd, checkedUser.getPassword())) {
+            return "pwdError";
+        }
+
+        userRepository2.updatePwd(username, passwordEncoder.encode(newPwd));
+        return "accepted";
+
+    }
+
+    @Transactional
+    public String deleteUser(String refreshToken,String nowPwd) {
+
+        String studentNumber = jwtTokenProvider.getUserPk(refreshToken);
+
+        // id확인
+        User checkedUser = userRepository2.findByStudentNumber(studentNumber)
+                .orElseThrow(() -> new IllegalArgumentException("id가 존재하지 않습니다."));
+
+        // 비번 확인
+        if (!passwordEncoder.matches(nowPwd, checkedUser.getPassword())) {
+            return "pwdError";
+        }
+        int userId = userRepository2.findUserIdByStudentNumber(studentNumber);
+
+        //db에서 삭제./
+
+        return "accepted";
+
+    }
+
     public Map<String, String> refreshToken(String refreshToken) {
         String accessToken = "";
 
