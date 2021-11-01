@@ -71,7 +71,8 @@ const VerticalHeader = ({ clickedNavNum, clickedNavItem,history }) => {
       </Link>
 
        {/* 리로드가 필요해서 a 태그씀. */}
-      <a onClick={() => window.location.replace("tachatroom")}>
+      <Link to="/tachatroom">
+      {/* <a onClick={() => window.location.replace("tachatroom")}> */}
         <div className={clicked2}>
           {isLong && <img className="logoImg" src="img/question1.png" />}
 
@@ -94,7 +95,8 @@ const VerticalHeader = ({ clickedNavNum, clickedNavItem,history }) => {
 
           <hr className="header_line" />
         </div>
-      </a>
+      {/* </a> */}
+      </Link>
 
       <Link to="/codingEditor">
         <div className={clicked3}>

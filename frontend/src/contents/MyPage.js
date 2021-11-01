@@ -21,13 +21,13 @@ const MyPage = ({
   changeLoadingState,
 }) => {
 
-  const [userName,setUserName] = useState('');
-  const [isTa,setTa] = useState('학생');
-  const [userId,setId] = useState('');
-  const [userEmail,setEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [isTa, setTa] = useState('학생');
+  const [userId, setId] = useState('');
+  const [userEmail, setEmail] = useState('');
   const [pwModalOn, setPwModalOn] = useState(false);
   const [withdrawalModalOn, setWithdrawalModalOn] = useState(false);
-  
+
   useEffect(() => {
 
     // 동기로 리프래쉬토큰 검증.
@@ -101,56 +101,56 @@ const MyPage = ({
   };
 
   return (
-    <div>
+    <div style={{ height: '100%' }}>
       <VerticalHeader />
       <HorizontalHeader />
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <>{pwModalOn ? <PwModifyingModal setModalOn={setPwModalOn} /> : ''}</>
+        <>{withdrawalModalOn ? <WithdrawalModal setModalOn={setWithdrawalModalOn} /> : ''}</>
 
-      <>{pwModalOn ? <PwModifyingModal setModalOn={setPwModalOn} /> : ''}</>
-      <>{withdrawalModalOn ? <WithdrawalModal setModalOn={setWithdrawalModalOn} /> : ''}</>
+        <div id="myPageBox">
+          <h3>My Page</h3>
+          <div style={{ width: '100%', height: '50px' }} />
+          <div id="myInfoSector">
 
-      <div id="myPageBox">
-        <h3>My Page</h3>
-        <div style={{ width: '100%', height: '50px' }} />
-        <div id="myInfoSector">
+            <img src="img/sjulogo.png" />
 
-          <img src="img/sjulogo.png" />
+            <div id="myInfoColumn">
+              <p>이 름</p>
+              <p>구 분</p>
+              <p>학 번</p>
+              <p>이메일</p>
+            </div>
 
-          <div id="myInfoColumn">
-            <p>이 름</p>
-            <p>구 분</p>
-            <p>학 번</p>
-            <p>이메일</p>
+            <div id="myInfoValue">
+              <p>{userName}</p>
+              <p>{isTa}</p>
+              <p>{userId}</p>
+              <p>{userEmail}</p>
+            </div>
+
           </div>
 
-          <div id="myInfoValue">
-            <p>{userName}</p>
-            <p>{isTa}</p>
-            <p>{userId}</p>
-            <p>{userEmail}</p>
+          <div style={{ height: '80px' }}>
+
           </div>
 
-        </div>
+          <div id="myInfoBntSector">
+            <button onClick={() => logout()}>
+              로그 아웃
+            </button>
 
-        <div style={{ height: '80px' }}>
+            <button onClick={() => { setPwModalOn(true) }}>
+              비밀번호 변경
+            </button>
 
-        </div>
-
-        <div id="myInfoBntSector">
-          <button onClick={() => logout()}>
-            로그 아웃
-          </button>
-
-          <button onClick={() => {setPwModalOn(true)}}>
-            비밀번호 변경
-          </button>
-
-          <button onClick={() => {setWithdrawalModalOn(true)}}>
-            회원 탈퇴
-          </button>
+            <button onClick={() => { setWithdrawalModalOn(true) }}>
+              회원 탈퇴
+            </button>
+          </div>
         </div>
       </div>
-
-      <div style={{ width: '100%', height: '50px' }} />
+      {/* <div style={{ width: '100%', height: '50px' }} /> */}
     </div>
   );
 };

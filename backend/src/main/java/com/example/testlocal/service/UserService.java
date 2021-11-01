@@ -163,7 +163,7 @@ public class UserService {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         message.setFrom("Sejong Coding Helper<sjhelper10@gmail.com>");
-        message.setSubject("Sejong Coding Helper 임시 이메일 발급.");
+        message.setSubject("Sejong Coding Helper 임시 비밀번호 발급.");
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
         message.setText(content, "UTF-8", "html");
         message.setSentDate(new Date());

@@ -33,6 +33,7 @@ function App() {
           <UserRoute path="/botchatroom" component={BotChatRoom} exact />
           <UserRoute path="/tachatroom" component={TaChatRoom} exact/>
           <UserRoute path="/myPage"  component={MyPage} exact/>
+          <UserRoute path="/codingEditor" component={CodingEditor} />
 
           <Route path="/signup" component={Signup} />
           <SignupRoute path="/signupDetails" component={SignupDetails}/>
@@ -40,7 +41,6 @@ function App() {
           <SignupRoute path="/signupComplete" component={SignupComplete}/> 
 
           <Route path="/login" component={Login} />
-          <Route path="/codingEditor" component={CodingEditor} />
           <Route path="/qa" component={Qa} />
         </BrowserRouter>
       </div>

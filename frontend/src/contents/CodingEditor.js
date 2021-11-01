@@ -1,11 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState,useEffect } from 'react';
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import Editor from '@monaco-editor/react';
 import '../css/CodingEditor.css';
 import axios from 'axios';
-import { connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { changeLoadingState } from '../redux/view/viewActions';
+import { changeType, onLoginSuccess } from '../redux/login/loginActions';
+import { root2 } from './Root2';
 import {
   API_BASE_URL,
   API_COMPILER_URL,
@@ -13,12 +15,27 @@ import {
   P_COMPILER_BASE_CODE,
 } from './utils/Constant';
 
-const CodingEditor = ({changeLoadingState}) => {
+const CodingEditor = ({ changeLoadingState, onLoginSuccess,changeType, }) => {
   const editorRef = useRef(null);
   const [codeInput, setCodeInput] = useState('');
   const [codeOutput, setCodeOutput] = useState('');
   const [codeLang, setCodeLang] = useState('c');
   const [baseCode, setBaseCode] = useState(C_COMPILER_BASE_CODE);
+
+  useEffect(() => {
+
+    // 동기로 리프래쉬토큰 검증.
+    const auth = async () => {
+      const result = await root2(onLoginSuccess, changeType, changeLoadingState);
+
+      if (result === 'success') {
+        changeLoadingState(false);
+      }
+    };
+
+    auth();
+
+  }, []);
 
   function showValue() {
     //alert(editorRef.current.getValue());
@@ -104,7 +121,7 @@ const CodingEditor = ({changeLoadingState}) => {
             language={codeLang}
             onMount={handleEditorDidMount}
             value={baseCode}
-            
+
           />
         </div>
       </div>
@@ -124,7 +141,7 @@ const CodingEditor = ({changeLoadingState}) => {
   );
 };
 
-const mapStateToProps = ({}) => {
+const mapStateToProps = ({ }) => {
 
   return {
   };
@@ -132,7 +149,9 @@ const mapStateToProps = ({}) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    changeType: (type) => dispatch(changeType(type)),
     changeLoadingState: (props) => dispatch(changeLoadingState(props)),
+    onLoginSuccess: (props) => dispatch(onLoginSuccess(props)),
   };
 };
 

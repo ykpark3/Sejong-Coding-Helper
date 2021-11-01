@@ -9,10 +9,19 @@ import com.example.testlocal.service.UserService;
 import com.example.testlocal.service.UserService2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +73,10 @@ public class ChatController {
     }
 //
     @MessageMapping("/chat/message")
-    public void message(ChatDTO2 msg){
+    public void message(SimpMessageHeaderAccessor headerAccessor, ChatDTO2 msg){
+        //String sessionId = headerAccessor.getSessionAttributes().get("sessionId").toString();
+        String sessionId = headerAccessor.getSessionAttributes().get("roomId").toString();
+        System.out.println(sessionId);
         chatService.create(msg);
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }

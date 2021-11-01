@@ -49,7 +49,7 @@ const PwSearchModal = ({ setModalOn,changeLoadingState }) => {
 
         changeLoadingState(false);
         setModalOn(false);
-        alert('✔✔✔ 임시 비밀 번호 발급에 성공했습니다. 메일함을 확인해보세요. ✔✔✔');
+        alert('✔ 임시 비밀 번호 발급에 성공했습니다. 메일함을 확인해보세요. ✔');
       })
       .catch((res) => {
         console.log(res);

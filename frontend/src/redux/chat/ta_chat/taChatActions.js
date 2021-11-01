@@ -8,6 +8,8 @@ import {
   ADD_TA_CHATROOM,
   GET_TA_RESPONSE,
   CHANGE_NOW_TA_CHATROOM,
+  CLEAR_TACHAT_LIST,
+  CLEAR_TACHATROOM_LIST,
 } from './taChatTypes';
 
 // const fetChatData = () => {
@@ -24,6 +26,18 @@ export const fetchChatData = () => {
         type: FETCH_CHATDATA_SUCCESS,
     };
 }
+
+export const clearTaChatList = () => {
+  return{
+    type:CLEAR_TACHAT_LIST,
+  }
+}
+export const clearTaChatRoomList = () => {
+  return{
+    type:CLEAR_TACHATROOM_LIST,
+  }
+}
+
 
 export const changeNowRoomId = (nowRoomId) => {
   return{

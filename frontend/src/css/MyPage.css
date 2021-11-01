@@ -9,6 +9,10 @@
     height: 100%;
     background-color: #f6f6f6;
   }
+
+  .App{
+    height: 100%;
+  }
   
   a {
     text-decoration: none;
@@ -37,15 +41,14 @@
   
   #myPageBox {
     width: 700px;
-    height: fit-content;
-    position: relative;
-    top: 100px;
+    height:fit-content;
+
     background-color: white;
-    margin: 0 auto 100px auto;
+    margin: auto;
     padding: 20px;
     border-radius: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction:column;
   
     justify-content: center;
     align-items: center;
