@@ -27,7 +27,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     //연결시 CORS(CrossOrigin) 허용
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/websocket").addInterceptors(new HttpHandshakeInterceptor()).setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/websocket").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
@@ -43,21 +43,21 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         return new ServerEndpointExporter();
     }
 
-    public class HttpHandshakeInterceptor implements HandshakeInterceptor {
-
-        @Override
-        public boolean beforeHandshake(org.springframework.http.server.ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-            if (request instanceof ServletServerHttpRequest) {
-                ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-                HttpSession session = servletRequest.getServletRequest().getSession();
-                attributes.put("roomId", session.getAttribute("roomId"));
-            }
-            return true;
-        }
-
-        @Override
-        public void afterHandshake(org.springframework.http.server.ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
-
-        }
-    }
+//    public class HttpHandshakeInterceptor implements HandshakeInterceptor {
+//
+//        @Override
+//        public boolean beforeHandshake(org.springframework.http.server.ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+//            if (request instanceof ServletServerHttpRequest) {
+//                ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
+//                HttpSession session = servletRequest.getServletRequest().getSession();
+//                attributes.put("roomId", session.getAttribute("roomId"));
+//            }
+//            return true;
+//        }
+//
+//        @Override
+//        public void afterHandshake(org.springframework.http.server.ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
+//
+//        }
+//    }
 }

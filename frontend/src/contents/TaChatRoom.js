@@ -146,6 +146,7 @@ const TaChatRoom = ({
           className={st}
           key={item.id}
           onClick={() => {
+            changeLoadingState(true);
             clearTaChatList();
             setRoomIdSession(list[item.id - 1].roomId);
             changeNowRoomId(list[item.id - 1].roomId);
@@ -290,16 +291,11 @@ const TaChatRoom = ({
         for (let i = 0; i < roomList.length; i++) {
           // subscribe 여러개 하면 다중 연결
           stomp.subscribe('/sub/chat/room/' + roomList[i], (chat) => {
-            //console.log('msg arrived');
 
             var content = JSON.parse(chat.body);
 
-            //if (String(content.roomId) === String(nowRoomId)) {
             //addMsgData(num, content.name, content.userId, content.message);
             testAddingMsg(num, content.roomId, content.name, content.userId, content.message);
-
-
-            //}
           });
         }
       },
@@ -308,8 +304,9 @@ const TaChatRoom = ({
   };
 
   const testAddingMsg = (num, roomId, name, userId, message) => {
+
+    // 현재 세션에 저장된 roomId값 검사한 후, add할지말지.
     getRoomIdSession().then((nowRoomId) => {
-      //console.log(nowRoomId);
       if (nowRoomId === roomId) {
         addMsgData(num, name, userId, message);
         scrollToBottom();
@@ -360,7 +357,9 @@ const TaChatRoom = ({
   };
 
   const scrollToBottom = () => {
-    scrollRef.current.scrollIntoView({ behavior: 'auto' });
+    if (scrollRef) {
+      scrollRef.current.scrollIntoView({ behavior: 'auto' });
+    }
   };
 
   const handleKeyPress = (e) => {

@@ -73,10 +73,7 @@ public class ChatController {
     }
 //
     @MessageMapping("/chat/message")
-    public void message(SimpMessageHeaderAccessor headerAccessor, ChatDTO2 msg){
-        //String sessionId = headerAccessor.getSessionAttributes().get("sessionId").toString();
-        String sessionId = headerAccessor.getSessionAttributes().get("roomId").toString();
-        System.out.println(sessionId);
+    public void message(ChatDTO2 msg){
         chatService.create(msg);
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
