@@ -13,17 +13,17 @@ import java.util.concurrent.TimeoutException;
 @Service
 @RequiredArgsConstructor
 public class CompilerService {
-
-    public final String CFileName = "test4.c";
-    public final String CExeDirectory = "./hi";
-    public final String PythonExeDirectory = "./test.py";
+    public final String CFileName = "/home/c/test4.c";
+    public final String CExeDirectory = "/home/c/hi";
+    public final String PythonExeDirectory = "/home/python/test.py";
     public final String InputFileName = "test.txt";
-    public final String InputFileDirectory = "./test.txt";
+    public final String InputCFileDirectory = "/home/c/test.txt";
+    public final String InputPythonFileDirectory = "/home/python/test.txt";
     public final String PythonFileName = "test.py";
 
     @SneakyThrows
     public String sendGcc(String code, String input) {
-        createInputFile(input);
+        createInputFile(input, InputCFileDirectory);
         createFile(code, CFileName);
         return executeCompiler("C");
     }
@@ -38,9 +38,9 @@ public class CompilerService {
         }
     }
 
-    public void createInputFile(String input){
+    public void createInputFile(String input, String inputFileName){
         try{
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(InputFileName, true));
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(inputFileName, true));
             bufferedWriter.write(input);
             bufferedWriter.flush();
             bufferedWriter.close();
@@ -68,20 +68,21 @@ public class CompilerService {
         List createdList = new ArrayList<String>();
         createdList.add("gcc");
         createdList.add("-o");
-        createdList.add("hi");
+        createdList.add("/home/c/hi");
         createdList.add(CFileName);
         compiler.execCommand(createdList);
 
         String result="";
 
         File exeCFile = new File(CExeDirectory);
-        File textCFile = new File(InputFileName);
+        File textCFile = new File(InputCFileDirectory);
 
         if (exeCFile.exists()) {
             List<String> executeCommendCFile = new ArrayList<String>();
+            //authorizeInProcess(compiler, CExeDirectory, "777");
             executeCommendCFile.add("/bin/sh");
             executeCommendCFile.add("-c");
-            executeCommendCFile.add(CExeDirectory+"<"+InputFileDirectory);
+            executeCommendCFile.add(CExeDirectory+"<"+InputCFileDirectory);
             result = compiler.execCommand(executeCommendCFile);
         }
         else {
@@ -94,28 +95,42 @@ public class CompilerService {
     }
 
     @SneakyThrows
+    public void authorizeInProcess(RenderScriptProcessor compiler, String fileName, String chmodNumber){
+
+        List<String> executeCommendCFile = new ArrayList<String>();
+
+        executeCommendCFile.add("chmod");
+        executeCommendCFile.add(chmodNumber);
+        executeCommendCFile.add(fileName);
+        compiler.execCommand(executeCommendCFile);
+
+    }
+
+    @SneakyThrows
     public String executePythonCompiler(RenderScriptProcessor compiler){
 
         File exePythonFile = new File(PythonExeDirectory);
-        File textPythonFile = new File(InputFileName);
+        File textPythonFile = new File(InputPythonFileDirectory);
         String result;
+//400 읽기, 200 쓰기, 100, 실행
+        authorizeInProcess(compiler, PythonExeDirectory, "400");
 
         List<String> executeCommendCFile = new ArrayList<String>();
+
         executeCommendCFile.add("/bin/sh");
         executeCommendCFile.add("-c");
-        executeCommendCFile.add("python3 "+PythonFileName+"<"+InputFileDirectory);
+        executeCommendCFile.add("python3 "+PythonExeDirectory+"<"+InputPythonFileDirectory);
         result = compiler.execCommand(executeCommendCFile);
 
-        textPythonFile.delete();
         exePythonFile.delete();
+        textPythonFile.delete();
         return result;
     }
 
-
     @SneakyThrows
     public String sendPython(String code, String input) {
-        createInputFile(input);
-        createFile(code, PythonFileName);
+        createInputFile(input, InputPythonFileDirectory);
+        createFile(code, PythonExeDirectory);
         return executeCompiler("Python");
     }
 
