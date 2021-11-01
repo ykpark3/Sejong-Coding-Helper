@@ -3,6 +3,7 @@ import ReactModal from 'react-modal';
 import reactDom from 'react-dom';
 import '../../css/modal/RoomAddingModal.css';
 import { LOGIN_BEFORE } from '../../redux/login/loginTypes';
+import { useHistory } from 'react-router';
 import axios from 'axios';
 import { API_BASE_URL } from '../utils/Constant';
 
@@ -10,6 +11,7 @@ const WithdrawalModal = ({ setModalOn }) => {
   const [nowPw, setNowPw] = useState('');
   const [nowPwCheck, setNowPwCheck] = useState('');
   const [checkString, setCheckString] = useState('');
+  const history = useHistory();
 
   const withdrawMember = () => {
     if (nowPw === '' || checkString === '' || nowPwCheck === '') {
@@ -22,7 +24,7 @@ const WithdrawalModal = ({ setModalOn }) => {
       return;
     }
 
-    if (checkString !== '회원 탈퇴') {
+    if (checkString !== '회원탈퇴') {
       alert('🙄❗❓ 삭제 문구가 올바르지 않습니다. ❓❗🙄');
       return;
     }
@@ -46,10 +48,8 @@ const WithdrawalModal = ({ setModalOn }) => {
         }
         setModalOn(false);
         alert('✔✔✔ 성공적으로 회원 탈퇴가 완료됐습니다. ✔✔✔');
-
-        // db에서 처리후,
-        // 세션, 쿠키 지우기
-        // 메인 화면으로 보내기.
+        
+        history.push('/');
       })
       .catch((res) => {
         console.log(res);
@@ -92,14 +92,14 @@ const WithdrawalModal = ({ setModalOn }) => {
           </p>
           <input
             style={{ width: '230px', marginBottom: '20px' }}
-            placeholder="회원 탈퇴"
+            placeholder="회원탈퇴"
             onChange={(e) => {
               setCheckString(e.target.value);
             }}
           ></input>
         </div>
         <p id="textAreaTip" style={{ margin: '0px 0px 20px 0px' }}>
-          ※ 정말로 회원 탈퇴를 원하시면 '회원 탈퇴'를 입력해주세요.
+          ※ 정말로 회원 탈퇴를 원하시면 '회원탈퇴'를 입력해주세요.
         </p>
 
         <div className="cuttingLine"></div>

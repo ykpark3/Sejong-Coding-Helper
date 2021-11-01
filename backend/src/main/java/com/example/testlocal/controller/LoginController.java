@@ -128,7 +128,6 @@ public class LoginController {
 
     @PostMapping("/userlogout")
     public String logout(HttpServletResponse response,HttpServletRequest request) {
-        System.out.println("qwe");
 
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
@@ -153,9 +152,11 @@ public class LoginController {
 
     @PostMapping("/delete/user")
     public String deleteUser(@CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken,
-                          @RequestBody Map<String, String> map) {
+                          @RequestBody Map<String, String> map,HttpServletResponse response,HttpServletRequest request) {
 
         String result = userService.deleteUser(refreshToken,map.get("nowPwd"));
+        logout(response,request);
+
         return result;
     }
 
