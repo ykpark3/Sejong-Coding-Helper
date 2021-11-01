@@ -10,6 +10,7 @@ import { login,changeType } from '../redux/login/loginActions';
 import {LOGIN_PENDING, LOGIN_FAIL, LOGIN_SUCCESS,LOGIN_BEFORE } from '../redux/login/loginTypes';
 import { changeLoadingState } from '../redux/view/viewActions';
 import IdSearchModal from './modal/IdSearchModal';
+import PwSearchModal from './modal/PwSearchModal';
 
 const Login = ({ loginState, login,changeType,changeLoadingState,history }) => {
 
@@ -17,9 +18,9 @@ const Login = ({ loginState, login,changeType,changeLoadingState,history }) => {
   const [pwd, setPwd] = useState("");
   const [modalOn, setModalOn] = useState(false);
   const [idSearchingModalOn,setIdSearchnigModalOn] = useState(false);
-  const [pwdSearchingModalOn,setPwdSearchnigModalOn] = useState(false);
+  const [pwdSearchingModalOn,setPwdSearchingModalOn] = useState(false);
   
-  console.log(loginState);
+  //console.log(loginState);
 
   useEffect(() => {
     if (loginState === LOGIN_FAIL) {
@@ -63,6 +64,11 @@ const Login = ({ loginState, login,changeType,changeLoadingState,history }) => {
         {idSearchingModalOn ? <IdSearchModal setModalOn={setIdSearchnigModalOn} /> : ''}
       </>
 
+      <>
+        {pwdSearchingModalOn ? <PwSearchModal setModalOn={setPwdSearchingModalOn} changeLoadingState={changeLoadingState} /> : ''}
+      </>
+
+
 
       <div id="loginBox">
         <img src="img/logo.png" />
@@ -78,8 +84,8 @@ const Login = ({ loginState, login,changeType,changeLoadingState,history }) => {
         <div id="textBox">
           <h4 className="contentsText1" onClick={()=>{history.push("/signup")}}>회원 가입</h4>
           <h4 className="contentsText1" onClick={()=>{setIdSearchnigModalOn(true)}}>아아디 찾기</h4>
-          <h4 className="contentsText1">비밀번호 찾기</h4>
-
+          <h4 className="contentsText1" onClick={()=>{setPwdSearchingModalOn(true)}}>비밀번호 찾기</h4>
+          
         </div>
 
         <button onClick={() => { { logining(); } }}>로그인</button>

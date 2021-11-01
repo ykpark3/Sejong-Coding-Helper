@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 @Slf4j
 @RestController
@@ -156,6 +158,13 @@ public class LoginController {
 
         String result = userService.deleteUser(refreshToken,map.get("nowPwd"));
         logout(response,request);
+
+        return result;
+    }
+
+    @PostMapping("/search/pw")
+    public String searchPw(@RequestBody Map<String, String> map) throws MessagingException {
+        String result = userService.searchPw(map.get("studentNumber"),map.get("name"),map.get("email")  + "@sju.ac.kr");
 
         return result;
     }

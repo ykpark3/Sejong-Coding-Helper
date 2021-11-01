@@ -92,7 +92,7 @@ const PwModifyingModal = ({ setModalOn }) => {
           ></input>
         </div>
 
-        <div className="cuttingLine"></div>
+        <div className="cuttingLine" ></div>
         <div className="bntGroup">
           <button
             style={{ color: '#ff7777' }}
