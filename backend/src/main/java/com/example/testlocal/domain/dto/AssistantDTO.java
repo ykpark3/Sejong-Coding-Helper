@@ -9,5 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AssistantDTO {
     private Long userId;
-    private String studentEmail;
+    private String studentNumber;
 }

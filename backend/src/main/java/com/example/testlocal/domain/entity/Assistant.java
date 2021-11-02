@@ -21,15 +21,15 @@ public class Assistant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 조교 id
 
-    @Column(name = "student_email", nullable = false)
-    private String email;
+    @Column(name = "student_number", nullable = false)
+    private String studentNumber;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Assistant(AssistantDTO requestDTO, UserService2 userService) {
-        this.email = requestDTO.getStudentEmail();
+        this.studentNumber = requestDTO.getStudentNumber();
         this.user = userService.findById(requestDTO.getUserId());
     }
 
