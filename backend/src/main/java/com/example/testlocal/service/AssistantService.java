@@ -2,7 +2,6 @@ package com.example.testlocal.service;
 
 import com.example.testlocal.domain.dto.AssistantDTO;
 import com.example.testlocal.domain.entity.Assistant;
-import com.example.testlocal.exception.InvalidAssistantIdException;
 import com.example.testlocal.repository.AssistantRepository;
 import com.example.testlocal.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +26,6 @@ public class AssistantService {
         return assistantRepository.findAll();
     }
 
-    public Assistant findById(Long id) {
-        return assistantRepository.findById(id).orElseThrow(() -> new InvalidAssistantIdException());
-    }
-
     public List<String> findAllByStudentId(String token) {
         String studentNumber = jwtTokenProvider.getUserPk(token);
         return assistantRepository.findAllStudentEmailByStudentNumber(studentNumber);
@@ -39,4 +34,24 @@ public class AssistantService {
         assistantRepository.deleteById(id);
     }
 
+    public void insertStudentNumbers(String assistantNumber, List<String> studentNumbers) {
+
+        Long id = (long) userService.findUserIdByStudentNumber(assistantNumber);
+
+        for (String number:studentNumbers){
+            if(!validateDuplicateAssistant(id, number))
+            {
+                assistantRepository.save(new Assistant(new AssistantDTO(id, number), userService));
+            }
+        }
+    }
+
+    private Boolean validateDuplicateAssistant(Long id, String number) {
+
+        if(assistantRepository.existsByidNumber(id.intValue(), number) == 1){
+            return true;
+        } else{
+            return false;
+        }
+    }
 }

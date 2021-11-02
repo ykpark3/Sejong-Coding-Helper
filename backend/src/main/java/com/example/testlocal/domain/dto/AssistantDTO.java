@@ -10,4 +10,10 @@ import lombok.Setter;
 public class AssistantDTO {
     private Long userId;
     private String studentNumber;
+
+    public AssistantDTO(Long id, String number) {
+        this.userId = id;
+        this.studentNumber = number;
+    }
+
 }
