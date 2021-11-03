@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useSelector, useState } from 'react';
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import { Link } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   addMsgData,
   getBotResponse,
@@ -12,7 +12,6 @@ import {
   changeNowBotRoomId,
   clearChatList,
 } from '../redux/chat/bot_chat/botChatActions';
-import Root from './Root';
 import '../css/Chatroom.css';
 import axios from 'axios';
 import { API_BASE_URL } from './utils/Constant';
@@ -25,14 +24,14 @@ import {
 } from '../redux/login/loginActions';
 import { root2 } from './Root2';
 import { changeLoadingState } from '../redux/view/viewActions';
+import { getTime } from './utils/ChatUtils';
 
 const chatData = ({ chatsData }) => {
-
   const chatItems = chatsData.map((chat) => {
     if (chat.sender === 'bot') {
-      return <BotChatMsgItem msg={chat.msg} key={chat.id} />;
+      return <BotChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
     } else if (chat.sender === 'user') {
-      return <UserChatMsgItem msg={chat.msg} key={chat.id} />;
+      return <UserChatMsgItem msg={chat.msg} key={chat.id} time={chat.time}/>;
     }
   });
 
@@ -52,24 +51,31 @@ const listData = ({ list }) => {
   return <>{listItems}</>;
 };
 
-function BotChatMsgItem({ msg }) {
+function BotChatMsgItem({ msg,time }) {
   return (
     <li className="botMsg">
       <img src="img/logo.png" />
-      <div>
-        <p>세종 코딩 헬퍼</p>
-        <p>{msg}</p>
+
+      <div className="botMsgBox">
+        <p className="botSenderName">세종 코딩 헬퍼</p>
+        <div>
+          <p className="botSenderTime">{time}</p>
+          <p className="botSenderContent">{msg}</p>
+        </div>
       </div>
     </li>
   );
 }
 
-function UserChatMsgItem({ msg }) {
+function UserChatMsgItem({ msg,time }) {
   return (
     <li className="userMsg">
-      <div>
-        <p>나</p>
-        <p>{msg}</p>
+      <div className="userMsgBox">
+        <p className="senderName">나</p>
+        <div>
+          <p className="senderTime">{time}</p>
+          <p className="senderContent">{msg}</p>
+        </div>
       </div>
     </li>
   );
@@ -112,6 +118,8 @@ const BotChatRoom = ({
       );
 
       if (result === 'success') {
+        // 로딩창 true
+        changeLoadingState(true);
         clearChatList();
         getUserInfo();
         getBotChatRoomList();
@@ -140,6 +148,7 @@ const BotChatRoom = ({
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -191,6 +200,7 @@ const BotChatRoom = ({
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -216,13 +226,15 @@ const BotChatRoom = ({
             name = 'bot';
           }
 
-          addMsgData(num, name, res.data[i].message);
+          addMsgData(num, name, res.data[i].message,getTime(res.data[i].createTime) );
         }
 
+        changeLoadingState(false);
         scrollToBottom();
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -285,13 +297,16 @@ const BotChatRoom = ({
       return;
     }
 
-    addMsgData(num, 'user', text);
+    let nowTime = new Date().getTime();
+
+    changeLoadingState(true);
+    addMsgData(num, 'user', text,getTime(nowTime));
     msgInput.current.value = '';
 
     axios
       .post(
         API_BASE_URL + '/chatbotMessage/send/' + nowRoomId + '/' + userId,
-        { message: text },
+        { message: text, time:nowTime},
         {
           headers: {
             'Content-type': 'application/json',
@@ -302,8 +317,9 @@ const BotChatRoom = ({
       )
       .then((res) => {
         console.log(res.data);
-        getBotResponse(res.data);
+        getBotResponse(res.data.message,getTime(res.data.createTime));
         scrollToBottom();
+        changeLoadingState(false);
       })
       .catch((res) => {
         console.log(res);
@@ -324,6 +340,7 @@ const BotChatRoom = ({
           <button
             className={cBntStyleClass}
             onClick={() => {
+              changeLoadingState(true);
               setRoomIdSession(cRoomId);
               changeNowBotRoomId(cRoomId);
               clearChatList();
@@ -339,6 +356,7 @@ const BotChatRoom = ({
           <button
             className={pBntStyleClass}
             onClick={() => {
+              changeLoadingState(true);
               setRoomIdSession(pRoomId);
               changeNowBotRoomId(pRoomId);
               clearChatList();
@@ -352,7 +370,7 @@ const BotChatRoom = ({
           </button>
 
           <h3>실시간 키워드 정보</h3>
-          <div>{listData({ list })}</div>
+          <div className="navInner2Div">{listData({ list })}</div>
         </div>
         <div id="mainChatting">
           <h3>대화하기</h3>
@@ -396,8 +414,8 @@ const mapStateToProps = ({ botChats, login }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchChatData: () => dispatch(fetchChatData()),
-    addMsgData: (id, sender, msg) => dispatch(addMsgData(id, sender, msg)),
-    getBotResponse: (msg) => dispatch(getBotResponse(msg)),
+    addMsgData: (id, sender, msg, time) => dispatch(addMsgData(id, sender, msg, time)),
+    getBotResponse: (msg,time) => dispatch(getBotResponse(msg,time)),
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
     changeCRoomId: (id) => dispatch(changeCRoomId(id)),

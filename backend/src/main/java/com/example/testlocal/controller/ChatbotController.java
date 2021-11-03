@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +55,9 @@ public class ChatbotController {
     //@SendTo("/topic/public")    //server -> client
 
     @PostMapping("/chatbotMessage/send/{roomId}/{userId}")
-    public String sendMessage(@RequestBody Map<String, Object> map,@PathVariable Long roomId, @PathVariable Long userId) throws IOException {
+    public ChatbotDTO sendMessage(@RequestBody Map<String, Object> map,@PathVariable Long roomId, @PathVariable Long userId) throws IOException {
 
+        ChatbotDTO input = null, result = null;
         String chatMessage = (String)map.get("message");
         String sendMessage = chatMessage;
         URL url = new URL(apiUrl);
@@ -103,8 +105,13 @@ public class ChatbotController {
                 String description = "";
                 description = (String)data.get("description");
                 chatMessage = description;
-                chatbotService.create(new ChatbotDTO(userId,roomId, sendMessage));
-                chatbotService.create(new ChatbotDTO(CHATBOT_ID ,roomId, chatMessage));
+
+                input = new ChatbotDTO(userId,roomId, sendMessage);
+                input.setCreateTime(new Timestamp((Long) map.get("time")));
+                result = new ChatbotDTO(CHATBOT_ID ,roomId, chatMessage);
+
+                chatbotService.create(input);
+                chatbotService.create(result);
 
             } catch (Exception e) {
 
@@ -118,8 +125,7 @@ public class ChatbotController {
             chatMessage = con.getResponseMessage();
         }
 
-
-        return chatMessage;
+        return result;
     }
 
     //보낼 메세지를 네이버에서 제공해준 암호화로 변경해주는 메소드

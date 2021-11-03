@@ -53,6 +53,7 @@ public class UserService2 {
         map.put("name", assistantDTO2.get(0).get("name"));
         map.put("isAssistant", assistantDTO2.get(1).get("name"));
         map.put("studentNumber",studentNumber);
+        map.put("email",findUserEmailByStudentNumber(studentNumber));
         map.put("id", findUserIdByStudentNumber(studentNumber));
         return map;
     }
@@ -63,6 +64,10 @@ public class UserService2 {
         }catch(Exception e){
           return 0;
         }
+    }
+
+    public String findUserEmailByStudentNumber(String studentNumber){
+        return userRepository2.findUserEmailByStudentNumber(studentNumber);
     }
 
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -128,7 +129,6 @@ public class LoginController {
 
     @PostMapping("/userlogout")
     public String logout(HttpServletResponse response,HttpServletRequest request) {
-        System.out.println("qwe");
 
         Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
@@ -141,6 +141,31 @@ public class LoginController {
         session.invalidate(); // 세션 삭제
 
         return "logout";
+    }
+
+    @PostMapping("/update/pw")
+    public String checkPw(@CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken,
+                          @RequestBody Map<String, String> map) {
+
+        String result = userService.updatePw(refreshToken,map.get("nowPwd"),map.get("newPwd"));
+        return result;
+    }
+
+    @PostMapping("/delete/user")
+    public String deleteUser(@CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken,
+                          @RequestBody Map<String, String> map,HttpServletResponse response,HttpServletRequest request) {
+
+        String result = userService.deleteUser(refreshToken,map.get("nowPwd"));
+        logout(response,request);
+
+        return result;
+    }
+
+    @PostMapping("/search/pw")
+    public String searchPw(@RequestBody Map<String, String> map) throws MessagingException {
+        String result = userService.searchPw(map.get("studentNumber"),map.get("name"),map.get("email")  + "@sju.ac.kr");
+
+        return result;
     }
 
 }

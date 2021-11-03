@@ -40,14 +40,14 @@ a {
   height: fit-content;
   display: flex;
   flex-direction: column;
-  padding-bottom: 100px;
+  padding-bottom: 10px;
 }
 
 #loginBox {
   width: 700px;
   height: fit-content;
   position: relative;
-  top: 100px;
+  top: 50px;
   background-color: white;
   margin: 0 auto 100px auto;
   padding: 20px;
@@ -124,7 +124,7 @@ a {
   font-family: 'nanumB';
   font-size: 17px;
   margin-top: 20px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   padding: 15px 0 15px 0;
 
   background-color: #990000;

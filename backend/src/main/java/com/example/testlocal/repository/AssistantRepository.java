@@ -11,6 +11,7 @@ import java.util.List;
 public interface AssistantRepository extends JpaRepository<Assistant, Long> {
 
     @Query(value = "select student_email from assistant where user_id = (select id from user where student_number = ?1)", nativeQuery = true)
+
     List<String> findAllStudentEmailByStudentNumber(String studentNumber);
 
     @Query(value = "insert into assistant values (?1, ?2)", nativeQuery = true)
@@ -18,4 +19,5 @@ public interface AssistantRepository extends JpaRepository<Assistant, Long> {
 
     @Query(value = "select exists(select id from assistant where user_id=?1 AND student_number=?2)as isChecked", nativeQuery = true)
     int existsByidNumber(int userId, String studentNumber);
+
 }

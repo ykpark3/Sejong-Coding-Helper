@@ -54,20 +54,21 @@ export const fetchChatData = () => {
     };
 }
 
-export const addMsgData = (id, sender,msg) => {
+export const addMsgData = (id, sender,msg,time) => {
   
     return{
       type: ADD_BOT_CHATMSG,
-      data:{id:id,sender: sender, msg: msg}
+      data:{id:id,sender: sender, msg: msg,time:time,}
     };
 }
 
-export const getBotResponse = (msg) => {
+export const getBotResponse = (msg,time) => {
 
   return{
     type: GET_BOT_RESPONSE,
     data:{
-      msg:msg
+      msg:msg,
+      time:time
     }
   }
 }

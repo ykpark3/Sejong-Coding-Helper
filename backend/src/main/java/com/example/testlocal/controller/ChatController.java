@@ -8,9 +8,22 @@ import com.example.testlocal.service.RoomService;
 import com.example.testlocal.service.UserService2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.server.HandshakeInterceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
 
 import java.util.List;
 import java.util.Map;
@@ -60,10 +73,14 @@ public class ChatController {
         msg.setMessage(roomService.findById(msg.getRoomId()).getTitle() + " 채팅방에 참여하였습니다.");
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
-//
+
     @MessageMapping("/chat/message")
     public void message(ChatDTO2 msg){
         chatService.create(msg);
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd hh:mm");
+//        msg.setCreateTime(dateFormat.format(msg.getCreateTime()));
+
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
 }

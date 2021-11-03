@@ -6,6 +6,7 @@ import {
   LOGIN_BEFORE,
   LOGIN_ORIGIN,
   CHANGE_SIGNUP_AUTH,
+  CHANGE_SIGNUP_AUTH2,
   CHANGE_USER_NAME,
   CHANGE_USER_ID
 } from './loginTypes';
@@ -41,6 +42,13 @@ export const changeSignupAuth = (props) => {
   };
 };
 
+export const changeSignupAuth2 = (props) => {
+  return {
+    type: CHANGE_SIGNUP_AUTH2,
+    data: { signupAuth: props },
+  };
+};
+
 export const onLoginSuccess = () => {
   return {
     type: LOGIN_SUCCESS,
@@ -63,7 +71,6 @@ export const login = (id, pwd) => (dispatch) => {
       },
     )
     .then((res) => {
-      console.log(res.data);
 
       // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
       axios.defaults.headers.common['Authorization'] = `Bearer ${res.data}`;

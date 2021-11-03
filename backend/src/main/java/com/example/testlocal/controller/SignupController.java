@@ -63,7 +63,7 @@ public class SignupController {
         System.out.println(authCode);
     }
 
-    @PostMapping("checkEmailAuthCode")
+    @PostMapping("/checkEmailAuthCode")
     public String checkEmailAuthCode(@RequestBody Map<String, String> map, HttpServletRequest request) {
         HttpSession session = request.getSession();
         String authCode = (String) session.getAttribute("authCode");

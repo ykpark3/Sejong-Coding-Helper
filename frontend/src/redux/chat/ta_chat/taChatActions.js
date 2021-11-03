@@ -8,6 +8,8 @@ import {
   ADD_TA_CHATROOM,
   GET_TA_RESPONSE,
   CHANGE_NOW_TA_CHATROOM,
+  CLEAR_TACHAT_LIST,
+  CLEAR_TACHATROOM_LIST,
 } from './taChatTypes';
 
 // const fetChatData = () => {
@@ -25,6 +27,18 @@ export const fetchChatData = () => {
     };
 }
 
+export const clearTaChatList = () => {
+  return{
+    type:CLEAR_TACHAT_LIST,
+  }
+}
+export const clearTaChatRoomList = () => {
+  return{
+    type:CLEAR_TACHATROOM_LIST,
+  }
+}
+
+
 export const changeNowRoomId = (nowRoomId) => {
   return{
     type: CHANGE_NOW_TA_CHATROOM,
@@ -32,10 +46,10 @@ export const changeNowRoomId = (nowRoomId) => {
   };
 }
 
-export const addMsgData = (id,name,userId,msg) => {
+export const addMsgData = (id,name,userId,msg,time) => {
     return{
       type: ADD_TA_CHATMSG,
-      data:{id:id,name:name,userId:userId, msg: msg}
+      data:{id:id,name:name,userId:userId, msg: msg,time:time}
     };
 }
 
@@ -44,17 +58,4 @@ export const addRoomData = (id,roomId, title, des) => {
     type: ADD_TA_CHATROOM,
     data:{id:id,roomId:roomId, title: title, des: des}
   };
-}
-
-export const getBotResponse = (msg) => {
-
-
-  msg = "엔샵 박태순 최고";
-
-  return{
-    type: GET_TA_RESPONSE,
-    data:{
-      msg:msg
-    }
-  }
 }

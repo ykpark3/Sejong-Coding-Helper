@@ -48,7 +48,32 @@ body {
   padding-right: 5px;
 }
 
-.secondHorizontalNav div {
+.secondHorizontalNav #navInnerDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.secondHorizontalNav #navInnerDiv div {
+  width: 25px;
+  height: 25px;
+
+  margin: 30px 20px 20px 0px;
+  padding: 0px 0px 0px 0px;
+  background-color: #008cff;
+  text-align: center;
+  border-radius: 10px;
+  font-size: 23px;
+  font-family: 'nanumB';
+  color: white;
+  cursor: pointer;
+}
+
+.secondHorizontalNav #navInnerDiv div:hover{
+  background-color: #00d8ec;
+}
+
+.secondHorizontalNav .navInner2Div {
   overflow-y: auto;
   height: 100vh;
   width: 25vw;
@@ -91,7 +116,7 @@ body {
   /* width: 20vw; */
   font-family: 'nanumB';
   background-color: #b2dcff;
-  margin: 20px;
+  margin: 0px 20px 20px 20px;
   border: none;
   border-radius: 10px;
   padding: 10px;
@@ -124,7 +149,7 @@ body {
   border-radius: 10px;
   padding: 10px;
   display: flex;
-  flex-direction:row;
+  flex-direction: row;
   justify-content: center;
   text-align: center;
   align-items: center;
@@ -145,7 +170,7 @@ body {
   border-radius: 10px;
   padding: 10px;
   display: flex;
-  flex-direction:row;
+  flex-direction: row;
   justify-content: center;
   text-align: center;
   align-items: center;
@@ -153,14 +178,12 @@ body {
 }
 
 .secondHorizontalNav .navQuestionBnt img {
-
-  width:50px;
+  width: 50px;
   margin-right: 15px;
 }
 
 .secondHorizontalNav .navQuestionSelectedBnt img {
-
-  width:50px;
+  width: 50px;
   margin-right: 15px;
 }
 
@@ -276,21 +299,38 @@ body {
   /* 이미지  */
   image-rendering: crisp-edges;
   transform: translateZ(0);
-  backface-visibility: hidden; 
+  backface-visibility: hidden;
 }
 
-.botMsg div {
+.botMsg .botMsgBox {
   margin-top: 10px;
   margin-bottom: 20px;
 }
 
-.botMsg div p:nth-child(1) {
+.botMsg .botSenderName {
   font-family: 'nanumB';
   font-size: 20px;
   margin-top: 20px;
 }
 
-.botMsg div p:nth-child(2) {
+.botMsgBox div  {
+  display: flex;
+  height: fit-content;
+  flex-direction: row-reverse;
+  align-items: flex-end;
+  justify-content: right;
+}
+
+.botMsgBox .botSenderTime {
+  width: auto;
+  height: auto;
+  font-family: 'nanumR';
+  font-size: 12px;
+  margin:0px 0px 2px 20px
+}
+
+.botMsgBox .botSenderContent {
+  width: inherit;
   font-family: 'nanumR';
   font-size: 17px;
   background-color: #f6f6f6;
@@ -298,8 +338,8 @@ body {
   border-radius: 10px;
   padding: 10px;
   margin-top: 10px;
-  margin-right: 20px;
-  max-width: 50vw;
+  max-width: 40vw;
+  word-break: break-all;
 }
 
 .userMsg {
@@ -307,22 +347,37 @@ body {
   flex-direction: row-reverse;
 }
 
-.userMsg div {
+.userMsg .userMsgBox {
   margin-top: 10px;
   margin-bottom: 20px;
   padding-right: 50px;
 }
 
-.userMsg div p:nth-child(1) {
+.userMsg .userMsgBox .senderName {
   text-align: end;
   font-family: 'nanumB';
   font-size: 20px;
   margin-top: 20px;
-  max-width: 50vw;
-  margin-left: 20px;
 }
 
-.userMsg div p:nth-child(2) {
+.userMsg .userMsgBox div  {
+  display: flex;
+  height: fit-content;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: right;
+}
+
+.userMsg .userMsgBox .senderTime {
+  width: auto;
+  height: auto;
+  font-family: 'nanumR';
+  font-size: 12px;
+  margin:0px 20px 2px 0px
+}
+
+.userMsg .userMsgBox .senderContent {
+  width: inherit;
   font-family: 'nanumR';
   font-size: 17px;
   background-color: #f6f6f6;
@@ -330,6 +385,8 @@ body {
   border-radius: 10px;
   padding: 10px;
   margin-top: 10px;
+  max-width: 40vw;
+  word-break: break-all;
 }
 
 /* 스크롤바 설정 */

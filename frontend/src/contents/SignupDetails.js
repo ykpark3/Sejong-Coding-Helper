@@ -5,20 +5,15 @@ import '../css/Signup.css';
 import axios from 'axios';
 import { API_BASE_URL } from './utils/Constant';
 import { connect, useDispatch } from 'react-redux';
-import { changeSignupAuth } from '../redux/login/loginActions';
+import { changeSignupAuth, changeSignupAuth2 } from '../redux/login/loginActions';
 import { useLocation } from 'react-router';
 import { changeLoadingState } from '../redux/view/viewActions';
 import { isDOMComponent } from 'react-dom/test-utils';
 import { useHistory } from 'react-router';
 
-const SignupDetails = ({ changeSignupAuth, changeLoadingState }) => {
+const SignupDetails = ({ signupAuth2, changeSignupAuth, changeSignupAuth2, changeLoadingState }) => {
   const location = useLocation();
   const history = useHistory();
-
-  const [isCorrectName, setCorrectName] = useState(false);
-  const [isCorrectStuId, setCorrectStuId] = useState(false);
-  const [isCorrectPw, setCorrectPw] = useState(false);
-  const [isCorrectPwCheck, setCorrectPwCheck] = useState(false);
 
   const [name, setName] = useState('');
   const [id, setId] = useState('');
@@ -56,7 +51,7 @@ const SignupDetails = ({ changeSignupAuth, changeLoadingState }) => {
     }
 
     if (!reg_pw.test(pw)) {
-      alert('🙄❗❓ 패스워드를 다시 확인해주세요. ❓❗🙄');
+      alert('🙄❗❓ 패스워드는 4글자 이상으로 입력해주세요. ❓❗🙄');
       return;
     }
 
@@ -85,12 +80,17 @@ const SignupDetails = ({ changeSignupAuth, changeLoadingState }) => {
       .then((res) => {
         console.log(res.data)
         if (res.data === 'accepted') {
+
+          // 두번째 인증 true로
+          changeSignupAuth2(true);
           history.push({
             pathname: '/signupComplete',
             state: {
               name: name,
             },
           });
+
+
         } else {
           alert('이미 가입된 학번입니다.');
         }
@@ -179,12 +179,15 @@ const SignupDetails = ({ changeSignupAuth, changeLoadingState }) => {
 const mapStateToProps = ({ login }) => {
   return {
     signupAuth: login.signupAuth,
+    signupAuth2: login.signupAuth2,
+
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     changeSignupAuth: (props) => dispatch(changeSignupAuth(props)),
+    changeSignupAuth2: (props) => dispatch(changeSignupAuth2(props)),
     changeLoadingState: (props) => dispatch(changeLoadingState(props)),
   };
 };

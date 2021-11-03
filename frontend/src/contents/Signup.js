@@ -124,7 +124,10 @@ const Signup = ({ changeLoadingState }) => {
               권장합니다.
             </li>
             <li>
-              6. 세종대학교 재학생들이 개발한 웹 사이트로 다양한 버그가 있을 수
+              6. 조교 계정으로 회원가입하기 위해서, 우선 회원 가입을 완료하신 후, <a href="https://forms.gle/UYzZCyCeCf3SP3xo6" target='_blank' style={{color:'blue'}}><u>이 링크</u></a>를 통해 조교 자격 신청을 해주시길 바랍니다.
+            </li>
+            <li>
+              7. 세종대학교 재학생들이 개발한 웹 사이트로 다양한 버그가 있을 수
               있습니다. 문제가 있을 시, 문의 사항을 통해 피드백 부탁드립니다.
             </li>
           </ul>

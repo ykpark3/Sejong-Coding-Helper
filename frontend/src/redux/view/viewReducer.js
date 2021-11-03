@@ -15,6 +15,7 @@ const viewReducer = (state = intialViewState, action) => {
   switch (action.type) {
     case CHANGE_HEADER_INVERSE:
       let isNowMain = false;
+
       if (currentUrl === BASE_URL + '/') isNowMain = true;
       else isNowMain = false;
 
@@ -48,7 +49,7 @@ const viewReducer = (state = intialViewState, action) => {
           num = 2;
           break;
 
-        case BASE_URL + '/curri':
+        case BASE_URL + '/codingEditor':
           num = 3;
           break;
 

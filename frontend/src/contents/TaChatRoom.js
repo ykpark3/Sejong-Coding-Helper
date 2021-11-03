@@ -5,12 +5,14 @@ import { Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { API_BASE_URL } from './utils/Constant';
+import { useLocation } from 'react-router';
 import {
   addMsgData,
   addRoomData,
-  getBotResponse,
   fetchChatData,
   changeNowRoomId,
+  clearTaChatList,
+  clearTaChatRoomList,
 } from '../redux/chat/ta_chat/taChatActions';
 import {
   changeUserId,
@@ -24,26 +26,39 @@ import { Stomp } from '@stomp/stompjs';
 import { LOGIN_ORIGIN, LOGIN_BEFORE } from '../redux/login/loginTypes';
 import { changeLoadingState } from '../redux/view/viewActions';
 import { root2 } from './Root2';
+import ChatRoomDeniedModal from './modal/ChatRoomDeniedModal';
+import ChatRoomAddingModal from './modal/ChatRoomAddingModal';
 import Root from './Root';
+import { clearChatList } from '../redux/chat/bot_chat/botChatActions';
+import { getTime } from './utils/ChatUtils';
 
-function BotChatMsgItem({ msg, name }) {
+function BotChatMsgItem({ msg, name,time }) {
   return (
+
     <li className="botMsg">
       <img src="img/taman.png" />
-      <div>
-        <p>{name}</p>
-        <p>{msg}</p>
+
+      <div className="botMsgBox">
+        <p className="botSenderName">{name}</p>
+        <div>         
+          <p className="botSenderTime">{time}</p>
+          <p className="botSenderContent">{msg}</p>
+        </div>
       </div>
+      
     </li>
   );
 }
 
-function UserChatMsgItem({ msg, name }) {
+function UserChatMsgItem({ msg, name,time }) {
   return (
     <li className="userMsg">
-      <div>
-        <p>나</p>
-        <p>{msg}</p>
+      <div className="userMsgBox">
+        <p className="senderName">나</p>
+        <div>         
+          <p className="senderTime">{time}</p>
+          <p className="senderContent">{msg}</p>
+        </div>
       </div>
     </li>
   );
@@ -68,6 +83,8 @@ const TaChatRoom = ({
   changeUserId,
   changeUserName,
   changeNowRoomId,
+  clearTaChatList,
+  clearTaChatRoomList,
 
   onLoginSuccess,
   changeType,
@@ -76,23 +93,37 @@ const TaChatRoom = ({
   const msgInput = useRef();
   const scrollRef = useRef();
   const [isTa, setTa] = useState(false);
+  const [modalOn, setModalOn] = useState(false);
+  const [roomPlusmodalOn, setRoomPlusModalOn] = useState(false);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     // 동기로 리프래쉬토큰 검증.
+
     const auth = async () => {
       const result = await root2(
         onLoginSuccess,
         changeType,
         changeLoadingState,
       );
-      //console.log(result + ' three');
+
       if (result === 'success') {
+        changeLoadingState(true);
         getIsTa();
       }
     };
 
     auth();
-  }, []);
+
+    return () => {
+      clearTaChatRoomList();
+      clearTaChatList();
+    };
+  }, [pathname]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatsData]);
 
   const chatData = () => {
     const chatItems = chatsData.map((chat) => {
@@ -102,9 +133,9 @@ const TaChatRoom = ({
       }
 
       if (chat.userId === userId) {
-        return <UserChatMsgItem msg={chat.msg} key={chat.id} />;
+        return <UserChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
       } else {
-        return <BotChatMsgItem msg={chat.msg} name={tempName} key={chat.id} />;
+        return <BotChatMsgItem msg={chat.msg} name={tempName} time={chat.time} key={chat.id} />;
       }
     });
 
@@ -123,8 +154,13 @@ const TaChatRoom = ({
           className={st}
           key={item.id}
           onClick={() => {
+            changeLoadingState(true);
+            clearTaChatList();
             setRoomIdSession(list[item.id - 1].roomId);
-            window.location.replace('/tachatroom');
+            changeNowRoomId(list[item.id - 1].roomId);
+
+            getChatList(list[item.id - 1].roomId);
+            //window.location.replace('/tachatroom');
           }}
         >
           <p>{item.title}</p>
@@ -161,6 +197,7 @@ const TaChatRoom = ({
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -181,8 +218,12 @@ const TaChatRoom = ({
       .then((res) => {
         // 채팅방이 없을 경우.
         if (res.data.length === 0) {
+          changeLoadingState(false);
           return;
         }
+
+        // room id 임시저장 변수
+        let roomList = [];
 
         for (let i = 0; i < res.data.length; i++) {
           let otherName;
@@ -201,16 +242,18 @@ const TaChatRoom = ({
           }
 
           addRoomData(roomNum, res.data[i].id, res.data[i].title, name);
+          roomList.push(res.data[i].id);
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
 
         getRoomIdSession().then((nowRoomId) => {
           getChatList(nowRoomId, studentNumber);
-          connectStomp(nowRoomId);
+          connectStomp(roomList);
         });
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
@@ -230,36 +273,60 @@ const TaChatRoom = ({
       )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
+
           addMsgData(
             num,
             res.data[i].user.name,
             res.data[i].user.id,
             res.data[i].message,
+            getTime(res.data[i].createTime)
           );
         }
         scrollToBottom();
+        changeLoadingState(false);
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   };
 
-  const connectStomp = (roomId) => {
+  const connectStomp = (roomList) => {
     stomp.connect(
       {},
       () => {
-        stomp.subscribe('/sub/chat/room/' + roomId, (chat) => {
-          console.log('msg arrived');
+        for (let i = 0; i < roomList.length; i++) {
+          // subscribe 여러개 하면 다중 연결
+          stomp.subscribe('/sub/chat/room/' + roomList[i], (chat) => {
+            var content = JSON.parse(chat.body);
+            
+            //addMsgData(num, content.name, content.userId, content.message);
+            let date = getTime(content.createTime);
 
-          var content = JSON.parse(chat.body);
-
-          addMsgData(num, content.name, content.userId, content.message);
-          scrollToBottom();
-        });
+            testAddingMsg(
+              num,
+              content.roomId,
+              content.name,
+              content.userId,
+              content.message,
+              date,
+            );
+          });
+        }
       },
       [],
     );
+  };
+
+  const testAddingMsg = (num, roomId, name, userId, message,time) => {
+    // 현재 세션에 저장된 roomId값 검사한 후, add할지말지.
+    getRoomIdSession().then((nowRoomId) => {
+      if (nowRoomId === roomId) {
+        addMsgData(num, name, userId, message,time);
+        //scrollToBottom();
+      }
+    });
   };
 
   const getRoomIdSession = async function () {
@@ -304,7 +371,9 @@ const TaChatRoom = ({
   };
 
   const scrollToBottom = () => {
-    scrollRef.current.scrollIntoView({ behavior: 'auto' });
+    if (scrollRef) {
+      scrollRef.current.scrollIntoView({ behavior: 'auto' });
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -319,7 +388,7 @@ const TaChatRoom = ({
     if (text === '') {
       return;
     }
-    console.log(nowRoomId);
+    //console.log(nowRoomId);
     stomp.send(
       '/pub/chat/message',
       {},
@@ -339,12 +408,34 @@ const TaChatRoom = ({
       <VerticalHeader />
       <HorizontalHeader />
 
+      <>{modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}</>
+      <>
+        {roomPlusmodalOn ? (
+          <ChatRoomAddingModal setModalOn={setRoomPlusModalOn} />
+        ) : (
+          ''
+        )}
+      </>
+
       <div id="chatRoomBody">
         <div id="emptySpace1" />
 
         <div className="secondHorizontalNav">
-          <h3 style={{ color: '#008cff' }}> 채팅방 목록</h3>
-          <div>
+          <div id="navInnerDiv">
+            <h3 style={{ color: '#008cff' }}> 채팅방 목록</h3>
+            <div
+              onClick={() => {
+                if (!isTa) {
+                  setModalOn(true);
+                } else {
+                  setRoomPlusModalOn(true);
+                }
+              }}
+            >
+              +
+            </div>
+          </div>
+          <div className="navInner2Div">
             <div>{listData()}</div>
           </div>
         </div>
@@ -391,14 +482,16 @@ const mapStateToProps = ({ taChats, login }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchChatData: () => dispatch(fetchChatData()),
-    addMsgData: (id, name, userId, msg) =>
-      dispatch(addMsgData(id, name, userId, msg)),
+    addMsgData: (id, name, userId, msg,time) =>
+      dispatch(addMsgData(id, name, userId, msg,time)),
     addRoomData: (id, roomId, title, des) =>
       dispatch(addRoomData(id, roomId, title, des)),
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
     changeNowRoomId: (nowRoomId) => dispatch(changeNowRoomId(nowRoomId)),
+    clearTaChatList: () => dispatch(clearTaChatList()),
+    clearTaChatRoomList: () => dispatch(clearTaChatRoomList()),
 
     changeType: (type) => dispatch(changeType(type)),
     changeLoadingState: (props) => dispatch(changeLoadingState(props)),
