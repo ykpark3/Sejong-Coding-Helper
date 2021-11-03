@@ -115,6 +115,10 @@ const TaChatRoom = ({
 
   }, [pathname]);
 
+  useEffect(()=>{
+    scrollToBottom();
+  },[chatsData])
+
   const chatData = () => {
     const chatItems = chatsData.map((chat) => {
       let tempName = chat.name;
@@ -309,7 +313,7 @@ const TaChatRoom = ({
     getRoomIdSession().then((nowRoomId) => {
       if (nowRoomId === roomId) {
         addMsgData(num, name, userId, message);
-        scrollToBottom();
+        //scrollToBottom();
       }
     });
 
