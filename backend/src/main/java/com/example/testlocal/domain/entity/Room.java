@@ -1,6 +1,5 @@
 package com.example.testlocal.domain.entity;
 
-import com.example.testlocal.domain.dto.AssistantDTO;
 import com.example.testlocal.domain.dto.RoomDTO;
 import com.example.testlocal.service.UserService2;
 import lombok.AllArgsConstructor;

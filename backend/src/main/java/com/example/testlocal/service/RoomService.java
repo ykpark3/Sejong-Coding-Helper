@@ -5,7 +5,6 @@ import com.example.testlocal.domain.entity.Room;
 import com.example.testlocal.exception.InvalidRoomIdException;
 import com.example.testlocal.repository.RoomRepository;
 import com.example.testlocal.security.JwtTokenProvider;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

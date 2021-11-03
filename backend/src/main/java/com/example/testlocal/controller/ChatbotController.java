@@ -2,30 +2,16 @@ package com.example.testlocal.controller;
 
 import com.example.testlocal.config.ApiKey;
 import com.example.testlocal.config.Constants;
-import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.dto.ChatbotDTO;
-import com.example.testlocal.domain.entity.Chat;
 import com.example.testlocal.domain.entity.Chatbot;
-import com.example.testlocal.service.ChatService;
 import com.example.testlocal.service.ChatbotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
-
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -40,7 +26,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 
 import static com.example.testlocal.config.ApiKey.apiUrl;
 import static com.example.testlocal.config.ApiKey.secretKey;

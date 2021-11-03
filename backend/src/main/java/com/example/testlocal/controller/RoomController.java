@@ -2,20 +2,15 @@ package com.example.testlocal.controller;
 
 import com.example.testlocal.config.Constants;
 import com.example.testlocal.domain.dto.RoomDTO;
-import com.example.testlocal.domain.entity.Assistant;
 import com.example.testlocal.domain.entity.Room;
-import com.example.testlocal.repository.RoomRepository;
-import com.example.testlocal.service.AssistantService;
 import com.example.testlocal.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -74,7 +69,6 @@ public class RoomController {
 
     @PostMapping("/room/roomSessionId/{roomId}")
     public void setRoomSessionId(HttpServletRequest request,@PathVariable String roomId){
-
         HttpSession session = request.getSession();
         session.setAttribute("roomId",roomId);
     }

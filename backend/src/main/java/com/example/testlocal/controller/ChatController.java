@@ -5,7 +5,6 @@ import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.entity.Chat;
 import com.example.testlocal.service.ChatService;
 import com.example.testlocal.service.RoomService;
-import com.example.testlocal.service.UserService;
 import com.example.testlocal.service.UserService2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+
 import java.util.List;
 import java.util.Map;
 

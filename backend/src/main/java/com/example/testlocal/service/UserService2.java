@@ -59,7 +59,11 @@ public class UserService2 {
     }
 
     public int findUserIdByStudentNumber(String studentNumber){
-        return userRepository2.findUserIdByStudentNumber(studentNumber);
+        try{
+            return userRepository2.findUserIdByStudentNumber(studentNumber);
+        }catch(Exception e){
+          return 0;
+        }
     }
 
     public String findUserEmailByStudentNumber(String studentNumber){

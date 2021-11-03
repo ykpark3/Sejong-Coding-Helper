@@ -3,6 +3,7 @@ package com.example.testlocal.controller;
 import com.example.testlocal.config.Constants;
 import com.example.testlocal.service.CompilerService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +22,16 @@ public class CompilerController {
 
    private final CompilerService compilerService;
 
+    @SneakyThrows
     @PostMapping("/compiler/c")
     public String compileInC(@RequestBody Map<String, String> map){
-//        return compilerService.sendGcc(map.get("code"));
-        return "hello";
+        return compilerService.sendGcc(map.get("code"), map.get("input"));
+    }
+
+    @SneakyThrows
+    @PostMapping("/compiler/python")
+    public String compileInPython(@RequestBody Map<String, String> map){
+        return compilerService.sendPython(map.get("code"), map.get("input"));
     }
 
 

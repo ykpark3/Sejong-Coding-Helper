@@ -3,7 +3,6 @@ package com.example.testlocal.controller;
 import com.example.testlocal.config.Constants;
 import com.example.testlocal.domain.dto.ChatbotRoomDTO;
 import com.example.testlocal.domain.dto.UserDTO2;
-
 import com.example.testlocal.service.ChatbotRoomService;
 import com.example.testlocal.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;

@@ -1,6 +1,5 @@
 package com.example.testlocal.repository;
 
-import com.example.testlocal.domain.entity.Chat;
 import com.example.testlocal.domain.entity.Chatbot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
