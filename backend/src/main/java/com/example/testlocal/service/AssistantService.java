@@ -36,18 +36,18 @@ public class AssistantService {
         assistantRepository.deleteById(id);
     }
 
-    public void insertStudentNumbers(String assistantNumber, List<String> studentNumbers) {
+    public void insertStudentNumbers(String assistantNumber, Object studentNumbers, Object roomName) {
 
         Long id = (long) userService.findUserIdByStudentNumber(assistantNumber);
 
-        for (String number:studentNumbers){
+        for (String number:(List<String>)studentNumbers){
             if(!validateDuplicateAssistant(id, number))
             {
                 assistantRepository.save(new Assistant(new AssistantDTO(id, number), userService));
 
                 Long id2 = (long) validateExistsUserId(number);
                 if (id2 != 0){
-                    roomService.create(new RoomDTO(id, id2, number,""));
+                    roomService.create(new RoomDTO(id, id2, (String) roomName,""));
                 }
             }
         }
