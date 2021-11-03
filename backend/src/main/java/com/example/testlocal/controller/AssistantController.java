@@ -33,8 +33,8 @@ public class AssistantController {
     // 학번 저장하기
     @ResponseBody
     @PostMapping("/assistant/studentNumbers/{studentNumber}")
-    public String insertStudentNumbers(@PathVariable String studentNumber, @RequestBody Map<String, List<String>> map){
-        assistantService.insertStudentNumbers(studentNumber, map.get("studentNumbers"));
+    public String insertStudentNumbers(@PathVariable String studentNumber, @RequestBody Map<String, Object> map){
+        assistantService.insertStudentNumbers(studentNumber, map.get("studentNumbers"), map.get("roomName"));
         return "성공";
     }
 
