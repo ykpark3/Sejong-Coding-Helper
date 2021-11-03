@@ -114,6 +114,7 @@ const botChatReducer = (state = initialState, action) => {
             id: state.num + 1,
             sender: data.sender,
             msg: data.msg,
+            time: data.time,
           },
         ),
         num: state.num + 1,
@@ -127,6 +128,7 @@ const botChatReducer = (state = initialState, action) => {
             id: state.num + 1,
             sender: 'bot',
             msg: data.msg,
+            time:data.time
           },
         ),
         num: state.num + 1,

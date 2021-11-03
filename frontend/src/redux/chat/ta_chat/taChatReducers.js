@@ -22,6 +22,7 @@ const initialState = {
     //   name : '정상뷰'
     //   userId: 123,
     //   msg: '질문있습니다. 조교님.',
+    //   time: 11/01 12:11
     // },
     // {
     //   id: 2,
@@ -73,6 +74,7 @@ const taChatReducer = (state = initialState, action) => {
           name: data.name,
           userId: data.userId,
           msg: data.msg,
+          time:data.time,
         }),
         num: state.num + 1,
       };
@@ -93,17 +95,6 @@ const taChatReducer = (state = initialState, action) => {
           des: data.des,
         }),
         roomNum: state.roomNum + 1,
-      };
-
-    case GET_TA_RESPONSE:
-      return {
-        ...state,
-        chats: state.chats.concat({
-          id: state.num + 1,
-          sender: 'ta',
-          msg: data.msg,
-        }),
-        num: state.num + 1,
       };
 
     default:

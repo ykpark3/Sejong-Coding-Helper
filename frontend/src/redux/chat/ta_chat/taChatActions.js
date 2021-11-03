@@ -46,10 +46,10 @@ export const changeNowRoomId = (nowRoomId) => {
   };
 }
 
-export const addMsgData = (id,name,userId,msg) => {
+export const addMsgData = (id,name,userId,msg,time) => {
     return{
       type: ADD_TA_CHATMSG,
-      data:{id:id,name:name,userId:userId, msg: msg}
+      data:{id:id,name:name,userId:userId, msg: msg,time:time}
     };
 }
 
@@ -58,17 +58,4 @@ export const addRoomData = (id,roomId, title, des) => {
     type: ADD_TA_CHATROOM,
     data:{id:id,roomId:roomId, title: title, des: des}
   };
-}
-
-export const getBotResponse = (msg) => {
-
-
-  msg = "엔샵 박태순 최고";
-
-  return{
-    type: GET_TA_RESPONSE,
-    data:{
-      msg:msg
-    }
-  }
 }

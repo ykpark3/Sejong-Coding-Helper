@@ -22,6 +22,8 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -71,10 +73,14 @@ public class ChatController {
         msg.setMessage(roomService.findById(msg.getRoomId()).getTitle() + " 채팅방에 참여하였습니다.");
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
-//
+
     @MessageMapping("/chat/message")
     public void message(ChatDTO2 msg){
         chatService.create(msg);
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd hh:mm");
+//        msg.setCreateTime(dateFormat.format(msg.getCreateTime()));
+
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
 }
