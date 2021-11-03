@@ -63,7 +63,6 @@ public class RoomController {
 
     @PostMapping("/room/roomSessionId/{roomId}")
     public void setRoomSessionId(HttpServletRequest request,@PathVariable String roomId){
-
         HttpSession session = request.getSession();
         session.setAttribute("roomId",roomId);
     }

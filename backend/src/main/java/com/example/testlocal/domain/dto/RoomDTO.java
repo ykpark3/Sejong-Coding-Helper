@@ -16,4 +16,11 @@ public class RoomDTO {
     private String title;
 
     private String updateDate;
+
+    public RoomDTO(Long id, Long id2, String title, String updateDate) {
+        this.userId = id;
+        this.user2Id = id2;
+        this.title = title;
+        this.updateDate = updateDate;
+    }
 }
