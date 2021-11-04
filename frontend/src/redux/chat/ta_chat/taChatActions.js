@@ -53,9 +53,9 @@ export const addMsgData = (id,name,userId,msg,time) => {
     };
 }
 
-export const addRoomData = (id,roomId, title, des) => {
+export const addRoomData = (id,roomId, title, des,isChecked) => {
   return{
     type: ADD_TA_CHATROOM,
-    data:{id:id,roomId:roomId, title: title, des: des}
+    data:{id:id,roomId:roomId, title: title, des: des,isChecked:isChecked}
   };
 }

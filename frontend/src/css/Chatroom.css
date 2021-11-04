@@ -119,7 +119,7 @@ body {
   margin: 0px 20px 20px 20px;
   border: none;
   border-radius: 10px;
-  padding: 10px;
+  padding: 12px;
   list-style: none;
   cursor: pointer;
 }
@@ -128,12 +128,24 @@ body {
   background-color: #b2dcff;
 }
 
+.secondHorizontalNav li div{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .secondHorizontalNav li p:nth-child(1) {
   font-family: 'nanumB';
   font-size: 18px;
 }
 
-.secondHorizontalNav li p:nth-child(2) {
+.secondHorizontalNav li .secondNavRoomNewP{
+  font-family: 'nanumB';
+  font-size: 14px;
+  /* padding-top: 8px; */
+}
+
+.secondHorizontalNav .secondNavRoomDes {
   font-family: 'nanumR';
   font-size: 13px;
   padding-top: 8px;

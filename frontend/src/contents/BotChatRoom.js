@@ -43,7 +43,7 @@ const listData = ({ list }) => {
     return (
       <li className="nonSelectedRoomLi" key={item.id}>
         <p>{item.title}</p>
-        <p>{item.des}</p>
+        <p className="secondNavRoomDes">{item.des}</p>
       </li>
     );
   });

@@ -32,7 +32,7 @@ import Root from './Root';
 import { clearChatList } from '../redux/chat/bot_chat/botChatActions';
 import { getTime } from './utils/ChatUtils';
 
-function BotChatMsgItem({ msg, name,time }) {
+function BotChatMsgItem({ msg, name, time }) {
   return (
 
     <li className="botMsg">
@@ -40,22 +40,22 @@ function BotChatMsgItem({ msg, name,time }) {
 
       <div className="botMsgBox">
         <p className="botSenderName">{name}</p>
-        <div>         
+        <div>
           <p className="botSenderTime">{time}</p>
           <p className="botSenderContent">{msg}</p>
         </div>
       </div>
-      
+
     </li>
   );
 }
 
-function UserChatMsgItem({ msg, name,time }) {
+function UserChatMsgItem({ msg, name, time }) {
   return (
     <li className="userMsg">
       <div className="userMsgBox">
         <p className="senderName">나</p>
-        <div>         
+        <div>
           <p className="senderTime">{time}</p>
           <p className="senderContent">{msg}</p>
         </div>
@@ -97,6 +97,8 @@ const TaChatRoom = ({
   const [roomPlusmodalOn, setRoomPlusModalOn] = useState(false);
   const { pathname } = useLocation();
 
+  const [isRoomListUpdated, setRoomListUpdated] = useState(false);
+
   useEffect(() => {
     // 동기로 리프래쉬토큰 검증.
 
@@ -124,6 +126,11 @@ const TaChatRoom = ({
   useEffect(() => {
     scrollToBottom();
   }, [chatsData]);
+
+  useEffect(() => {
+    //console.log(list);
+    connectStomp(list);
+  }, [isRoomListUpdated])
 
   const chatData = () => {
     const chatItems = chatsData.map((chat) => {
@@ -163,8 +170,12 @@ const TaChatRoom = ({
             //window.location.replace('/tachatroom');
           }}
         >
-          <p>{item.title}</p>
-          <p>{item.des}</p>
+          <div>
+            <p>{item.title}</p>
+            <>{item.isChecked ? <p className="secondNavRoomNewP" style={{ color: 'red' }}>New</p> : ''}</>
+          </div>
+          <p className="secondNavRoomDes">{item.des}</p>
+
         </li>
       );
     });
@@ -241,14 +252,17 @@ const TaChatRoom = ({
             name = 'TA ' + otherName;
           }
 
-          addRoomData(roomNum, res.data[i].id, res.data[i].title, name);
+          addRoomData(roomNum, res.data[i].id, res.data[i].title, name, false);
           roomList.push(res.data[i].id);
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
 
+        // updated 시켜서 connect문 -> useEffect에서
+        setRoomListUpdated(true);
+
         getRoomIdSession().then((nowRoomId) => {
           getChatList(nowRoomId, studentNumber);
-          connectStomp(roomList);
+          //connectStomp(roomList);
         });
       })
       .catch((res) => {
@@ -298,20 +312,29 @@ const TaChatRoom = ({
       () => {
         for (let i = 0; i < roomList.length; i++) {
           // subscribe 여러개 하면 다중 연결
-          stomp.subscribe('/sub/chat/room/' + roomList[i], (chat) => {
+          stomp.subscribe('/sub/chat/room/' + roomList[i].roomId, (chat) => {
             var content = JSON.parse(chat.body);
-            
+
             //addMsgData(num, content.name, content.userId, content.message);
             let date = getTime(content.createTime);
 
-            testAddingMsg(
-              num,
-              content.roomId,
-              content.name,
-              content.userId,
-              content.message,
-              date,
-            );
+            ////////////////// id check ////////////////
+
+            console.log(nowRoomId);
+            if (nowRoomId === content.roomId) {
+              addMsgData(num,content.name, content.userId, content.message, date);
+            }
+
+            /////////////////////////////////////////////
+
+            // testAddingMsg(
+            //   num,
+            //   content.roomId,
+            //   content.name,
+            //   content.userId,
+            //   content.message,
+            //   date,
+            // );
           });
         }
       },
@@ -319,12 +342,18 @@ const TaChatRoom = ({
     );
   };
 
-  const testAddingMsg = (num, roomId, name, userId, message,time) => {
+  const testAddingMsg = (num, roomId, name, userId, message, time) => {
     // 현재 세션에 저장된 roomId값 검사한 후, add할지말지.
     getRoomIdSession().then((nowRoomId) => {
       if (nowRoomId === roomId) {
-        addMsgData(num, name, userId, message,time);
-        //scrollToBottom();
+        addMsgData(num, name, userId, message, time);
+      }
+      else {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].roomId == roomId) {
+            console.log(list[i].roomId + " // " + roomId);
+          }
+        }
       }
     });
   };
@@ -482,10 +511,10 @@ const mapStateToProps = ({ taChats, login }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchChatData: () => dispatch(fetchChatData()),
-    addMsgData: (id, name, userId, msg,time) =>
-      dispatch(addMsgData(id, name, userId, msg,time)),
-    addRoomData: (id, roomId, title, des) =>
-      dispatch(addRoomData(id, roomId, title, des)),
+    addMsgData: (id, name, userId, msg, time) =>
+      dispatch(addMsgData(id, name, userId, msg, time)),
+    addRoomData: (id, roomId, title, des, isChecked) =>
+      dispatch(addRoomData(id, roomId, title, des, isChecked)),
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),

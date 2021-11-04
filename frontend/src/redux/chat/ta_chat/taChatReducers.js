@@ -39,6 +39,7 @@ const initialState = {
     //   roomId: 3,
     //   title: '알고리즘 및 실습',
     //   des: '홍길동 교수 / TA 정성벽',
+    //   isChecked : false,
     // },
   ],
 };
@@ -93,6 +94,7 @@ const taChatReducer = (state = initialState, action) => {
           roomId: data.roomId,
           title: data.title,
           des: data.des,
+          isChecked : data.isChecked,
         }),
         roomNum: state.roomNum + 1,
       };
