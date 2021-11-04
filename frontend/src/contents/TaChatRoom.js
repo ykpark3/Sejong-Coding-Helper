@@ -102,6 +102,7 @@ const TaChatRoom = ({
   const [isRoomListUpdated, setRoomListUpdated] = useState(false);
   // 룸 소켓통신 연결한후를 알려쥼.
   const [isSelectedRoomUpdated, setSelectedRoomUpdated] = useState(false);
+  const [isChangedPage, setChangedPage] = useState(false);
 
   useEffect(() => {
     // 동기로 리프래쉬토큰 검증.
@@ -122,14 +123,22 @@ const TaChatRoom = ({
     auth();
 
     return () => {
+      setChangedPage(true);
+
       clearTaChatRoomList();
       clearTaChatList();
+      stomp.disconnect();
+
     };
   }, [pathname]);
 
   useEffect(() => {
     scrollToBottom();
   }, [chatsData]);
+
+  useEffect(() => {
+    stomp2.disconnect();
+  }, [isChangedPage]);
 
   useEffect(() => {
     if (list.length !== 0) {
@@ -141,7 +150,7 @@ const TaChatRoom = ({
   useEffect(() => {
     if (list.length !== 0 && isSelectedRoomUpdated) {
 
-      //console.log('ff : ' + nowRoomId);
+      console.log('ff : ' + nowRoomId);
       connectStomp2(nowRoomId);
     }
   }, [isSelectedRoomUpdated]);
@@ -190,7 +199,7 @@ const TaChatRoom = ({
             changeNowRoomId(list[item.id - 1].roomId);
             changeCheckedState(list[item.id - 1].roomId,false);
             getChatList(list[item.id - 1].roomId);
-            stomp2.deactivate();
+            stomp2.deactivate({type1:'clicked'});
             //window.location.replace('/tachatroom');
           }}
         >
@@ -398,6 +407,7 @@ const TaChatRoom = ({
       //closeEventCallback
       () => {
         console.log(nowRoomId);
+        console.log(isChangedPage);
         // 이 시점에서 선택된 하나의 채팅 룸에대한 소켓통신을 connect한다.
         setSelectedRoomUpdated(true);
         changeLoadingState(false);
