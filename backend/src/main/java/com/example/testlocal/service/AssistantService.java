@@ -36,9 +36,9 @@ public class AssistantService {
         assistantRepository.deleteById(id);
     }
 
-    public void insertStudentNumbers(String assistantNumber, Object studentNumbers, Object roomName) {
+    public void insertStudentNumbers(String userId, Object studentNumbers, Object roomName) {
 
-        Long id = (long) userService.findUserIdByStudentNumber(assistantNumber);
+        Long id = Long.valueOf(userId);
 
         for (String number:(List<String>)studentNumbers){
             if(!validateDuplicateAssistant(id, number))

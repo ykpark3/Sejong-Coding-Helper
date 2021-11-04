@@ -411,7 +411,7 @@ const TaChatRoom = ({
       <>{modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}</>
       <>
         {roomPlusmodalOn ? (
-          <ChatRoomAddingModal setModalOn={setRoomPlusModalOn} />
+          <ChatRoomAddingModal setModalOn={setRoomPlusModalOn} userId={userId} />
         ) : (
           ''
         )}
