@@ -13,6 +13,7 @@ import {
   changeNowRoomId,
   clearTaChatList,
   clearTaChatRoomList,
+  changeCheckedState,
 } from '../redux/chat/ta_chat/taChatActions';
 import {
   changeUserId,
@@ -32,30 +33,28 @@ import Root from './Root';
 import { clearChatList } from '../redux/chat/bot_chat/botChatActions';
 import { getTime } from './utils/ChatUtils';
 
-function BotChatMsgItem({ msg, name,time }) {
+function BotChatMsgItem({ msg, name, time }) {
   return (
-
     <li className="botMsg">
       <img src="img/taman.png" />
 
       <div className="botMsgBox">
         <p className="botSenderName">{name}</p>
-        <div>         
+        <div>
           <p className="botSenderTime">{time}</p>
           <p className="botSenderContent">{msg}</p>
         </div>
       </div>
-      
     </li>
   );
 }
 
-function UserChatMsgItem({ msg, name,time }) {
+function UserChatMsgItem({ msg, name, time }) {
   return (
     <li className="userMsg">
       <div className="userMsgBox">
         <p className="senderName">나</p>
-        <div>         
+        <div>
           <p className="senderTime">{time}</p>
           <p className="senderContent">{msg}</p>
         </div>
@@ -67,6 +66,7 @@ function UserChatMsgItem({ msg, name,time }) {
 //const sockJS = new SockJS(API_BASE_URL + '/websocket');
 //const stomp = Stomp.over(sockJS);
 const stomp = Stomp.over(() => new SockJS(API_BASE_URL + '/websocket'));
+const stomp2 = Stomp.over(() => new SockJS(API_BASE_URL + '/websocket2'));
 
 const TaChatRoom = ({
   loginState,
@@ -83,6 +83,7 @@ const TaChatRoom = ({
   changeUserId,
   changeUserName,
   changeNowRoomId,
+  changeCheckedState,
   clearTaChatList,
   clearTaChatRoomList,
 
@@ -96,6 +97,12 @@ const TaChatRoom = ({
   const [modalOn, setModalOn] = useState(false);
   const [roomPlusmodalOn, setRoomPlusModalOn] = useState(false);
   const { pathname } = useLocation();
+
+  // 룸 리스트를 api로 가지고 온후를 알려주는 변수 useEffect
+  const [isRoomListUpdated, setRoomListUpdated] = useState(false);
+  // 룸 소켓통신 연결한후를 알려쥼.
+  const [isSelectedRoomUpdated, setSelectedRoomUpdated] = useState(false);
+  const [isChangedPage, setChangedPage] = useState(false);
 
   useEffect(() => {
     // 동기로 리프래쉬토큰 검증.
@@ -116,14 +123,37 @@ const TaChatRoom = ({
     auth();
 
     return () => {
+      setChangedPage(true);
+
       clearTaChatRoomList();
       clearTaChatList();
+      stomp.disconnect();
+
     };
   }, [pathname]);
 
   useEffect(() => {
     scrollToBottom();
   }, [chatsData]);
+
+  useEffect(() => {
+    stomp2.disconnect();
+  }, [isChangedPage]);
+
+  useEffect(() => {
+    if (list.length !== 0) {
+      //console.log(list);
+      connectStomp(list);
+    }
+  }, [isRoomListUpdated]);
+
+  useEffect(() => {
+    if (list.length !== 0 && isSelectedRoomUpdated) {
+
+      console.log('ff : ' + nowRoomId);
+      connectStomp2(nowRoomId);
+    }
+  }, [isSelectedRoomUpdated]);
 
   const chatData = () => {
     const chatItems = chatsData.map((chat) => {
@@ -133,9 +163,18 @@ const TaChatRoom = ({
       }
 
       if (chat.userId === userId) {
-        return <UserChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
+        return (
+          <UserChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />
+        );
       } else {
-        return <BotChatMsgItem msg={chat.msg} name={tempName} time={chat.time} key={chat.id} />;
+        return (
+          <BotChatMsgItem
+            msg={chat.msg}
+            name={tempName}
+            time={chat.time}
+            key={chat.id}
+          />
+        );
       }
     });
 
@@ -158,13 +197,25 @@ const TaChatRoom = ({
             clearTaChatList();
             setRoomIdSession(list[item.id - 1].roomId);
             changeNowRoomId(list[item.id - 1].roomId);
-
+            changeCheckedState(list[item.id - 1].roomId,false);
             getChatList(list[item.id - 1].roomId);
+            stomp2.deactivate({type1:'clicked'});
             //window.location.replace('/tachatroom');
           }}
         >
-          <p>{item.title}</p>
-          <p>{item.des}</p>
+          <div>
+            <p>{item.title}</p>
+            <>
+              {item.isChecked ? (
+                <p className="secondNavRoomNewP" style={{ color: 'red' }}>
+                  New
+                </p>
+              ) : (
+                ''
+              )}
+            </>
+          </div>
+          <p className="secondNavRoomDes">{item.des}</p>
         </li>
       );
     });
@@ -241,14 +292,17 @@ const TaChatRoom = ({
             name = 'TA ' + otherName;
           }
 
-          addRoomData(roomNum, res.data[i].id, res.data[i].title, name);
+          addRoomData(roomNum, res.data[i].id, res.data[i].title, name, false);
           roomList.push(res.data[i].id);
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
 
+        // updated 시켜서 connect문 -> useEffect에서 소켓통신 연결.
+        setRoomListUpdated(true);
+
         getRoomIdSession().then((nowRoomId) => {
           getChatList(nowRoomId, studentNumber);
-          connectStomp(roomList);
+          //connectStomp(roomList);
         });
       })
       .catch((res) => {
@@ -273,13 +327,12 @@ const TaChatRoom = ({
       )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
-
           addMsgData(
             num,
             res.data[i].user.name,
             res.data[i].user.id,
             res.data[i].message,
-            getTime(res.data[i].createTime)
+            getTime(res.data[i].createTime),
           );
         }
         scrollToBottom();
@@ -293,40 +346,73 @@ const TaChatRoom = ({
   };
 
   const connectStomp = (roomList) => {
+    changeLoadingState(true);
     stomp.connect(
       {},
       () => {
         for (let i = 0; i < roomList.length; i++) {
           // subscribe 여러개 하면 다중 연결
-          stomp.subscribe('/sub/chat/room/' + roomList[i], (chat) => {
+          stomp.subscribe('/sub/chat/room/' + roomList[i].roomId, (chat) => {
             var content = JSON.parse(chat.body);
-            
+
             //addMsgData(num, content.name, content.userId, content.message);
             let date = getTime(content.createTime);
 
-            testAddingMsg(
-              num,
-              content.roomId,
-              content.name,
-              content.userId,
-              content.message,
-              date,
-            );
+            getRoomIdSession().then((nowRoomId) => {
+              if (nowRoomId !== content.roomId) {
+                for (let i = 0; i < list.length; i++) {
+                  if (list[i].roomId == content.roomId) {
+                    //console.log(list[i].roomId + ' // ' + roomId);
+                    changeCheckedState(content.roomId,true);
+                  }
+                }
+              }
+            });
           });
         }
+
+        // 이 시점에서 선택된 하나의 채팅 룸에대한 소켓통신을 connect한다.
+        setSelectedRoomUpdated(true);
+        changeLoadingState(false);
       },
-      [],
+      // onErrorCallback
+      ()=>{
+        changeLoadingState(false);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      },
     );
   };
 
-  const testAddingMsg = (num, roomId, name, userId, message,time) => {
-    // 현재 세션에 저장된 roomId값 검사한 후, add할지말지.
-    getRoomIdSession().then((nowRoomId) => {
-      if (nowRoomId === roomId) {
-        addMsgData(num, name, userId, message,time);
-        //scrollToBottom();
-      }
-    });
+  const connectStomp2 = (nowRoomId) => {
+    changeLoadingState(true);
+    stomp2.connect(
+      {},
+      // connectCallback
+      () => {
+        stomp2.subscribe('/sub/chat/room2/' + nowRoomId, (chat) => {
+          var content = JSON.parse(chat.body);
+
+          let date = getTime(content.createTime);
+          console.log('qweqwe');
+          addMsgData(num, content.name, content.userId, content.message, date);
+        });
+        changeLoadingState(false);
+        setSelectedRoomUpdated(false);
+      },
+      // onErrorCallback
+      ()=>{
+        changeLoadingState(false);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      },
+      //closeEventCallback
+      () => {
+        console.log(nowRoomId);
+        console.log(isChangedPage);
+        // 이 시점에서 선택된 하나의 채팅 룸에대한 소켓통신을 connect한다.
+        setSelectedRoomUpdated(true);
+        changeLoadingState(false);
+      },
+    );
   };
 
   const getRoomIdSession = async function () {
@@ -388,9 +474,20 @@ const TaChatRoom = ({
     if (text === '') {
       return;
     }
-    //console.log(nowRoomId);
+    console.log(nowRoomId);
     stomp.send(
       '/pub/chat/message',
+      {},
+      JSON.stringify({
+        roomId: nowRoomId,
+        name: userName,
+        userId: userId,
+        message: text,
+      }),
+    );
+
+    stomp2.send(
+      '/pub/chat/message2',
       {},
       JSON.stringify({
         roomId: nowRoomId,
@@ -411,7 +508,10 @@ const TaChatRoom = ({
       <>{modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}</>
       <>
         {roomPlusmodalOn ? (
-          <ChatRoomAddingModal setModalOn={setRoomPlusModalOn} />
+          <ChatRoomAddingModal
+            setModalOn={setRoomPlusModalOn}
+            userId={userId}
+          />
         ) : (
           ''
         )}
@@ -482,14 +582,15 @@ const mapStateToProps = ({ taChats, login }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchChatData: () => dispatch(fetchChatData()),
-    addMsgData: (id, name, userId, msg,time) =>
-      dispatch(addMsgData(id, name, userId, msg,time)),
-    addRoomData: (id, roomId, title, des) =>
-      dispatch(addRoomData(id, roomId, title, des)),
+    addMsgData: (id, name, userId, msg, time) =>
+      dispatch(addMsgData(id, name, userId, msg, time)),
+    addRoomData: (id, roomId, title, des, isChecked) =>
+      dispatch(addRoomData(id, roomId, title, des, isChecked)),
     getBotResponse: (msg) => dispatch(getBotResponse(msg)),
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
     changeNowRoomId: (nowRoomId) => dispatch(changeNowRoomId(nowRoomId)),
+    changeCheckedState: (checked,isChecked) => dispatch(changeCheckedState(checked,isChecked)),
     clearTaChatList: () => dispatch(clearTaChatList()),
     clearTaChatRoomList: () => dispatch(clearTaChatRoomList()),
 

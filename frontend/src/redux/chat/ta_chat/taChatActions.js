@@ -8,8 +8,10 @@ import {
   ADD_TA_CHATROOM,
   GET_TA_RESPONSE,
   CHANGE_NOW_TA_CHATROOM,
+  CHANGE_ROOM_CHECKED,
   CLEAR_TACHAT_LIST,
   CLEAR_TACHATROOM_LIST,
+
 } from './taChatTypes';
 
 // const fetChatData = () => {
@@ -46,6 +48,13 @@ export const changeNowRoomId = (nowRoomId) => {
   };
 }
 
+export const changeCheckedState = (roomId,isChecked) => {
+  return{
+    type: CHANGE_ROOM_CHECKED,
+    data:{roomId:roomId,isChecked:isChecked}
+  };
+}
+
 export const addMsgData = (id,name,userId,msg,time) => {
     return{
       type: ADD_TA_CHATMSG,
@@ -53,9 +62,9 @@ export const addMsgData = (id,name,userId,msg,time) => {
     };
 }
 
-export const addRoomData = (id,roomId, title, des) => {
+export const addRoomData = (id,roomId, title, des,isChecked) => {
   return{
     type: ADD_TA_CHATROOM,
-    data:{id:id,roomId:roomId, title: title, des: des}
+    data:{id:id,roomId:roomId, title: title, des: des,isChecked:isChecked}
   };
 }

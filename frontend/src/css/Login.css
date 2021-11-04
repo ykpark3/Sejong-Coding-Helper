@@ -37,19 +37,19 @@ a {
 
 #loginMainContainer {
   width: 100%;
-  height: fit-content;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  padding-bottom: 10px;
+  /* padding-bottom: 10px; */
 }
 
 #loginBox {
   width: 700px;
   height: fit-content;
-  position: relative;
-  top: 50px;
+  /* position: relative; */
+  /* top: 50px; */
   background-color: white;
-  margin: 0 auto 100px auto;
+  margin: auto;
   padding: 20px;
   border-radius: 10px;
   display: flex;
