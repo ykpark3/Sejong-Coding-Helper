@@ -105,7 +105,7 @@ const taChatReducer = (state = initialState, action) => {
 
       return produce(state, (draft) => {
         const room = draft.list.find((list) => String(list.roomId) === String(data.roomId));
-        room.isChecked = true;
+        room.isChecked = data.isChecked;
       });
 
     default:

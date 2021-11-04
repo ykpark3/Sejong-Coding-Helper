@@ -100,7 +100,7 @@ const TaChatRoom = ({
 
   // 룸 리스트를 api로 가지고 온후를 알려주는 변수 useEffect
   const [isRoomListUpdated, setRoomListUpdated] = useState(false);
-  // 룸 소켓통신 연결한후를 알려쥼. true or false는 의미없고, 그저 변화를 감지하는 값.
+  // 룸 소켓통신 연결한후를 알려쥼.
   const [isSelectedRoomUpdated, setSelectedRoomUpdated] = useState(false);
 
   useEffect(() => {
@@ -139,7 +139,7 @@ const TaChatRoom = ({
   }, [isRoomListUpdated]);
 
   useEffect(() => {
-    if (list.length !== 0) {
+    if (list.length !== 0 && isSelectedRoomUpdated) {
 
       //console.log('ff : ' + nowRoomId);
       connectStomp2(nowRoomId);
@@ -188,6 +188,7 @@ const TaChatRoom = ({
             clearTaChatList();
             setRoomIdSession(list[item.id - 1].roomId);
             changeNowRoomId(list[item.id - 1].roomId);
+            changeCheckedState(list[item.id - 1].roomId,false);
             getChatList(list[item.id - 1].roomId);
             stomp2.deactivate();
             //window.location.replace('/tachatroom');
@@ -348,19 +349,21 @@ const TaChatRoom = ({
             //addMsgData(num, content.name, content.userId, content.message);
             let date = getTime(content.createTime);
 
-            testAddingMsg(
-              num,
-              content.roomId,
-              content.name,
-              content.userId,
-              content.message,
-              date,
-            );
+            getRoomIdSession().then((nowRoomId) => {
+              if (nowRoomId !== content.roomId) {
+                for (let i = 0; i < list.length; i++) {
+                  if (list[i].roomId == content.roomId) {
+                    //console.log(list[i].roomId + ' // ' + roomId);
+                    changeCheckedState(content.roomId,true);
+                  }
+                }
+              }
+            });
           });
         }
 
         // 이 시점에서 선택된 하나의 채팅 룸에대한 소켓통신을 connect한다.
-        setSelectedRoomUpdated(!isSelectedRoomUpdated);
+        setSelectedRoomUpdated(true);
         changeLoadingState(false);
       },
       // onErrorCallback
@@ -377,7 +380,7 @@ const TaChatRoom = ({
       {},
       // connectCallback
       () => {
-        stomp.subscribe('/sub/chat/room2/' + nowRoomId, (chat) => {
+        stomp2.subscribe('/sub/chat/room2/' + nowRoomId, (chat) => {
           var content = JSON.parse(chat.body);
 
           let date = getTime(content.createTime);
@@ -385,6 +388,7 @@ const TaChatRoom = ({
           addMsgData(num, content.name, content.userId, content.message, date);
         });
         changeLoadingState(false);
+        setSelectedRoomUpdated(false);
       },
       // onErrorCallback
       ()=>{
@@ -395,26 +399,10 @@ const TaChatRoom = ({
       () => {
         console.log(nowRoomId);
         // 이 시점에서 선택된 하나의 채팅 룸에대한 소켓통신을 connect한다.
-        setSelectedRoomUpdated(!isSelectedRoomUpdated);
+        setSelectedRoomUpdated(true);
         changeLoadingState(false);
       },
     );
-  };
-
-  const testAddingMsg = (num, roomId, name, userId, message, time) => {
-    // 현재 세션에 저장된 roomId값 검사한 후, add할지말지.
-    getRoomIdSession().then((nowRoomId) => {
-      if (nowRoomId === roomId) {
-        //addMsgData(num, name, userId, message, time);
-      } else {
-        for (let i = 0; i < list.length; i++) {
-          if (list[i].roomId == roomId) {
-            console.log(list[i].roomId + ' // ' + roomId);
-            changeCheckedState(roomId);
-          }
-        }
-      }
-    });
   };
 
   const getRoomIdSession = async function () {
@@ -592,7 +580,7 @@ const mapDispatchToProps = (dispatch) => {
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
     changeNowRoomId: (nowRoomId) => dispatch(changeNowRoomId(nowRoomId)),
-    changeCheckedState: (checked) => dispatch(changeCheckedState(checked)),
+    changeCheckedState: (checked,isChecked) => dispatch(changeCheckedState(checked,isChecked)),
     clearTaChatList: () => dispatch(clearTaChatList()),
     clearTaChatRoomList: () => dispatch(clearTaChatRoomList()),
 

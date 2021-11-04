@@ -48,10 +48,10 @@ export const changeNowRoomId = (nowRoomId) => {
   };
 }
 
-export const changeCheckedState = (roomId) => {
+export const changeCheckedState = (roomId,isChecked) => {
   return{
     type: CHANGE_ROOM_CHECKED,
-    data:{roomId:roomId}
+    data:{roomId:roomId,isChecked:isChecked}
   };
 }
 
