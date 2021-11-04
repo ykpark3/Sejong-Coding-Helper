@@ -83,4 +83,14 @@ public class ChatController {
 
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
+
+    @MessageMapping("/chat/message2")
+    public void message2(ChatDTO2 msg){
+        chatService.create(msg);
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd hh:mm");
+//        msg.setCreateTime(dateFormat.format(msg.getCreateTime()));
+
+        template.convertAndSend("/sub/chat/room2/" + msg.getRoomId().toString(), msg);
+    }
 }

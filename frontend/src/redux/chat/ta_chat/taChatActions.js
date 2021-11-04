@@ -8,8 +8,10 @@ import {
   ADD_TA_CHATROOM,
   GET_TA_RESPONSE,
   CHANGE_NOW_TA_CHATROOM,
+  CHANGE_ROOM_CHECKED,
   CLEAR_TACHAT_LIST,
   CLEAR_TACHATROOM_LIST,
+
 } from './taChatTypes';
 
 // const fetChatData = () => {
@@ -43,6 +45,13 @@ export const changeNowRoomId = (nowRoomId) => {
   return{
     type: CHANGE_NOW_TA_CHATROOM,
     data:{nowRoomId:nowRoomId}
+  };
+}
+
+export const changeCheckedState = (roomId) => {
+  return{
+    type: CHANGE_ROOM_CHECKED,
+    data:{roomId:roomId}
   };
 }
 

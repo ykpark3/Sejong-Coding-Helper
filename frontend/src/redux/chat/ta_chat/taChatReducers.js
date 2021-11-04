@@ -7,9 +7,11 @@ import {
   ADD_TA_CHATROOM,
   GET_TA_RESPONSE,
   CHANGE_NOW_TA_CHATROOM,
+  CHANGE_ROOM_CHECKED,
   CLEAR_TACHAT_LIST,
-  CLEAR_TACHATROOM_LIST
+  CLEAR_TACHATROOM_LIST,
 } from './taChatTypes';
+import produce from 'immer';
 
 const initialState = {
   num: 0,
@@ -56,15 +58,15 @@ const taChatReducer = (state = initialState, action) => {
         ...state,
         chats: [],
         num: 0,
-      }
+      };
 
     case CLEAR_TACHATROOM_LIST:
       return {
         ...state,
         list: [],
-        nowRoomId:-1,
+        nowRoomId: -1,
         roomNum: 0,
-      }
+      };
 
     case ADD_TA_CHATMSG:
       //state.num= state.num + 1;
@@ -75,7 +77,7 @@ const taChatReducer = (state = initialState, action) => {
           name: data.name,
           userId: data.userId,
           msg: data.msg,
-          time:data.time,
+          time: data.time,
         }),
         num: state.num + 1,
       };
@@ -84,7 +86,7 @@ const taChatReducer = (state = initialState, action) => {
       return {
         ...state,
         nowRoomId: data.nowRoomId,
-      }
+      };
 
     case ADD_TA_CHATROOM:
       return {
@@ -94,10 +96,17 @@ const taChatReducer = (state = initialState, action) => {
           roomId: data.roomId,
           title: data.title,
           des: data.des,
-          isChecked : data.isChecked,
+          isChecked: data.isChecked,
         }),
         roomNum: state.roomNum + 1,
       };
+
+    case CHANGE_ROOM_CHECKED:
+
+      return produce(state, (draft) => {
+        const room = draft.list.find((list) => String(list.roomId) === String(data.roomId));
+        room.isChecked = true;
+      });
 
     default:
       return state;
