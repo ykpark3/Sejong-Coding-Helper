@@ -29,6 +29,9 @@ public class Chat {
     @Column(name = "create_time", nullable = false)
     private Timestamp createTime;
 
+    @Column(name = "chat_read_count", nullable = false)
+    private Integer chatRead;
+
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;

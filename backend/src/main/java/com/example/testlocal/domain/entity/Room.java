@@ -27,6 +27,9 @@ public class Room {
     @Column(name = "update_date", nullable = false)
     private String updateDate;
 
+    @Column(name = "chat_unread_count", nullable = false)
+    private Integer chatUnreadCount;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

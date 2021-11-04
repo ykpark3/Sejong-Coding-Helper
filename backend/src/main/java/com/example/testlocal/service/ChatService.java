@@ -2,7 +2,6 @@ package com.example.testlocal.service;
 
 import com.example.testlocal.domain.dto.ChatDTO2;
 import com.example.testlocal.domain.entity.Chat;
-import com.example.testlocal.domain.entity.User;
 import com.example.testlocal.exception.InvalidChatIdException;
 import com.example.testlocal.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,8 @@ public class ChatService {
         map.put("UserId",checkedChat.getUser());
         map.put("createTime",checkedChat.getCreateTime());
         map.put("roomId",checkedChat.getRoom());
-
+        // 추가
+        map.put("chatReed", checkedChat.getChatRead());
         return map;
     }
 
