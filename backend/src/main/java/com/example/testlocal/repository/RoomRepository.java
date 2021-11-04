@@ -15,4 +15,6 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
             "select id from user where student_number = ?1) ", nativeQuery = true)
     List<Room> findAllRoomByStudentId(String studentNumber);
 
+    @Query(value = "select chat_read_count from chat where user_id = ?1 and room_id = ?2 order by chat_read_count desc limit 1" , nativeQuery = true)
+    int findUnReadByStudentId(Integer id, Integer roomId);
 }

@@ -69,5 +69,5 @@ public class ChatController {
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
 
-    
+
 }
