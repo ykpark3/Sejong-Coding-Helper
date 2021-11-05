@@ -17,6 +17,7 @@ public class RoomDTO {
 
     private String updateDate;
 
+
     public RoomDTO(Long id, Long id2, String title, String updateDate) {
         this.userId = id;
         this.user2Id = id2;
