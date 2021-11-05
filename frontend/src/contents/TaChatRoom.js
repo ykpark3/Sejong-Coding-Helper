@@ -267,8 +267,10 @@ const TaChatRoom = ({
         },
       )
       .then((res) => {
+        console.log(res.data.roomIdList);
+      
         // 채팅방이 없을 경우.
-        if (res.data.length === 0) {
+        if (res.data.room.length === 0) {
           changeLoadingState(false);
           return;
         }
@@ -276,12 +278,12 @@ const TaChatRoom = ({
         // room id 임시저장 변수
         let roomList = [];
 
-        for (let i = 0; i < res.data.length; i++) {
+        for (let i = 0; i < res.data.room.length; i++) {
           let otherName;
-          if (String(res.data[i].user.studentNumber) === studentNumber) {
-            otherName = res.data[i].user2.name;
+          if (String(res.data.room[i].user.studentNumber) === studentNumber) {
+            otherName = res.data.room[i].user2.name;
           } else {
-            otherName = res.data[i].user.name;
+            otherName = res.data.room[i].user.name;
           }
 
           // 접속 계정이 TA일 경우와 아닌 경우 다른 UI를 위해.
@@ -292,8 +294,16 @@ const TaChatRoom = ({
             name = 'TA ' + otherName;
           }
 
-          addRoomData(roomNum, res.data[i].id, res.data[i].title, name, false);
-          roomList.push(res.data[i].id);
+          let isNewChatRoom = false;
+          // checked true or false 계산
+          for(let j = 0; j< res.data.roomIdList.length;j++){
+            if(String(res.data.room[i].id) === String(res.data.roomIdList[j])){              
+              isNewChatRoom = true;
+            }
+          }
+
+          addRoomData(roomNum, res.data.room[i].id, res.data.room[i].title, name, isNewChatRoom);
+          roomList.push(res.data.room[i].id);
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
 
@@ -302,6 +312,7 @@ const TaChatRoom = ({
 
         getRoomIdSession().then((nowRoomId) => {
           getChatList(nowRoomId, studentNumber);
+          changeCheckedState(nowRoomId,false);
           //connectStomp(roomList);
         });
       })
@@ -356,7 +367,6 @@ const TaChatRoom = ({
             var content = JSON.parse(chat.body);
 
             //addMsgData(num, content.name, content.userId, content.message);
-            let date = getTime(content.createTime);
 
             getRoomIdSession().then((nowRoomId) => {
               if (nowRoomId !== content.roomId) {
@@ -483,6 +493,7 @@ const TaChatRoom = ({
         name: userName,
         userId: userId,
         message: text,
+        chatRead:0,
       }),
     );
 
@@ -494,6 +505,7 @@ const TaChatRoom = ({
         name: userName,
         userId: userId,
         message: text,
+        chatRead:0,
       }),
     );
 
@@ -590,7 +602,7 @@ const mapDispatchToProps = (dispatch) => {
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
     changeNowRoomId: (nowRoomId) => dispatch(changeNowRoomId(nowRoomId)),
-    changeCheckedState: (checked,isChecked) => dispatch(changeCheckedState(checked,isChecked)),
+    changeCheckedState: (roomId,isChecked) => dispatch(changeCheckedState(roomId,isChecked)),
     clearTaChatList: () => dispatch(clearTaChatList()),
     clearTaChatRoomList: () => dispatch(clearTaChatRoomList()),
 

@@ -63,6 +63,7 @@ public class ChatController {
 
     @MessageMapping("/chat/message")
     public void message(ChatDTO2 msg){
+        System.out.println(msg.getChatRead() + "   " + msg.getMessage());
         chatService.create(msg);
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd hh:mm");
 //        msg.setCreateTime(dateFormat.format(msg.getCreateTime()));

@@ -60,6 +60,10 @@ public class RoomController {
             session.setAttribute("roomId",String.valueOf(result.get(0).getId()));
         }
 
+        //temp
+        if(list.size() ==0)
+            list.add(4);
+
         // room 값들 list 형식으로 보내줌
         map.put("room", result);
         // new 해야할 값들 list 형식으로 보내줌

@@ -43,6 +43,7 @@ public class Chat {
     public Chat(ChatDTO2 requestDTO, RoomService roomService, UserService2 userService) {
         this.message = requestDTO.getMessage();
         this.createTime = requestDTO.getCreateTime();
+        this.chatRead = requestDTO.getChatRead();
         this.room = roomService.findById(requestDTO.getRoomId());
         this.user = userService.findById(requestDTO.getUserId());
     }
