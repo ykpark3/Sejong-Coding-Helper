@@ -406,6 +406,9 @@ const TaChatRoom = ({
           console.log('qweqwe');
           addMsgData(num, content.name, content.userId, content.message, date);
         });
+
+        // enter하는 시점에서 상대방 모든 메세지 1로 만듬.
+
         changeLoadingState(false);
         setSelectedRoomUpdated(false);
       },
@@ -418,6 +421,9 @@ const TaChatRoom = ({
       () => {
         console.log(nowRoomId);
         console.log(isChangedPage);
+
+         // disconnect하는 시점에서 상대방 모든 메세지 1로 만듬.
+
         // 이 시점에서 선택된 하나의 채팅 룸에대한 소켓통신을 connect한다.
         setSelectedRoomUpdated(true);
         changeLoadingState(false);

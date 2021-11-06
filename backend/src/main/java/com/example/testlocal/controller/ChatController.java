@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -72,10 +73,6 @@ public class ChatController {
 
     @MessageMapping("/chat/message2")
     public void message2(ChatDTO2 msg){
-//        chatService.create(msg);
-
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd hh:mm");
-//        msg.setCreateTime(dateFormat.format(msg.getCreateTime()));
 
         template.convertAndSend("/sub/chat/room2/" + msg.getRoomId().toString(), msg);
     }
