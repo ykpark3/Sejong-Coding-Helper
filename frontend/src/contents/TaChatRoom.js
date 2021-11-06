@@ -128,7 +128,6 @@ const TaChatRoom = ({
       clearTaChatRoomList();
       clearTaChatList();
       stomp.disconnect();
-
     };
   }, [pathname]);
 
@@ -149,8 +148,6 @@ const TaChatRoom = ({
 
   useEffect(() => {
     if (list.length !== 0 && isSelectedRoomUpdated) {
-
-      console.log('ff : ' + nowRoomId);
       connectStomp2(nowRoomId);
     }
   }, [isSelectedRoomUpdated]);
@@ -192,15 +189,18 @@ const TaChatRoom = ({
         <li
           className={st}
           key={item.id}
+          // 채팅방 클릭 onClick
           onClick={() => {
             changeLoadingState(true);
             clearTaChatList();
+
+            // enter하는 시점에서 상대방 모든 메세지 1로 만듬.
+            updateChatReadState(list[item.id - 1].roomId);
             setRoomIdSession(list[item.id - 1].roomId);
             changeNowRoomId(list[item.id - 1].roomId);
-            changeCheckedState(list[item.id - 1].roomId,false);
+            changeCheckedState(list[item.id - 1].roomId, false);
             getChatList(list[item.id - 1].roomId);
-            stomp2.deactivate({type1:'clicked'});
-            //window.location.replace('/tachatroom');
+            stomp2.deactivate({ type1: 'clicked' });
           }}
         >
           <div>
@@ -268,7 +268,7 @@ const TaChatRoom = ({
       )
       .then((res) => {
         console.log(res.data.roomIdList);
-      
+
         // 채팅방이 없을 경우.
         if (res.data.room.length === 0) {
           changeLoadingState(false);
@@ -296,13 +296,21 @@ const TaChatRoom = ({
 
           let isNewChatRoom = false;
           // checked true or false 계산
-          for(let j = 0; j< res.data.roomIdList.length;j++){
-            if(String(res.data.room[i].id) === String(res.data.roomIdList[j])){              
+          for (let j = 0; j < res.data.roomIdList.length; j++) {
+            if (
+              String(res.data.room[i].id) === String(res.data.roomIdList[j])
+            ) {
               isNewChatRoom = true;
             }
           }
 
-          addRoomData(roomNum, res.data.room[i].id, res.data.room[i].title, name, isNewChatRoom);
+          addRoomData(
+            roomNum,
+            res.data.room[i].id,
+            res.data.room[i].title,
+            name,
+            isNewChatRoom,
+          );
           roomList.push(res.data.room[i].id);
         }
         // 우선 첫번째 채팅방의 채팅 내역 불러오기.
@@ -312,7 +320,7 @@ const TaChatRoom = ({
 
         getRoomIdSession().then((nowRoomId) => {
           getChatList(nowRoomId, studentNumber);
-          changeCheckedState(nowRoomId,false);
+          changeCheckedState(nowRoomId, false);
           //connectStomp(roomList);
         });
       })
@@ -373,7 +381,7 @@ const TaChatRoom = ({
                 for (let i = 0; i < list.length; i++) {
                   if (list[i].roomId == content.roomId) {
                     //console.log(list[i].roomId + ' // ' + roomId);
-                    changeCheckedState(content.roomId,true);
+                    changeCheckedState(content.roomId, true);
                   }
                 }
               }
@@ -386,7 +394,7 @@ const TaChatRoom = ({
         changeLoadingState(false);
       },
       // onErrorCallback
-      ()=>{
+      () => {
         changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       },
@@ -403,17 +411,14 @@ const TaChatRoom = ({
           var content = JSON.parse(chat.body);
 
           let date = getTime(content.createTime);
-          console.log('qweqwe');
           addMsgData(num, content.name, content.userId, content.message, date);
         });
-
-        // enter하는 시점에서 상대방 모든 메세지 1로 만듬.
 
         changeLoadingState(false);
         setSelectedRoomUpdated(false);
       },
       // onErrorCallback
-      ()=>{
+      () => {
         changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       },
@@ -422,7 +427,8 @@ const TaChatRoom = ({
         console.log(nowRoomId);
         console.log(isChangedPage);
 
-         // disconnect하는 시점에서 상대방 모든 메세지 1로 만듬.
+        // disconnect하는 시점에서 상대방 모든 메세지 1로 만듬.
+        updateChatReadState(nowRoomId);
 
         // 이 시점에서 선택된 하나의 채팅 룸에대한 소켓통신을 connect한다.
         setSelectedRoomUpdated(true);
@@ -499,7 +505,7 @@ const TaChatRoom = ({
         name: userName,
         userId: userId,
         message: text,
-        chatRead:0,
+        chatRead: 0,
       }),
     );
 
@@ -511,12 +517,32 @@ const TaChatRoom = ({
         name: userName,
         userId: userId,
         message: text,
-        chatRead:0,
+        chatRead: 0,
       }),
     );
 
     msgInput.current.value = '';
   }
+
+  const updateChatReadState = (roomId) => {
+    axios
+      .post(
+        API_BASE_URL + '/room/readStatus',
+        { roomId: roomId },
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {})
+      .catch((res) => {
+        console.log(res);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  };
 
   return (
     <div style={{ width: '100%' }}>
@@ -608,7 +634,8 @@ const mapDispatchToProps = (dispatch) => {
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
     changeNowRoomId: (nowRoomId) => dispatch(changeNowRoomId(nowRoomId)),
-    changeCheckedState: (roomId,isChecked) => dispatch(changeCheckedState(roomId,isChecked)),
+    changeCheckedState: (roomId, isChecked) =>
+      dispatch(changeCheckedState(roomId, isChecked)),
     clearTaChatList: () => dispatch(clearTaChatList()),
     clearTaChatRoomList: () => dispatch(clearTaChatRoomList()),
 

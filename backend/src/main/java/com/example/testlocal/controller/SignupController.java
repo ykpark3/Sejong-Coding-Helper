@@ -75,6 +75,7 @@ public class SignupController {
         else
             return "fail";
 
+
     }
 
     @PostMapping("/completeUserSignup")
@@ -95,7 +96,6 @@ public class SignupController {
 
     @PostMapping("/checkEmailOverlap")
     public String checkEmailOverlap(@RequestBody Map<String, String> map) {
-
         if (userService.isOverlapEmail(map.get("email") + "@sju.ac.kr"))
             return "denied";
         return "accepted";
@@ -103,7 +103,6 @@ public class SignupController {
 
     @PostMapping("/checkIdOverlap")
     public void checkIdOverlap(@RequestBody Map<String, String> map) {
-
 
     }
 
