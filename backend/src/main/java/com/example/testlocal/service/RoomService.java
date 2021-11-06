@@ -32,20 +32,21 @@ public class RoomService {
     }
 
     public List<Room> findAllRoomByStudentId(String refreshToken){
-        String studentId = refreshToken;//jwtTokenProvider.getUserPk(refreshToken);
+        String studentId = jwtTokenProvider.getUserPk(refreshToken);
         return repository.findAllRoomByStudentId(studentId);
     }
 
     public List<Integer> findUnReadByStudentId(String refreshToken, List<Room> rooms){
 
         List<Integer> unReadRoomNumbers = new ArrayList<>();
-        String studentId = refreshToken;//jwtTokenProvider.getUserPk(refreshToken);
+        String studentId = jwtTokenProvider.getUserPk(refreshToken);
         int id = userService.findUserIdByStudentNumber(studentId);
 
         for(int i = 0; i<rooms.size(); i++){
             try {
                 if(repository.findUnReadByStudentId(id, rooms.get(i).getId().intValue()) == 0){
                     System.out.printf(String.valueOf(rooms.get(i).getId().intValue()));
+                    System.out.printf(String.valueOf(rooms.size()));
                     unReadRoomNumbers.add(rooms.get(i).getId().intValue());
                 }
             } catch (Exception e){
@@ -59,6 +60,5 @@ public class RoomService {
 
     public void deleteRoom(Long id) {
         repository.deleteById(id);
-
     }
 }

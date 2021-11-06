@@ -88,7 +88,6 @@ public class LoginController {
         refreshCookie.setPath("/");
         refreshCookie.setSecure(false);
         refreshCookie.setHttpOnly(true);
-
         response.addCookie(refreshCookie);
 
         // 싸인업
