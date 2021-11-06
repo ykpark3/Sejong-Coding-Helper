@@ -2,8 +2,10 @@ package com.example.testlocal.repository;
 
 import com.example.testlocal.domain.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,4 +19,9 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
 
     @Query(value = "select chat_read_count from chat where user_id != ?1 and room_id = ?2 order by chat_read_count desc limit 1" , nativeQuery = true)
     int findUnReadByStudentId(Integer id, Integer roomId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update chat set chat_read_count = 1 where user_id != ?1 and room_id = ?2", nativeQuery = true)
+    void updateReadStatus(Integer id, Integer roomId);
 }

@@ -58,6 +58,12 @@ public class RoomService {
         return unReadRoomNumbers;
     }
 
+    public void updateReadStatus(String refreshToken, int roomId){
+        String studentId = jwtTokenProvider.getUserPk(refreshToken);
+        int id = userService.findUserIdByStudentNumber(studentId);
+        repository.updateReadStatus(id, roomId);
+    }
+
     public void deleteRoom(Long id) {
         repository.deleteById(id);
     }

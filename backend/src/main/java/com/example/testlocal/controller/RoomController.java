@@ -39,6 +39,11 @@ public class RoomController {
     @DeleteMapping("/room")
     public void deleteRoom(@PathVariable Long id) { roomService.deleteRoom(id);}
 
+    @PostMapping("/room/readStatus")
+    public void updateRoomReadStatus(@RequestBody Map<String, Integer> map, HttpServletRequest request, @CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken) {
+        roomService.updateReadStatus(refreshToken, map.get("roomId"));
+    }
+
     @PostMapping("/room/studentId")
     public Map<String, Object> findAllRoomByStudentId(@RequestBody Map<String, Object> map, HttpServletRequest request, @CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken) {
 

@@ -64,8 +64,7 @@ public class ChatController {
     @MessageMapping("/chat/message")
     public void message(ChatDTO2 msg){
         chatService.create(msg);
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd hh:mm");
-//        msg.setCreateTime(dateFormat.format(msg.getCreateTime()));
+
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
 
