@@ -1,4 +1,3 @@
-
 import {
   FETCH_CHATDATA,
   FETCH_CHATDATA_REQUEST,
@@ -11,7 +10,7 @@ import {
   CHANGE_ROOM_CHECKED,
   CLEAR_TACHAT_LIST,
   CLEAR_TACHATROOM_LIST,
-
+  UPDATE_TACHATROOM_LIST,
 } from './taChatTypes';
 
 // const fetChatData = () => {
@@ -24,47 +23,59 @@ import {
 // }
 
 export const fetchChatData = () => {
-    return {
-        type: FETCH_CHATDATA_SUCCESS,
-    };
-}
+  return {
+    type: FETCH_CHATDATA_SUCCESS,
+  };
+};
 
 export const clearTaChatList = () => {
-  return{
-    type:CLEAR_TACHAT_LIST,
-  }
-}
+  return {
+    type: CLEAR_TACHAT_LIST,
+  };
+};
 export const clearTaChatRoomList = () => {
-  return{
-    type:CLEAR_TACHATROOM_LIST,
-  }
-}
+  return {
+    type: CLEAR_TACHATROOM_LIST,
+  };
+};
 
+export const updateTAChatroomList = (index) => {
+  return {
+    type: UPDATE_TACHATROOM_LIST,
+    data: { index: index },
+  };
+};
 
 export const changeNowRoomId = (nowRoomId) => {
-  return{
+  return {
     type: CHANGE_NOW_TA_CHATROOM,
-    data:{nowRoomId:nowRoomId}
+    data: { nowRoomId: nowRoomId },
   };
-}
+};
 
-export const changeCheckedState = (roomId,isChecked) => {
-  return{
+export const changeCheckedState = (roomId, isChecked) => {
+  return {
     type: CHANGE_ROOM_CHECKED,
-    data:{roomId:roomId,isChecked:isChecked}
+    data: { roomId: roomId, isChecked: isChecked },
   };
-}
+};
 
-export const addMsgData = (id,name,userId,msg,time) => {
-    return{
-      type: ADD_TA_CHATMSG,
-      data:{id:id,name:name,userId:userId, msg: msg,time:time}
-    };
-}
+export const addMsgData = (id, name, userId, msg, time) => {
+  return {
+    type: ADD_TA_CHATMSG,
+    data: { id: id, name: name, userId: userId, msg: msg, time: time },
+  };
+};
 
-export const addRoomData = (id,roomId, title, des,isChecked) => {
-  return{
+export const addRoomData = (id, roomId, title, des, isChecked) => {
+  return {
     type: ADD_TA_CHATROOM,
-    data:{id:id,roomId:roomId, title: title, des: des,isChecked:isChecked}
+    data: {
+      id: id,
+      roomId: roomId,
+      title: title,
+      des: des,
+      isChecked: isChecked,
+    },
   };
-}
+};

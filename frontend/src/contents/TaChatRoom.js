@@ -14,6 +14,7 @@ import {
   clearTaChatList,
   clearTaChatRoomList,
   changeCheckedState,
+  updateTAChatroomList,
 } from '../redux/chat/ta_chat/taChatActions';
 import {
   changeUserId,
@@ -86,6 +87,7 @@ const TaChatRoom = ({
   changeCheckedState,
   clearTaChatList,
   clearTaChatRoomList,
+  updateTAChatroomList,
 
   onLoginSuccess,
   changeType,
@@ -179,10 +181,11 @@ const TaChatRoom = ({
   };
 
   const listData = () => {
+
     const listItems = list.map((item) => {
       let st = 'nonSelectedRoomLi';
 
-      if (String(nowRoomId) === String(list[item.id - 1].roomId)) {
+      if (String(nowRoomId) === String(item.roomId)) {
         st = 'selectedRoomLi';
       }
       return (
@@ -194,12 +197,12 @@ const TaChatRoom = ({
             changeLoadingState(true);
             clearTaChatList();
 
-            // enter하는 시점에서 상대방 모든 메세지 1로 만듬.
-            updateChatReadState(list[item.id - 1].roomId);
-            setRoomIdSession(list[item.id - 1].roomId);
-            changeNowRoomId(list[item.id - 1].roomId);
-            changeCheckedState(list[item.id - 1].roomId, false);
-            getChatList(list[item.id - 1].roomId);
+            // enter하는 시점에서 상대방 모든 메세지 1로 만듬. list[item.id - 1]
+            updateChatReadState(item.roomId);
+            setRoomIdSession(item.roomId);
+            changeNowRoomId(item.roomId);
+            changeCheckedState(item.roomId, false);
+            getChatList(item.roomId);
             stomp2.deactivate({ type1: 'clicked' });
           }}
         >
@@ -520,6 +523,7 @@ const TaChatRoom = ({
         chatRead: 0,
       }),
     );
+    updateTAChatroomList(nowRoomId);
 
     msgInput.current.value = '';
   }
@@ -638,6 +642,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(changeCheckedState(roomId, isChecked)),
     clearTaChatList: () => dispatch(clearTaChatList()),
     clearTaChatRoomList: () => dispatch(clearTaChatRoomList()),
+    updateTAChatroomList: (index) => dispatch(updateTAChatroomList(index)),
 
     changeType: (type) => dispatch(changeType(type)),
     changeLoadingState: (props) => dispatch(changeLoadingState(props)),
