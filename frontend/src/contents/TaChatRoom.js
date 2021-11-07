@@ -181,7 +181,6 @@ const TaChatRoom = ({
   };
 
   const listData = () => {
-
     const listItems = list.map((item) => {
       let st = 'nonSelectedRoomLi';
 
@@ -200,8 +199,11 @@ const TaChatRoom = ({
             // enter하는 시점에서 상대방 모든 메세지 1로 만듬. list[item.id - 1]
             updateChatReadState(item.roomId);
             setRoomIdSession(item.roomId);
-            changeNowRoomId(item.roomId);
+
+            // 클릭하기전 nowRoomId를 false로 만듬. 
+            changeCheckedState(nowRoomId, false);
             changeCheckedState(item.roomId, false);
+            changeNowRoomId(item.roomId);
             getChatList(item.roomId);
             stomp2.deactivate({ type1: 'clicked' });
           }}
@@ -209,7 +211,7 @@ const TaChatRoom = ({
           <div>
             <p>{item.title}</p>
             <>
-              {item.isChecked ? (
+              {item.isChecked && item.roomId !== nowRoomId ? (
                 <p className="secondNavRoomNewP" style={{ color: 'red' }}>
                   New
                 </p>
@@ -377,18 +379,24 @@ const TaChatRoom = ({
           stomp.subscribe('/sub/chat/room/' + roomList[i].roomId, (chat) => {
             var content = JSON.parse(chat.body);
 
-            //addMsgData(num, content.name, content.userId, content.message);
-
-            getRoomIdSession().then((nowRoomId) => {
-              if (nowRoomId !== content.roomId) {
-                for (let i = 0; i < list.length; i++) {
-                  if (list[i].roomId == content.roomId) {
-                    //console.log(list[i].roomId + ' // ' + roomId);
-                    changeCheckedState(content.roomId, true);
-                  }
-                }
+            for (let i = 0; i < list.length; i++) {
+              if (list[i].roomId == content.roomId) {
+                changeCheckedState(content.roomId, true);
               }
-            });
+            }
+          
+            updateTAChatroomList(content.roomId);
+            
+            // getRoomIdSession().then((nowRoomId) => {
+            //   if (nowRoomId !== content.roomId) {
+            //     for (let i = 0; i < list.length; i++) {
+            //       if (list[i].roomId == content.roomId) {
+            //         //console.log(list[i].roomId + ' // ' + roomId);
+            //         changeCheckedState(content.roomId, true);
+            //       }
+            //     }
+            //   }
+            // });
           });
         }
 

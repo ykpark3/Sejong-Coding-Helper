@@ -8,8 +8,7 @@ import com.example.testlocal.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +32,15 @@ public class RoomService {
 
     public List<Room> findAllRoomByStudentId(String refreshToken){
         String studentId = jwtTokenProvider.getUserPk(refreshToken);
-        return repository.findAllRoomByStudentId(studentId);
+
+        List<Room> result = repository.findAllRoomByStudentId(studentId);
+
+        for(int i = 0; i<result.size(); i++){
+            result.get(i).setUpdateDate(repository.findLastChatTime(result.get(i).getId()));
+        }
+        Collections.sort(result,new SortByDate());
+
+        return result;
     }
 
     public List<Integer> findUnReadByStudentId(String refreshToken, List<Room> rooms){
@@ -68,5 +75,12 @@ public class RoomService {
 
     public void deleteRoom(Long id) {
         repository.deleteById(id);
+    }
+
+    static class SortByDate implements Comparator<Room> {
+        @Override
+        public int compare(Room o1, Room o2) {
+            return o2.getUpdateDate().compareTo(o1.getUpdateDate());
+        }
     }
 }
