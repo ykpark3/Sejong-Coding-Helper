@@ -62,6 +62,11 @@ public class ChatController {
         template.convertAndSend("/sub/chat/room/" + msg.getRoomId().toString(), msg);
     }
 
+    @PostMapping("/chat/compileMessage")
+    public void compileMessage(@RequestBody ChatDTO2 msg){
+        chatService.create(msg);
+    }
+
     @MessageMapping("/chat/message")
     public void message(ChatDTO2 msg){
         System.out.println(msg.getChatRead() + "   " + msg.getMessage());

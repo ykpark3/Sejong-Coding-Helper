@@ -71,6 +71,30 @@ body,
   color: #990000;
 }
 
+#outputBoxNav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#outputBoxNav button {
+  height: fit-content;
+  background-color: #990000;
+  color: white;
+  font-family: 'nanumR';
+  font-size: 13px;
+  border-style: none;
+  border-radius: 9px;
+  cursor: pointer;
+  padding: 5px 10px 5px 10px;
+  margin: 20px 0px 0px 0px;
+}
+
+#outputBoxNav button:hover {
+  background-color: #ff7777;
+  color: white;
+}
+
 #outputBox h1 {
   font-family: 'nanumB';
   padding: 30px 25px 30px 0px;

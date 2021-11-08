@@ -25,7 +25,8 @@ public class CompilerController {
     @SneakyThrows
     @PostMapping("/compiler/c")
     public String compileInC(@RequestBody Map<String, String> map){
-        return compilerService.sendGcc(map.get("code"), map.get("input"));
+        //return compilerService.sendGcc(map.get("code"), map.get("input"));
+        return "hello";
     }
 
     @SneakyThrows

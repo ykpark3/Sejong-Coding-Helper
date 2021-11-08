@@ -57,7 +57,7 @@ function UserChatMsgItem({ msg, name, time }) {
         <p className="senderName">나</p>
         <div>
           <p className="senderTime">{time}</p>
-          <p className="senderContent">{msg}</p>
+          <p style={{whiteSpace:'pre'}} className="senderContent">{msg}</p>
         </div>
       </div>
     </li>
@@ -351,6 +351,7 @@ const TaChatRoom = ({
       )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
+          console.log(res.data[i].message);
           addMsgData(
             num,
             res.data[i].user.name,
