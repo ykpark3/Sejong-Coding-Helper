@@ -47,7 +47,6 @@ public class RoomController {
     @PostMapping("/room/studentId")
     public Map<String, Object> findAllRoomByStudentId(@RequestBody Map<String, Object> map, HttpServletRequest request, @CookieValue(name = "refreshToken", defaultValue = "-1") String refreshToken) {
 
-        refreshToken = "17011525";
         List<Room> result = roomService.findAllRoomByStudentId(refreshToken);
         // 생성된 채팅 방이 없을 경우.
         if(result.isEmpty()){

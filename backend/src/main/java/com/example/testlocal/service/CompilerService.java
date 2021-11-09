@@ -23,6 +23,8 @@ public class CompilerService {
 
     @SneakyThrows
     public String sendGcc(String code, String input) {
+        removeFile(InputCFileDirectory);
+        removeFile(CFileName);
         createInputFile(input, InputCFileDirectory);
         createFile(code, CFileName);
         return executeCompiler("C");
@@ -129,9 +131,20 @@ public class CompilerService {
 
     @SneakyThrows
     public String sendPython(String code, String input) {
+        removeFile(InputPythonFileDirectory);
+        removeFile(PythonExeDirectory);
         createInputFile(input, InputPythonFileDirectory);
         createFile(code, PythonExeDirectory);
         return executeCompiler("Python");
+    }
+
+    public void removeFile(String directory){
+        File file = new File(directory);
+        if (file.exists()) {
+            if (file.isDirectory()) {
+                file.delete();
+            }
+        }
     }
 
 }
