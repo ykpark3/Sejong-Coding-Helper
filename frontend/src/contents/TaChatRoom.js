@@ -30,39 +30,10 @@ import { changeLoadingState } from '../redux/view/viewActions';
 import { root2 } from './Root2';
 import ChatRoomDeniedModal from './modal/ChatRoomDeniedModal';
 import ChatRoomAddingModal from './modal/ChatRoomAddingModal';
+import CodeMsgModal from './modal/CodeMsgModal';
 import Root from './Root';
 import { clearChatList } from '../redux/chat/bot_chat/botChatActions';
 import { getTime } from './utils/ChatUtils';
-
-function BotChatMsgItem({ msg, name, time }) {
-  return (
-    <li className="botMsg">
-      <img src="img/taman.png" />
-
-      <div className="botMsgBox">
-        <p className="botSenderName">{name}</p>
-        <div>
-          <p className="botSenderTime">{time}</p>
-          <p className="botSenderContent">{msg}</p>
-        </div>
-      </div>
-    </li>
-  );
-}
-
-function UserChatMsgItem({ msg, name, time }) {
-  return (
-    <li className="userMsg">
-      <div className="userMsgBox">
-        <p className="senderName">나</p>
-        <div>
-          <p className="senderTime">{time}</p>
-          <p style={{whiteSpace:'pre'}} className="senderContent">{msg}</p>
-        </div>
-      </div>
-    </li>
-  );
-}
 
 //const sockJS = new SockJS(API_BASE_URL + '/websocket');
 //const stomp = Stomp.over(sockJS);
@@ -97,8 +68,11 @@ const TaChatRoom = ({
   const scrollRef = useRef();
   const [isTa, setTa] = useState(false);
   const [modalOn, setModalOn] = useState(false);
+  const [codeModalOn, setCodeModalOn] = useState(false);
   const [roomPlusmodalOn, setRoomPlusModalOn] = useState(false);
   const { pathname } = useLocation();
+
+  const [codeMsg, setCodeMsg] = useState('');
 
   // 룸 리스트를 api로 가지고 온후를 알려주는 변수 useEffect
   const [isRoomListUpdated, setRoomListUpdated] = useState(false);
@@ -153,6 +127,63 @@ const TaChatRoom = ({
       connectStomp2(nowRoomId);
     }
   }, [isSelectedRoomUpdated]);
+
+
+  function BotChatMsgItem({ msg, name, time }) {
+
+    let isCodeMsg = msg.includes("----- 코드 -----");
+    let st = "botSenderContent";
+    let code = "";
+    if (isCodeMsg) {
+      code = msg;
+      st = "botSenderCodeContent";
+      msg = "코드를 전송했습니다.\n메세지를 클릭해서 코드를 확인하세요."
+    }
+
+    return (
+      <li className="botMsg">
+        <img src="img/taman.png" />
+
+        <div className="botMsgBox">
+          <p className="botSenderName">{name}</p>
+          <div>
+            <p className="botSenderTime">{time}</p>
+            <p onClick={() => {
+              setCodeModalOn(true);
+              setCodeMsg(code);
+            }} className={st}>{msg}</p>
+          </div>
+        </div>
+      </li>
+    );
+  }
+
+  function UserChatMsgItem({ msg, name, time }) {
+
+    let isCodeMsg = msg.includes("----- 코드 -----");
+    let st = "senderContent";
+    let code = "";
+    if (isCodeMsg) {
+      code = msg;
+      st = "senderCodeContent";
+      msg = "코드를 전송했습니다.\n메세지를 클릭해서 코드를 확인하세요."
+    }
+
+    return (
+      <li className="userMsg">
+        <div className="userMsgBox">
+          <p className="senderName">나</p>
+          <div>
+            <p className="senderTime">{time}</p>
+            <p onClick={() => {
+              setCodeModalOn(true);
+              setCodeMsg(code);
+            }} className={st}>{msg}</p>
+          </div>
+        </div>
+      </li>
+    );
+  }
 
   const chatData = () => {
     const chatItems = chatsData.map((chat) => {
@@ -351,7 +382,7 @@ const TaChatRoom = ({
       )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
-          console.log(res.data[i].message);
+          //console.log(res.data[i].message);
           addMsgData(
             num,
             res.data[i].user.name,
@@ -385,9 +416,9 @@ const TaChatRoom = ({
                 changeCheckedState(content.roomId, true);
               }
             }
-          
+
             updateTAChatroomList(content.roomId);
-            
+
             // getRoomIdSession().then((nowRoomId) => {
             //   if (nowRoomId !== content.roomId) {
             //     for (let i = 0; i < list.length; i++) {
@@ -550,7 +581,7 @@ const TaChatRoom = ({
           withCredentials: true,
         },
       )
-      .then((res) => {})
+      .then((res) => { })
       .catch((res) => {
         console.log(res);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
@@ -562,7 +593,14 @@ const TaChatRoom = ({
       <VerticalHeader />
       <HorizontalHeader />
 
-      <>{modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}</>
+      <>
+        {modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}
+      </>
+
+      <>
+        {codeModalOn ? <CodeMsgModal setModalOn={setCodeModalOn} msg={codeMsg} /> : ''}
+      </>
+
       <>
         {roomPlusmodalOn ? (
           <ChatRoomAddingModal

@@ -146,7 +146,9 @@ const CodeCompilerModal = ({ code, input, output, userId, userName, list, roomNu
     if (nowSelectedNum === -1) {
       return;
     }
-    console.log(userName + "   " + userId);
+
+    changeLoadingState(true);
+
     let msg = "----- 코드 -----\n" + code + "\n\n" + "----- 입력 -----\n" + input + "\n\n" +
       "----- 결과 -----\n" + output;
 
@@ -170,8 +172,9 @@ const CodeCompilerModal = ({ code, input, output, userId, userName, list, roomNu
       )
       .then((res) => {
 
-
-        changeLoadingState(false);
+        changeLoadingState(false);          
+        alert('✔✔✔ 코드 전송 성공 ✔✔✔');
+          setModalOn(false);
       })
       .catch((res) => {
         console.log(res);

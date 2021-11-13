@@ -380,6 +380,10 @@ const BotChatRoom = ({
             <div ref={scrollRef}></div>
           </div>
 
+          {/* <div id="recommendationSpace">
+
+          </div> */}
+
           <div id="inputForm">
             <input
               id="msgInput"
