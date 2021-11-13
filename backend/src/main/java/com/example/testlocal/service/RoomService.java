@@ -36,7 +36,11 @@ public class RoomService {
         List<Room> result = repository.findAllRoomByStudentId(studentId);
 
         for(int i = 0; i<result.size(); i++){
-            result.get(i).setUpdateDate(repository.findLastChatTime(result.get(i).getId()));
+            String updateDate = repository.findLastChatTime(result.get(i).getId());
+            if(updateDate == null)
+                result.get(i).setUpdateDate("2030-12-30 00:00:00");
+            else
+                result.get(i).setUpdateDate(updateDate);
         }
         Collections.sort(result,new SortByDate());
 
@@ -80,7 +84,7 @@ public class RoomService {
     static class SortByDate implements Comparator<Room> {
         @Override
         public int compare(Room o1, Room o2) {
-            return o2.getUpdateDate().compareTo(o1.getUpdateDate());
+            return o2.getUpdateDate(). compareTo(o1.getUpdateDate());
         }
     }
 }

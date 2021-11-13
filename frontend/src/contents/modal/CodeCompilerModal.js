@@ -14,6 +14,7 @@ import { changeUserId, changeUserName } from '../../redux/login/loginActions';
 const CodeCompilerModal = ({ code, input, output, userId, userName, list, roomNum, changeUserId,changeUserName,addRoomData, setModalOn, changeLoadingState, clearTaChatRoomList }) => {
 
   const [nowSelectedNum, setNowSelectedNum] = useState(-1);
+  const [title,setTitle] = useState('TA조교한테 질문하기');
 
   useEffect(() => {
     console.log(code + "  " + input + "   " + output);
@@ -67,6 +68,10 @@ const CodeCompilerModal = ({ code, input, output, userId, userName, list, roomNu
         },
       )
       .then((res) => {
+
+        if(res.data.isAssistant === '1'){
+          setTitle('학생에게 코드 보내기')
+        }
 
         changeUserId(res.data.id);
         changeUserName(res.data.name);
@@ -180,7 +185,7 @@ const CodeCompilerModal = ({ code, input, output, userId, userName, list, roomNu
     <div className="codeCompilerQaModal">
       <div className="bg" />
       <div className="codeCompilerQaModalBox">
-        <p className="modalTitle">TA조교에게 질문하기</p>
+        <p className="modalTitle">{title}</p>
 
         <div className="chatRoomList">
           {listData()}

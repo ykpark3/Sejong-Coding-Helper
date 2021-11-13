@@ -24,6 +24,7 @@ const CodingEditor = ({ changeLoadingState, onLoginSuccess, changeType, }) => {
   const [baseCode, setBaseCode] = useState(C_COMPILER_BASE_CODE);
 
   const [taQaModalOn, setTaQaModalOn] = useState(false);
+  const [title,setTitle] = useState('TA조교한테\n질문하기');
 
   useEffect(() => {
 
@@ -33,12 +34,36 @@ const CodingEditor = ({ changeLoadingState, onLoginSuccess, changeType, }) => {
 
       if (result === 'success') {
         changeLoadingState(false);
+        getIsTa();
       }
     };
 
     auth();
 
   }, []);
+
+  const getIsTa = () => {
+    axios
+      .post(
+        API_BASE_URL + '/user/assistant',
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+
+        if(res.data.isAssistant === '1'){
+          setTitle('학생에게\n코드 보내기')
+        }
+      })
+      .catch((res) => {
+      });
+  };
 
   function showValue() {
     //alert(editorRef.current.getValue());
@@ -141,8 +166,8 @@ const CodingEditor = ({ changeLoadingState, onLoginSuccess, changeType, }) => {
         <div id="outputBoxNav">
           <h1>결 과</h1>
           <div>
-            <button style={{ marginRight: "15px" }}>챗봇에게<br />질문 보내기</button>
-            <button onClick={() => { setTaQaModalOn(true) }}>TA 조교에게<br />질문 보내기</button>
+            {/* <button style={{ marginRight: "15px" }}>챗봇에게<br />질문 보내기</button> */}
+            <button style={{whiteSpace:'pre'}} onClick={() => { setTaQaModalOn(true) }}>{title}</button>
           </div>
         </div>
         <textarea id="outputLine" value={codeOutput} readOnly></textarea>
