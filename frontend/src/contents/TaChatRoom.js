@@ -128,30 +128,35 @@ const TaChatRoom = ({
     }
   }, [isSelectedRoomUpdated]);
 
-
   function BotChatMsgItem({ msg, name, time }) {
-
-    let isCodeMsg = msg.includes("----- 코드 -----");
-    let st = "botSenderContent";
-    let code = "";
+    let isCodeMsg = msg.includes('----- 코드 -----');
+    let st = 'botSenderContent';
+    let code = '';
     if (isCodeMsg) {
       code = msg;
-      st = "botSenderCodeContent";
-      msg = "코드를 전송했습니다.\n메세지를 클릭해서 코드를 확인하세요."
+      st = 'botSenderCodeContent';
+      msg = '코드를 전송했습니다.\n메세지를 클릭해서 코드를 확인하세요.';
     }
 
     return (
       <li className="botMsg">
-        <img src="img/taman.png" />
+        <img src="img/taman.png"/>
 
         <div className="botMsgBox">
           <p className="botSenderName">{name}</p>
-          <div>
+          <div className="botSenderMainBox">
             <p className="botSenderTime">{time}</p>
-            <p onClick={() => {
-              setCodeModalOn(true);
-              setCodeMsg(code);
-            }} className={st}>{msg}</p>
+            <p className="botSenderContent"
+              onClick={() => {
+                if (isCodeMsg) {
+                  setCodeModalOn(true);
+                  setCodeMsg(code);
+                }
+              }}
+              className={st}
+            >
+              {msg}
+            </p>
           </div>
         </div>
       </li>
@@ -159,14 +164,13 @@ const TaChatRoom = ({
   }
 
   function UserChatMsgItem({ msg, name, time }) {
-
-    let isCodeMsg = msg.includes("----- 코드 -----");
-    let st = "senderContent";
-    let code = "";
+    let isCodeMsg = msg.includes('----- 코드 -----');
+    let st = 'senderContent';
+    let code = '';
     if (isCodeMsg) {
       code = msg;
-      st = "senderCodeContent";
-      msg = "코드를 전송했습니다.\n메세지를 클릭해서 코드를 확인하세요."
+      st = 'senderCodeContent';
+      msg = '코드를 전송했습니다.\n메세지를 클릭해서 코드를 확인하세요.';
     }
 
     return (
@@ -175,10 +179,17 @@ const TaChatRoom = ({
           <p className="senderName">나</p>
           <div>
             <p className="senderTime">{time}</p>
-            <p onClick={() => {
-              setCodeModalOn(true);
-              setCodeMsg(code);
-            }} className={st}>{msg}</p>
+            <p
+              onClick={() => {
+                if (isCodeMsg) {
+                  setCodeModalOn(true);
+                  setCodeMsg(code);
+                }
+              }}
+              className={st}
+            >
+              {msg}
+            </p>
           </div>
         </div>
       </li>
@@ -231,7 +242,7 @@ const TaChatRoom = ({
             updateChatReadState(item.roomId);
             setRoomIdSession(item.roomId);
 
-            // 클릭하기전 nowRoomId를 false로 만듬. 
+            // 클릭하기전 nowRoomId를 false로 만듬.
             changeCheckedState(nowRoomId, false);
             changeCheckedState(item.roomId, false);
             changeNowRoomId(item.roomId);
@@ -581,7 +592,7 @@ const TaChatRoom = ({
           withCredentials: true,
         },
       )
-      .then((res) => { })
+      .then((res) => {})
       .catch((res) => {
         console.log(res);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
@@ -593,12 +604,14 @@ const TaChatRoom = ({
       <VerticalHeader />
       <HorizontalHeader />
 
-      <>
-        {modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}
-      </>
+      <>{modalOn ? <ChatRoomDeniedModal setModalOn={setModalOn} /> : ''}</>
 
       <>
-        {codeModalOn ? <CodeMsgModal setModalOn={setCodeModalOn} msg={codeMsg} /> : ''}
+        {codeModalOn ? (
+          <CodeMsgModal setModalOn={setCodeModalOn} msg={codeMsg} />
+        ) : (
+          ''
+        )}
       </>
 
       <>
