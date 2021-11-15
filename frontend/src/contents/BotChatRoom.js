@@ -25,73 +25,7 @@ import {
 import { root2 } from './Root2';
 import { changeLoadingState } from '../redux/view/viewActions';
 import { getTime } from './utils/ChatUtils';
-
-const chatData = ({ chatsData }) => {
-  const chatItems = chatsData.map((chat) => {
-    if (chat.sender === 'bot') {
-      return <BotChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
-    } else if (chat.sender === 'user') {
-      return <UserChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
-    }
-  });
-
-  return <>{chatItems}</>;
-};
-
-const listData = ({ list }) => {
-  const listItems = list.map((item) => {
-    return (
-      <li className="nonSelectedRoomLi" key={item.id}>
-        <p>{item.title}</p>
-        <p className="secondNavRoomDes">{item.des}</p>
-      </li>
-    );
-  });
-
-  return <>{listItems}</>;
-};
-
-function BotChatMsgItem({ msg, time }) {
-  let recoContent = ['# 변수', '# 함수함수함수함수', '# 태슌'];
-  let reconContents = recoContent.map((msg)=>{
-    return <p className="botSenderRecoItem">{msg}</p>;
-  })
-
-  return (
-    <li className="botMsg">
-      <img src="img/logo.png" />
-
-      <div className="botMsgBox">
-        <p className="botSenderName">세종 코딩 헬퍼</p>
-        <div className="botSenderMainBox">
-          <p className="botSenderTime">{time}</p>
-          <div className="botSenderCotentBox">
-            <p className="botSenderContent">{msg}</p>
-
-            <div className="botSenderRecoContentBox">
-              {reconContents}
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </li>
-  );
-}
-
-function UserChatMsgItem({ msg, time }) {
-  return (
-    <li className="userMsg">
-      <div className="userMsgBox">
-        <p className="senderName">나</p>
-        <div>
-          <p className="senderTime">{time}</p>
-          <p className="senderContent">{msg}</p>
-        </div>
-      </div>
-    </li>
-  );
-}
+import HotKeywordInfoModal from './modal/HotKeywordInfoModal';
 
 const BotChatRoom = ({
   num,
@@ -117,6 +51,9 @@ const BotChatRoom = ({
 }) => {
   const msgInput = useRef();
   const scrollRef = useRef();
+  const [hotKeywordModalOn, setHotKeywordModalOn] = useState(false);
+  const [hotKeywordTitle, setHotKeywordTitle] = useState('');
+  const [hotKeywordContent, setHotKeywordContent] = useState('');
   const [pBntStyleClass, setPBntStyleClass] = useState('navQuestionBnt');
   const [cBntStyleClass, setCBntStyleClass] = useState('navQuestionBnt');
 
@@ -140,6 +77,83 @@ const BotChatRoom = ({
 
     auth();
   }, []);
+
+
+  const chatData = ({ chatsData }) => {
+    const chatItems = chatsData.map((chat) => {
+      if (chat.sender === 'bot') {
+        return <BotChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
+      } else if (chat.sender === 'user') {
+        return <UserChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
+      }
+    });
+
+    return <>{chatItems}</>;
+  };
+
+  const listData = ({ list }) => {
+    const listItems = list.map((item) => {
+      return (
+        <li className="nonSelectedRoomLi" key={item.id}
+          onClick={() => {
+            setHotKeywordTitle(item.title);
+            setHotKeywordContent(item.des);
+            setHotKeywordModalOn(true);
+          }}
+        >
+          <p>{item.title}</p>
+          <p className="secondNavRoomDes">{item.des}</p>
+        </li>
+      );
+    });
+
+    return <>{listItems}</>;
+  };
+
+  function BotChatMsgItem({ msg, time }) {
+    let recoContent = ['변수', '함수함수함수함수', '태슌'];
+    let reconContents = recoContent.map((msg) => {
+      return <p className="botSenderRecoItem" onClick={() => {
+        msgInput.current.value = msg;
+        sendMsg();
+      }}>{"# " + msg}</p>;
+    })
+
+    return (
+      <li className="botMsg">
+        <img src="img/logo.png" />
+
+        <div className="botMsgBox">
+          <p className="botSenderName">세종 코딩 헬퍼</p>
+          <div className="botSenderMainBox">
+            <p className="botSenderTime">{time}</p>
+            <div className="botSenderCotentBox">
+              <p className="botSenderContent">{msg}</p>
+
+              <div className="botSenderRecoContentBox">
+                {reconContents}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </li>
+    );
+  }
+
+  function UserChatMsgItem({ msg, time }) {
+    return (
+      <li className="userMsg">
+        <div className="userMsgBox">
+          <p className="senderName">나</p>
+          <div>
+            <p className="senderTime">{time}</p>
+            <p className="senderContent">{msg}</p>
+          </div>
+        </div>
+      </li>
+    );
+  }
 
   const getUserInfo = () => {
     axios
@@ -349,6 +363,18 @@ const BotChatRoom = ({
       <VerticalHeader />
       <HorizontalHeader />
 
+      <>
+        {hotKeywordModalOn ? (
+          <HotKeywordInfoModal
+            setModalOn={setHotKeywordModalOn}
+            title={hotKeywordTitle}
+            content={hotKeywordContent}
+          />
+        ) : (
+          ''
+        )}
+      </>
+
       <div id="chatRoomBody">
         <div id="emptySpace1" />
         <div className="secondHorizontalNav">
@@ -386,7 +412,7 @@ const BotChatRoom = ({
             파이썬 질문하기
           </button>
 
-          <h3>실시간 키워드 정보</h3>
+          <h3>실시간 인기 키워드</h3>
           <div className="navInner2Div">{listData({ list })}</div>
         </div>
         <div id="mainChatting">

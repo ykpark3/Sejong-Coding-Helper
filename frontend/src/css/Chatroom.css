@@ -149,6 +149,15 @@ body {
   font-family: 'nanumR';
   font-size: 13px;
   padding-top: 8px;
+
+  /* 여러줄 자르기 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 16px;    
+  max-height: 32px;     
+  -webkit-line-clamp: 3; /* 표시하고자 하는 라인 수 */
+  -webkit-box-orient: vertical;
 }
 
 .secondHorizontalNav .navQuestionBnt {
@@ -375,7 +384,7 @@ body {
 }
 
 .botMsgBox .botSenderContent {
-  width: inherit;
+  width: fit-content;
   font-family: 'nanumR';
   font-size: 17px;
   background-color: #f6f6f6;
