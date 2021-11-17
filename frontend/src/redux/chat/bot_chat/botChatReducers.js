@@ -128,6 +128,7 @@ const botChatReducer = (state = initialState, action) => {
             id: state.num + 1,
             sender: 'bot',
             msg: data.msg,
+            reco:data.reco,
             time:data.time
           },
         ),

@@ -14,7 +14,7 @@ import {
 } from '../redux/chat/bot_chat/botChatActions';
 import '../css/Chatroom.css';
 import axios from 'axios';
-import { API_BASE_URL } from './utils/Constant';
+import { API_BASE_URL, API_CHATBOT_URL } from './utils/Constant';
 import { CHATBOT_ID } from './utils/Constant';
 import {
   changeUserId,
@@ -82,7 +82,7 @@ const BotChatRoom = ({
   const chatData = ({ chatsData }) => {
     const chatItems = chatsData.map((chat) => {
       if (chat.sender === 'bot') {
-        return <BotChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
+        return <BotChatMsgItem msg={chat.msg} reco={chat.reco} key={chat.id} time={chat.time} />;
       } else if (chat.sender === 'user') {
         return <UserChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
       }
@@ -110,14 +110,23 @@ const BotChatRoom = ({
     return <>{listItems}</>;
   };
 
-  function BotChatMsgItem({ msg, time }) {
-    let recoContent = ['변수', '함수함수함수함수', '태슌'];
-    let reconContents = recoContent.map((msg) => {
-      return <p className="botSenderRecoItem" onClick={() => {
-        msgInput.current.value = msg;
-        sendMsg();
-      }}>{"# " + msg}</p>;
-    })
+  function BotChatMsgItem({ msg, reco, time }) {
+
+    let reconContents = null;
+    if (reco !== undefined) {
+
+      reco = reco.toString().replace(/\'/g, '').replace(/]/g, '').replace(/\[/g, '');
+      let recoContent = reco.toString().split(",");
+      let i = 0;
+      reconContents = recoContent.map((msg) => {
+        i++;
+        return <p className="botSenderRecoItem" key={i} onClick={() => {
+          msgInput.current.value = msg;
+          sendMsg();
+        }}>{"# " + msg}</p>;
+      })
+    }
+
 
     return (
       <li className="botMsg">
@@ -130,10 +139,13 @@ const BotChatRoom = ({
             <div className="botSenderCotentBox">
               <p className="botSenderContent">{msg}</p>
 
-              <div className="botSenderRecoContentBox">
-                {reconContents}
-              </div>
-
+              <>
+                {reconContents !== null ?
+                  <div className="botSenderRecoContentBox">
+                    {reconContents}
+                  </div>
+                  : ''}
+              </>
             </div>
           </div>
         </div>
@@ -336,7 +348,7 @@ const BotChatRoom = ({
 
     axios
       .post(
-        API_BASE_URL + '/chatbotMessage/send/' + nowRoomId + '/' + userId,
+        API_CHATBOT_URL + '/chatbotMessage/message/' + nowRoomId + '/' + userId,
         { message: text, time: nowTime },
         {
           headers: {
@@ -348,7 +360,11 @@ const BotChatRoom = ({
       )
       .then((res) => {
         console.log(res.data);
-        getBotResponse(res.data.message, getTime(res.data.createTime));
+
+        // test
+        let temp = "이해하지 못했어요.";
+        let temp2 = "['출력함수 printf', '줄바꿈 출력', '탭 출력', '따옴표 출력']";
+        getBotResponse(temp, temp2, getTime(res.data.createTime));
         scrollToBottom();
         changeLoadingState(false);
       })
@@ -459,7 +475,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchChatData: () => dispatch(fetchChatData()),
     addMsgData: (id, sender, msg, time) =>
       dispatch(addMsgData(id, sender, msg, time)),
-    getBotResponse: (msg, time) => dispatch(getBotResponse(msg, time)),
+    getBotResponse: (msg, reco, time) => dispatch(getBotResponse(msg, reco, time)),
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
     changeCRoomId: (id) => dispatch(changeCRoomId(id)),

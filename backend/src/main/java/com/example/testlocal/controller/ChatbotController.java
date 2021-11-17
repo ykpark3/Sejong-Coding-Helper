@@ -61,9 +61,12 @@ public class ChatbotController {
         String chatMessage = (String)map.get("message");
         String resultMessage = "";
         input = new ChatbotDTO(userId,roomId, chatMessage);
+        input.setCreateTime(new Timestamp((Long) map.get("time")));
 
-        resultMessage = chatbotService.executePython(chatMessage);
+        //resultMessage = chatbotService.executePython(chatMessage);
+        resultMessage = "['출력함수 printf', '줄바꿈 출력', '탭 출력', '따옴표 출력']";
         result = new ChatbotDTO(CHATBOT_ID ,roomId, resultMessage);
+
 
         map.put("result", resultMessage);
         map.put("recommend", resultMessage);
