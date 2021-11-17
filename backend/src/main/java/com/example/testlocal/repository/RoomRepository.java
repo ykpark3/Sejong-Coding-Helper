@@ -22,6 +22,7 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
     String findLastChatTime(Long roomId);
 
     @Query(value = "select chat_read_count from chat where user_id != ?1 and room_id = ?2 order by en_true2.chat.id desc limit 1" , nativeQuery = true)
+
     int findUnReadByStudentId(Integer id, Integer roomId);
 
     @Transactional

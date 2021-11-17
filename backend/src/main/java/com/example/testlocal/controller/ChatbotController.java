@@ -26,6 +26,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.testlocal.config.ApiKey.apiUrl;
 import static com.example.testlocal.config.ApiKey.secretKey;
@@ -54,12 +55,31 @@ public class ChatbotController {
     //@MessageMapping("/sendMessage") //client -> server & "/app/sendMessage"
     //@SendTo("/topic/public")    //server -> client
 
+    @PostMapping("/chatbotMessage/message/{roomId}/{userId}")
+    public String send(@RequestBody Map<String, Object> map,@PathVariable Long roomId, @PathVariable Long userId) throws IOException, InterruptedException, TimeoutException {
+        ChatbotDTO input = null, result = null;
+        String chatMessage = (String)map.get("message");
+        String resultMessage = "";
+        input = new ChatbotDTO(userId,roomId, chatMessage);
+
+        resultMessage = chatbotService.executePython(chatMessage);
+        result = new ChatbotDTO(CHATBOT_ID ,roomId, resultMessage);
+
+        map.put("result", resultMessage);
+        map.put("recommend", resultMessage);
+
+        chatbotService.create(input);
+        chatbotService.create(result);
+        return resultMessage;
+    }
+
     @PostMapping("/chatbotMessage/send/{roomId}/{userId}")
     public ChatbotDTO sendMessage(@RequestBody Map<String, Object> map,@PathVariable Long roomId, @PathVariable Long userId) throws IOException {
 
         ChatbotDTO input = null, result = null;
         String chatMessage = (String)map.get("message");
         String sendMessage = chatMessage;
+
         URL url = new URL(apiUrl);
         String message =  getReqMessage(chatMessage);
         String encodeBase64String = makeSignature(message);
@@ -194,8 +214,8 @@ public class ChatbotController {
             jsonObject.put("bubbles", bubbles_array);
             jsonObject.put("event", "send");
 
-            requestBody = jsonObject.toString();
 
+            requestBody = jsonObject.toString();
 
         } catch (Exception e){
             System.out.println("## Exception : " + e);
