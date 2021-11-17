@@ -10,6 +10,7 @@ import {
   CHANGE_ROOM_CHECKED,
   CLEAR_TACHAT_LIST,
   CLEAR_TACHATROOM_LIST,
+  UPDATE_TACHATROOM_LIST,
 } from './taChatTypes';
 import produce from 'immer';
 
@@ -102,10 +103,25 @@ const taChatReducer = (state = initialState, action) => {
       };
 
     case CHANGE_ROOM_CHECKED:
-
       return produce(state, (draft) => {
-        const room = draft.list.find((list) => String(list.roomId) === String(data.roomId));
+        const room = draft.list.find(
+          (list) => String(list.roomId) === String(data.roomId),
+        );
         room.isChecked = data.isChecked;
+      });
+
+    case UPDATE_TACHATROOM_LIST:
+
+      // const tempList = state.list;
+      // console.log(tempList);
+      // tempList.splice(index,1);
+      // tempList.unshift(updatedRoom);
+      return produce(state, (draft) => {
+
+        const index = draft.list.findIndex( (list) => list.roomId === data.index);
+        const temp = draft.list[index];
+        draft.list.splice(index,1);
+        draft.list.unshift(temp);
       });
 
     default:

@@ -35,12 +35,15 @@ public class Room {
     @JoinColumn(name = "user2_id", nullable = false)
     private User user2;
 
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
     public Room(RoomDTO requestDTO, UserService2 userService) {
         this.title = requestDTO.getTitle();
         this.updateDate = requestDTO.getUpdateDate();
         this.user = userService.findById(requestDTO.getUserId());
         this.user2 = userService.findById(requestDTO.getUser2Id());
     }
-
 
 }

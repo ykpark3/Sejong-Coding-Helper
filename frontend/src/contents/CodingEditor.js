@@ -1,9 +1,10 @@
-import React, { useRef, useState,useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import VerticalHeader from './VerticalHeader';
 import HorizontalHeader from './HorizontalHeader';
 import Editor from '@monaco-editor/react';
 import '../css/CodingEditor.css';
 import axios from 'axios';
+import CodeCompilerModal from './modal/CodeCompilerModal';
 import { connect } from 'react-redux';
 import { changeLoadingState } from '../redux/view/viewActions';
 import { changeType, onLoginSuccess } from '../redux/login/loginActions';
@@ -15,12 +16,15 @@ import {
   P_COMPILER_BASE_CODE,
 } from './utils/Constant';
 
-const CodingEditor = ({ changeLoadingState, onLoginSuccess,changeType, }) => {
+const CodingEditor = ({ changeLoadingState, onLoginSuccess, changeType, }) => {
   const editorRef = useRef(null);
   const [codeInput, setCodeInput] = useState('');
   const [codeOutput, setCodeOutput] = useState('');
   const [codeLang, setCodeLang] = useState('c');
   const [baseCode, setBaseCode] = useState(C_COMPILER_BASE_CODE);
+
+  const [taQaModalOn, setTaQaModalOn] = useState(false);
+  const [title,setTitle] = useState('TA조교한테\n질문하기');
 
   useEffect(() => {
 
@@ -30,12 +34,36 @@ const CodingEditor = ({ changeLoadingState, onLoginSuccess,changeType, }) => {
 
       if (result === 'success') {
         changeLoadingState(false);
+        getIsTa();
       }
     };
 
     auth();
 
   }, []);
+
+  const getIsTa = () => {
+    axios
+      .post(
+        API_BASE_URL + '/user/assistant',
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+
+        if(res.data.isAssistant === '1'){
+          setTitle('학생에게\n코드 보내기')
+        }
+      })
+      .catch((res) => {
+      });
+  };
 
   function showValue() {
     //alert(editorRef.current.getValue());
@@ -74,7 +102,8 @@ const CodingEditor = ({ changeLoadingState, onLoginSuccess,changeType, }) => {
     <div id="editorContainer">
       <VerticalHeader />
       <HorizontalHeader />
-
+      <>{taQaModalOn ? <CodeCompilerModal setModalOn={setTaQaModalOn} code={editorRef.current.getValue()}
+        input={codeInput} output={codeOutput} /> : ''}</>
       <div id="editorBox">
         <div id="codingTopNav">
           <h1>코딩하기</h1>
@@ -134,7 +163,13 @@ const CodingEditor = ({ changeLoadingState, onLoginSuccess,changeType, }) => {
             setCodeInput(e.target.value);
           }}
         ></textarea>
-        <h1>결 과</h1>
+        <div id="outputBoxNav">
+          <h1>결 과</h1>
+          <div>
+            {/* <button style={{ marginRight: "15px" }}>챗봇에게<br />질문 보내기</button> */}
+            <button style={{whiteSpace:'pre'}} onClick={() => { setTaQaModalOn(true) }}>{title}</button>
+          </div>
+        </div>
         <textarea id="outputLine" value={codeOutput} readOnly></textarea>
       </div>
     </div>
