@@ -7,10 +7,6 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
-# In[2]:
-
-
 from konlpy.tag import Komoran
 
 # komoran 선언 및 사전추가
@@ -25,12 +21,13 @@ text = input()
 from re import match
 
 nouns = ""
+
 for noun in komoran.nouns(text):
     if len(str(noun)) >= 2 and (match('[^방법]', noun)):
         nouns = nouns + ' ' + noun
 
 nouns
-print(nouns)
+
 # In[4]:
 
 

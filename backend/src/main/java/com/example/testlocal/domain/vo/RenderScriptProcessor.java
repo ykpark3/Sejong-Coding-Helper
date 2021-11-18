@@ -20,13 +20,13 @@ public class RenderScriptProcessor {
     private StringBuffer errorReadBuffer;
     private ProcessResult processResult;
 
-    public String execCommand(List<String> cmd) throws IOException, InterruptedException, TimeoutException {
+    public String execCommand(List<String> cmd, Integer time) throws IOException, InterruptedException, TimeoutException {
         String output="";
 
         boolean success = false;
 
         try {
-            output = new org.zeroturnaround.exec.ProcessExecutor().directory(new File("./")).command(cmd).timeout(20, TimeUnit.SECONDS)
+            output = new org.zeroturnaround.exec.ProcessExecutor().directory(new File("./")).command(cmd).timeout(time, TimeUnit.SECONDS)
                     .redirectErrorStream(true)
                     .readOutput(true)
                     .execute()

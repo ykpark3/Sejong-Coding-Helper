@@ -61,6 +61,7 @@ public class ChatbotController {
         String chatMessage = (String)map.get("message");
         String resultMessage = "";
         input = new ChatbotDTO(userId,roomId, chatMessage);
+        input.setCreateTime(new Timestamp((Long) map.get("time")));
 
         resultMessage = chatbotService.executePython(chatMessage);
         result = new ChatbotDTO(CHATBOT_ID ,roomId, resultMessage);
