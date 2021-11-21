@@ -127,6 +127,7 @@ const BotChatRoom = ({
       })
     }
 
+    const msgResult = msg.split('\n').map( (it, i) => <div key={'x'+i}>{it}</div> );
 
     return (
       <li className="botMsg">
@@ -137,7 +138,7 @@ const BotChatRoom = ({
           <div className="botSenderMainBox">
             <p className="botSenderTime">{time}</p>
             <div className="botSenderCotentBox">
-              <p className="botSenderContent">{msg}</p>
+              <div className="botSenderContent"> {msgResult}</div>
 
               <>
                 {reconContents !== null ?

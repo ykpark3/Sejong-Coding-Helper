@@ -6,19 +6,16 @@ class GiveAnswer:
     def __init__(self, db):
         self.db = db
 
-    def give_answer(self, intent, ner):
-        # 사용자 질문
-        print("input = ")
-        query = input()
+    def give_answer(self,msg, intent, ner):
 
         # 의도 파악
-        predict = intent.predict_class(query)
+        predict = intent.predict_class(msg)
 
         intent_name = intent.labels[predict]
 
         # 개체명 인식
-        predicts = ner.predict(query)
-        ner_tags = ner.predict_tags(query)
+        predicts = ner.predict(msg)
+        ner_tags = ner.predict_tags(msg)
 
         # 답변 검색
         try:
@@ -36,3 +33,4 @@ class GiveAnswer:
             answer = "죄송해요, 무슨 말인지 모르겠어요."
 
         print("답변 : ", answer)
+        return answer
