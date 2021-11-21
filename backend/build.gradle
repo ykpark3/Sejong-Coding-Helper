@@ -44,6 +44,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
 
     implementation 'org.zeroturnaround:zt-exec:1.12'
+    implementation group: 'org.json', name: 'json', version: '20201115'
 }
 
 test {

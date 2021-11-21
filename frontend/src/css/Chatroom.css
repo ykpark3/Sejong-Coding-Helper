@@ -394,6 +394,7 @@ body {
   margin-top: 10px;
   max-width: 40vw;
   word-break: break-all;
+  line-height: 25px;
 }
 
 .botMsgBox .botSenderCodeContent {

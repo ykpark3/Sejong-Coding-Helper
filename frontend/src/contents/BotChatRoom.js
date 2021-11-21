@@ -115,10 +115,10 @@ const BotChatRoom = ({
     let reconContents = null;
     if (reco !== undefined) {
 
-      reco = reco.toString().replace(/\'/g, '').replace(/]/g, '').replace(/\[/g, '');
-      let recoContent = reco.toString().split(",");
+      // reco = reco.toString().replace(/\'/g, '').replace(/]/g, '').replace(/\[/g, '');
+      // let recoContent = reco.toString().split(",");
       let i = 0;
-      reconContents = recoContent.map((msg) => {
+      reconContents = reco.map((msg) => {
         i++;
         return <p className="botSenderRecoItem" key={i} onClick={() => {
           msgInput.current.value = msg;
@@ -360,8 +360,8 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-        console.log(res.data.result);
-        getBotResponse(res.data.result.message, res.data.resultReco, getTime(res.data.result.createTime));
+        //console.log(res.data.recommend);
+        getBotResponse(res.data.result.message, res.data.recommend, getTime(res.data.result.createTime));
         scrollToBottom();
         changeLoadingState(false);
       })
