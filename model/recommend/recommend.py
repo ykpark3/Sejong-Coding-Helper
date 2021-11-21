@@ -10,7 +10,10 @@ class Recommendation:
 
     def preProcess(self):
 
-        data = pd.read_csv(os.getcwd() +'/recommend/dataset.csv', low_memory=False)
+        # loca = os.getcwd()
+        loca = ""
+
+        data = pd.read_csv(loca +'/recommend/dataset.csv', low_memory=False)
 
         # 데이터셋에 삽입
         df = pd.DataFrame(data)

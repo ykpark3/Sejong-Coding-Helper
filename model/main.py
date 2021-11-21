@@ -15,12 +15,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 from re import match
 
 app = Flask(__name__)
-
+# loca = os.getcwd()
+loca = ""
 ############# chatbot #############
 
 # 전처리 객체 생성
-p = Preprocess(word2index_dic= os.getcwd() + '/chatbot/train_tools/dict/chatbot_dict.bin',
-               userdic= os.getcwd() +'/chatbot/utils/user_dic.tsv')
+p = Preprocess(word2index_dic= loca + '/chatbot/train_tools/dict/chatbot_dict.bin',
+               userdic= loca +'/chatbot/utils/user_dic.tsv')
 
 # 질문/답변 학습 DB 연결 객체 생성
 db = Database(
@@ -28,15 +29,15 @@ db = Database(
 )
 db.connect()  # DB 연결
 
-intent = IntentModel(model_name= os.getcwd() +'/chatbot/models/intent/intent_model.h5', preprocess=p)
-ner = NerModel(model_name= os.getcwd() +'/chatbot/models/ner/ner_model.h5', preprocess=p)
+intent = IntentModel(model_name= loca +'/chatbot/models/intent/intent_model.h5', preprocess=p)
+ner = NerModel(model_name= loca +'/chatbot/models/ner/ner_model.h5', preprocess=p)
 
 question = GiveAnswer(db=db)
 
 ############# recommend #############
 
-reco = Recommendation();
-komoran = Komoran(userdic=os.getcwd() +'/recommend/user_dic.txt')
+reco = Recommendation()
+komoran = Komoran(userdic=loca +'/recommend/user_dic.txt')
 recoPreProcessing = reco.preProcess()
 
 @app.route('/predict/bot_response', methods=['POST'])
