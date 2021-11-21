@@ -359,12 +359,8 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-        console.log(res.data);
-
-        // test
-        let temp = "이해하지 못했어요.";
-        let temp2 = "['출력함수 printf', '줄바꿈 출력', '탭 출력', '따옴표 출력']";
-        getBotResponse(temp, temp2, getTime(res.data.createTime));
+        console.log(res.data.result);
+        getBotResponse(res.data.result.message, res.data.resultReco, getTime(res.data.result.createTime));
         scrollToBottom();
         changeLoadingState(false);
       })

@@ -11,7 +11,11 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -20,10 +24,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -56,24 +63,30 @@ public class ChatbotController {
     //@SendTo("/topic/public")    //server -> client
 
     @PostMapping("/chatbotMessage/message/{roomId}/{userId}")
-    public String send(@RequestBody Map<String, Object> map,@PathVariable Long roomId, @PathVariable Long userId) throws IOException, InterruptedException, TimeoutException {
+    public Map<Object, Object> send(@RequestBody Map<String, Object> map,@PathVariable Long roomId, @PathVariable Long userId) throws IOException, InterruptedException, TimeoutException {
         ChatbotDTO input = null, result = null;
         String chatMessage = (String)map.get("message");
-        String resultMessage = "";
+        String resultMessage = "", resultReco = "";
         input = new ChatbotDTO(userId,roomId, chatMessage);
         input.setCreateTime(new Timestamp((Long) map.get("time")));
 
         //resultMessage = chatbotService.executePython(chatMessage);
-        resultMessage = "['출력함수 printf', '줄바꿈 출력', '탭 출력', '따옴표 출력']";
+
+        HttpHeaders headers = new HttpHeaders();
+
+        RestTemplate restTemplate = new RestTemplate();
+        resultMessage = restTemplate.postForObject(Constants.BOT_PREDICTION_URL,new HttpEntity<>(map, headers),String.class);
+        resultReco = "['출력함수 printf', '줄바꿈 출력', '탭 출력', '따옴표 출력']";
+
         result = new ChatbotDTO(CHATBOT_ID ,roomId, resultMessage);
 
+        Map<Object, Object> resultMap = new HashMap<>();
+        resultMap.put("result", result);
+        resultMap.put("recommend", resultReco);
 
-        map.put("result", resultMessage);
-        map.put("recommend", resultMessage);
-
-        chatbotService.create(input);
-        chatbotService.create(result);
-        return resultMessage;
+        //chatbotService.create(input);
+        //chatbotService.create(result);
+        return resultMap;
     }
 
     @PostMapping("/chatbotMessage/send/{roomId}/{userId}")
