@@ -33,7 +33,7 @@ public class CompilerService {
     public void createFile(String code, String fileName){
         try {
             OutputStream output = new FileOutputStream(fileName);
-            byte[] bytes = code.getBytes();
+            byte[] bytes = code.getBytes("UTF-8");
             output.write(bytes);
         } catch (Exception e) {
             e.getStackTrace();
