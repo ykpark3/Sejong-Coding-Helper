@@ -35,11 +35,11 @@ public class ChatbotService {
     public String executePython(String input) throws IOException, InterruptedException, TimeoutException {
 
         RenderScriptProcessor compiler = new RenderScriptProcessor();
-        String PythonExeDirectory =  "./chatbotmodel-sejong-test/test/chatbot_test.py";
-        String InputPythonFileDirectory = "./chatbotmodel-sejong-test/test/text.txt";
+        String PythonExeDirectory =  "./chatbot_test.py";
+        String InputPythonFileDirectory = "./text.txt";
 
             try{
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("./chatbotmodel-sejong-test/test/text.txt", true));
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("./text.txt", true));
                 bufferedWriter.write(input);
                 bufferedWriter.flush();
                 bufferedWriter.close();
@@ -47,18 +47,15 @@ public class ChatbotService {
                 e.printStackTrace();
             }
 
-        File exePythonFile = new File("./chatbotmodel-sejong-test/test/chatbot_test.py");
-        File textPythonFile = new File("./chatbotmodel-sejong-test/test/text.txt");
+        File exePythonFile = new File("./chatbot_test.py");
+        File textPythonFile = new File("./text.txt");
         String result;
 
         List<String> executeCommendCFile = new ArrayList<String>();
         executeCommendCFile.add("/bin/sh");
         executeCommendCFile.add("-c");
         executeCommendCFile.add("python3 "+PythonExeDirectory+"<"+InputPythonFileDirectory);
-        result = compiler.execCommand(executeCommendCFile);
-
-//conda activate tensorflow
-
+        result = compiler.execCommand(executeCommendCFile, 20);
         textPythonFile.delete();
         return  result;
 

@@ -7,34 +7,20 @@ import com.example.testlocal.domain.entity.Chatbot;
 import com.example.testlocal.service.ChatbotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.json.JSONObject;
 import org.json.JSONArray;
-
-import org.json.simple.parser.JSONParser;
+import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
-
-import static com.example.testlocal.config.ApiKey.apiUrl;
-import static com.example.testlocal.config.ApiKey.secretKey;
 
 
 @Slf4j
@@ -65,7 +51,7 @@ public class ChatbotController {
         ChatbotDTO input = null, result = null;
         String chatMessage = (String)map.get("message");
         String resultMessage = "", resultBotMsg = "";
-        input = new ChatbotDTO(userId,roomId, chatMessage);
+        input = new ChatbotDTO(userId,roomId, chatMessage, "");
         input.setCreateTime(new Timestamp((Long) map.get("time")));
 
         //resultMessage = chatbotService.executePython(chatMessage);
@@ -73,6 +59,7 @@ public class ChatbotController {
         HttpHeaders headers = new HttpHeaders();
 
         RestTemplate restTemplate = new RestTemplate();
+
         resultMessage = restTemplate.postForObject(Constants.BOT_PREDICTION_URL,new HttpEntity<>(map, headers),String.class);
 
         JSONObject resultJson = new JSONObject(resultMessage);
@@ -83,14 +70,14 @@ public class ChatbotController {
         for(int i = 0;i<resultReco.length();i++)
             recoList.add((String) resultReco.get(i));
 
-        result = new ChatbotDTO(CHATBOT_ID ,roomId, resultBotMsg);
+        result = new ChatbotDTO(CHATBOT_ID ,roomId, resultBotMsg, recoList.toString());
         System.out.println(resultReco);
         Map<Object, Object> resultMap = new HashMap<>();
         resultMap.put("result", result);
         resultMap.put("recommend", recoList);
 
-        //chatbotService.create(input);
-        //chatbotService.create(result);
+        chatbotService.create(input);
+        chatbotService.create(result);
         return resultMap;
     }
 

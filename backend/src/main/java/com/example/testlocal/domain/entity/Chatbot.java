@@ -29,6 +29,9 @@ public class Chatbot {
     @Column(name = "create_time", nullable = false)
     private Timestamp createTime;
 
+    @Column(name = "recommends", nullable = true)
+    private String recommends;
+
     @ManyToOne
     @JoinColumn(name = "chatbot_room_id", nullable = false)
     private ChatbotRoom room;

@@ -33,7 +33,7 @@ public class CompilerService {
     public void createFile(String code, String fileName){
         try {
             OutputStream output = new FileOutputStream(fileName);
-            byte[] bytes = code.getBytes();
+            byte[] bytes = code.getBytes("UTF-8");
             output.write(bytes);
         } catch (Exception e) {
             e.getStackTrace();
@@ -72,7 +72,7 @@ public class CompilerService {
         createdList.add("-o");
         createdList.add("/home/c/hi");
         createdList.add(CFileName);
-        compiler.execCommand(createdList);
+        compiler.execCommand(createdList, 3);
 
         String result="";
 
@@ -85,10 +85,10 @@ public class CompilerService {
             executeCommendCFile.add("/bin/sh");
             executeCommendCFile.add("-c");
             executeCommendCFile.add(CExeDirectory+"<"+InputCFileDirectory);
-            result = compiler.execCommand(executeCommendCFile);
+            result = compiler.execCommand(executeCommendCFile, 3);
         }
         else {
-            result = compiler.execCommand(createdList);
+            result = compiler.execCommand(createdList, 3);
         }
 
         textCFile.delete();
@@ -104,7 +104,7 @@ public class CompilerService {
         executeCommendCFile.add("chmod");
         executeCommendCFile.add(chmodNumber);
         executeCommendCFile.add(fileName);
-        compiler.execCommand(executeCommendCFile);
+        compiler.execCommand(executeCommendCFile,3);
 
     }
 
@@ -122,7 +122,7 @@ public class CompilerService {
         executeCommendCFile.add("/bin/sh");
         executeCommendCFile.add("-c");
         executeCommendCFile.add("python3 "+PythonExeDirectory+"<"+InputPythonFileDirectory);
-        result = compiler.execCommand(executeCommendCFile);
+        result = compiler.execCommand(executeCommendCFile, 3);
 
         exePythonFile.delete();
         textPythonFile.delete();
