@@ -12,7 +12,6 @@ import { root2 } from './Root2';
 import PwModifyingModal from './modal/PwModifyingModal';
 import WithdrawalModal from './modal/WithdrawalModal';
 import '../css/MyPage.css';
-
 const MyPage = ({
   history,
   loginState,

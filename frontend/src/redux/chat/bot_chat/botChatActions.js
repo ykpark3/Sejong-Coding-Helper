@@ -62,12 +62,13 @@ export const addMsgData = (id, sender,msg,time) => {
     };
 }
 
-export const getBotResponse = (msg,time) => {
+export const getBotResponse = (msg,reco, time) => {
 
   return{
     type: GET_BOT_RESPONSE,
     data:{
       msg:msg,
+      reco:reco,
       time:time
     }
   }

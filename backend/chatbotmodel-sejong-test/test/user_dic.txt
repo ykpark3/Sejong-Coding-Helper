@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 설치	NNG
 OJ	NNG
 가입  NNG
@@ -42,6 +43,8 @@ remove	NNG
 pop	NNG
 count	NNG
 튜플	NNG
+=======
+>>>>>>> upstream/master
 for문	NNG
 매개변수	NNG
 인수	NNG
@@ -79,6 +82,7 @@ while문	NNG
 배열	NNG
 다차원배열	NNG
 2차원배열	NNG
+<<<<<<< HEAD
 for문	NNG
 매개변수	NNG
 인수	NNG
@@ -169,3 +173,5 @@ while	NNG
 for	NNG
 전역	NNG
 지역	NNG
+=======
+>>>>>>> upstream/master
