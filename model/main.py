@@ -6,6 +6,7 @@ from Preprocess import Preprocess
 from models.intent.IntentModel import IntentModel
 from models.ner.NerModel import NerModel
 from GiveAnswer import GiveAnswer
+from recommend import Recommendation
 import os
 from konlpy.tag import Komoran
 import pandas as pd
@@ -18,8 +19,8 @@ app = Flask(__name__)
 ############# chatbot #############
 
 # 전처리 객체 생성
-p = Preprocess(word2index_dic= '/chatbot/train_tools/dict/chatbot_dict.bin',
-               userdic= '/chatbot/utils/user_dic.tsv')
+p = Preprocess(word2index_dic= os.getcwd() + '/chatbot/train_tools/dict/chatbot_dict.bin',
+               userdic= os.getcwd() +'/chatbot/utils/user_dic.tsv')
 
 # 질문/답변 학습 DB 연결 객체 생성
 db = Database(
@@ -27,25 +28,16 @@ db = Database(
 )
 db.connect()  # DB 연결
 
-intent = IntentModel(model_name= '/chatbot/models/intent/intent_model.h5', preprocess=p)
-ner = NerModel(model_name= '/chatbot/models/ner/ner_model.h5', preprocess=p)
+intent = IntentModel(model_name= os.getcwd() +'/chatbot/models/intent/intent_model.h5', preprocess=p)
+ner = NerModel(model_name= os.getcwd() +'/chatbot/models/ner/ner_model.h5', preprocess=p)
 
 question = GiveAnswer(db=db)
 
 ############# recommend #############
 
-#komoran 선언 및 사전추가
-# komoran = Komoran(userdic='/recommend/user_dic.txt')
-#
-# data = pd.read_csv('/recommend/dataset.csv', low_memory=False)
-#
-# #데이터셋에 삽입
-# df = pd.DataFrame(data)
-#
-# #Description과 Title이 공백이면 데이터프레임에서 제거
-# data = df[['타이틀(Title)', '설명(Description)']].dropna()
-
-############# Server #############
+reco = Recommendation();
+komoran = Komoran(userdic=os.getcwd() +'/recommend/user_dic.txt')
+recoPreProcessing = reco.preProcess()
 
 @app.route('/predict/bot_response', methods=['POST'])
 def predictBotResonse():
@@ -53,8 +45,17 @@ def predictBotResonse():
     msg = msg.get("message")
     print(msg)
 
-    result = question.give_answer(msg, intent, ner)
-    return result
+    result_chatbot = question.give_answer(msg, intent, ner)
+
+    test_data = reco.insertUserData(recoPreProcessing, komoran, msg)
+    result_reco = reco.get_recommendations(test_data, len(test_data) - 1)
+
+    result_dict = dict()
+    result_dict["botMsg"] = result_chatbot
+    result_dict["reco"] = result_reco
+    print(result_dict)
+    return result_dict
 
 if __name__ == '__main__':
     app.run(debug=True)
+
