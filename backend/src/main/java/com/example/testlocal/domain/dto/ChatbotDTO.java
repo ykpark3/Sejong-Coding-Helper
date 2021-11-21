@@ -14,12 +14,14 @@ public class ChatbotDTO {
     private Long chatbotRoomId;
     private Timestamp createTime;
     private String message;
+    private String recommends;
 
-    public ChatbotDTO(Long userId,Long chatbotRoomId, String chatMessage) {
+    public ChatbotDTO(Long userId,Long chatbotRoomId, String chatMessage, String recommends) {
         this.userId = userId;
         this.createTime = getCreateTime();
         this.message = chatMessage;
         this.chatbotRoomId = chatbotRoomId;
+        this.recommends = recommends;
     }
 
     public Timestamp getCreateTime() {
