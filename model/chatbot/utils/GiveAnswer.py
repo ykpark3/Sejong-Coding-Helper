@@ -6,7 +6,7 @@ class GiveAnswer:
     def __init__(self, db):
         self.db = db
 
-    def give_answer(self,msg, intent, ner):
+    def give_answer(self, msg, intent, ner):
 
         # 의도 파악
         predict = intent.predict_class(msg)
