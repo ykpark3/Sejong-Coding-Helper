@@ -86,9 +86,9 @@ class Recommendation:
         first_result_idx = ques_indices[0]
         ques_indices = self.get_similarity(data, first_result_idx)
 
-        if ques_indices[0] == idx:
-            print(ques_indices[0])
-            ques_indices[0] = first_result_idx
+        for i in range(len(ques_indices)):
+            if (ques_indices[i] == idx):
+                ques_indices[i] = first_result_idx
 
         result = []
 

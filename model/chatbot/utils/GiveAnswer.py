@@ -19,6 +19,7 @@ class GiveAnswer:
 
         # 답변 검색
         try:
+            print(predicts)
             f = FindAnswer(self.db)
             answer_text = f.search(intent_name, ner_tags, predicts)
 
