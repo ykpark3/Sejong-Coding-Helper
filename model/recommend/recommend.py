@@ -10,8 +10,8 @@ class Recommendation:
 
     def preProcess(self):
 
-        # loca = os.getcwd()
-        loca = ""
+        loca = os.getcwd()
+        # loca = ""
 
         data = pd.read_csv(loca +'/recommend/dataset.csv', low_memory=False)
 

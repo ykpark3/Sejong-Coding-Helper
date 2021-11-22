@@ -45,6 +45,7 @@ public class Chatbot {
         this.createTime = requestDTO.getCreateTime();
         this.user = userService.findById(requestDTO.getUserId());
         this.room = roomService.findById(requestDTO.getChatbotRoomId());
+        this.recommends = requestDTO.getRecommends();
     }
 
 

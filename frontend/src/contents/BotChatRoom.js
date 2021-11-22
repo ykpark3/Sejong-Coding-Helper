@@ -113,7 +113,8 @@ const BotChatRoom = ({
   function BotChatMsgItem({ msg, reco, time }) {
 
     let reconContents = null;
-    if (reco !== undefined) {
+    console.log(reco);
+    if (reco !== undefined && reco !== null) {
 
       // reco = reco.toString().replace(/\'/g, '').replace(/]/g, '').replace(/\[/g, '');
       // let recoContent = reco.toString().split(",");
@@ -264,13 +265,27 @@ const BotChatRoom = ({
           if (res.data[i].user.id === CHATBOT_ID) {
             name = 'bot';
           }
+          console.log(res.data[i]);
+          if(name === 'user'){
+            addMsgData(
+              num,
+              name,
+              res.data[i].message,
+              getTime(res.data[i].createTime),
+            );
+          }
+          else{
+            let reco = res.data[i].recommends
 
-          addMsgData(
-            num,
-            name,
-            res.data[i].message,
-            getTime(res.data[i].createTime),
-          );
+            if(reco  === null){
+              reco = ""
+            }
+
+            getBotResponse(
+              res.data[i].message,
+              reco,
+              getTime(res.data[i].createTime));
+          }
         }
 
         changeLoadingState(false);
