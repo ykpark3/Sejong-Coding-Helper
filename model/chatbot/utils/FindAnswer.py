@@ -24,21 +24,21 @@ class FindAnswer:
             for i in range(len(predicts)):
                 self.extra_keyword.append(predicts[i][0])
 
-                where += " and (keyword like '"
+            where += " and (keyword like '"
 
-                for i in range(len(self.extra_keyword)):
-                    where += "%{}%".format(self.extra_keyword[i])
-                where += "')"
-                sql = sql + where
+            for i in range(len(self.extra_keyword)):
+                where += "%{}%".format(self.extra_keyword[i])
+            where += "')"
 
-                answer = self.db.select_row(sql)
+            sql = sql + where
+            answer = self.db.select_row(sql)  # 관련된 답변 전부 가져오기
 
             if answer is None:
                 self.keyword.append("again")
                 where += " and (keyword like '%again%')"
                 sql = sql + where
 
-                answer = self.db.select_row(sql)
+                answer = self.db.select_row(sql)  # 관련된 답변 전부 가져오기
 
         # 의도명, 개체명 둘 다 있는 경우
         elif (intent_name is not None) and (ner_tags is not None):
@@ -49,15 +49,17 @@ class FindAnswer:
                 where += "and ("
                 for ne in ner_tags:
                     where += " ner like '%{}%' or ".format(ne)
-                where = where[:-3] + ')'  # or 없애기
+                where = where[:-3] + ')'
 
+            # predicts 있는 경우
             if predicts is not None:
-                for i in range(len(predicts)):
+
+                for i in range(len(predicts)):  # predicts 길이에 따라
 
                     if predicts[i][1] == 'B_LV1':
-                        self.keyword.append(predicts[i][0])
+                        self.keyword.append(predicts[i][0])  # keyword 리스트에 넣어주기
                     else:
-                        self.extra_keyword.append(predicts[i][0])
+                        self.extra_keyword.append(predicts[i][0])  # 나중에 다시 사용하기 위해 extra_keyword에 넣기
 
             where += " and (keyword like '"
 
@@ -66,7 +68,7 @@ class FindAnswer:
             where += "')"
             sql = sql + where
 
-            answer = self.db.select_row(sql)
+            answer = self.db.select_row(sql)  # 관련된 답변 전부 가져오기
 
             if len(answer) > 1:
                 sql_new = sql[:-2]  # )' 없애기
