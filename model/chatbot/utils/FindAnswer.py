@@ -83,9 +83,15 @@ class FindAnswer:
                 answer = self.db.select_row(sql)
 
         if answer:
-            answer = answer[0]['answer']
+            answer_result = answer[0]['answer']
 
-        return answer
+        count = answer[0]['count']
+        count = count + 1
+        row_id = answer[0]['id']
+        sql_count = "update chatbot_train_data_new set count = {} where (id = {})".format(count, row_id)
+        self.db.execute(sql_count)
+
+        return answer_result
 
     # NER 태그를 실제 입력된 단어로 변환
     def tag_to_word(self, ner_predicts, answer):
