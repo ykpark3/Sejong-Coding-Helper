@@ -266,26 +266,23 @@ const BotChatRoom = ({
             name = 'bot';
           }
           console.log(res.data[i]);
-          // if(name === 'user'){
+          if(name === 'user'){
             addMsgData(
               num,
               name,
               res.data[i].message,
               getTime(res.data[i].createTime),
             );
-          // }
-          // else{
-          //   let reco = res.data[i].recommends
+          }
+          else{
+            let len = res.data[i].recommends.length - 1;
+            let reco = res.data[i].recommends.substring(1,len).split(',');
 
-          //   // if(reco  === null){
-          //   //   reco = ""
-          //   // }
-
-          //   getBotResponse(
-          //     res.data[i].message,
-          //     reco,
-          //     getTime(res.data[i].createTime));
-          // }
+            getBotResponse(
+              res.data[i].message,
+              reco,
+              getTime(res.data[i].createTime));
+          }
         }
 
         changeLoadingState(false);
