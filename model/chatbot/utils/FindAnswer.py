@@ -6,15 +6,46 @@ class FindAnswer:
     def __init__(self, db):
         self.db = db
 
+    # msg와 같은 title 값이 있는지 확인
+    def search_title(self, msg, language):
+        if language == 'p':
+            table_name = "chatbot_train_data_python"
+        else:
+            table_name = "chatbot_train_data_c"
+
+        sql = "select * from {}".format(table_name)
+        where = " where (title='{}')".format(msg)
+        sql = sql + where
+
+        answer = self.db.select_row(sql)
+
+        if answer:
+            answer_result = answer[0]['answer']
+
+        # 호출되었으니 count 1 증가
+        count = answer[0]['count']
+        count = count + 1
+        row_id = answer[0]['id']
+        sql_count = "update {} set count = {} where (id = {})".format(table_name, count, row_id)
+
+        self.db.execute(sql_count)
+
+        return answer_result
+
     # 답변 검색
-    def search(self, intent_name, ner_tags, predicts):
+    def search(self, intent_name, ner_tags, predicts, language):
         answer = None
 
         self.keyword.clear()
         self.extra_keyword.clear()
 
         # 의도명과 개체명으로 답변 검색
-        sql = "select * from chatbot_train_data_new"
+        if language == 'p':
+            table_name = "chatbot_train_data_python"
+        else:
+            table_name = "chatbot_train_data_c"
+
+        sql = "select * from {}".format(table_name)
 
         # 의도명만 있는 경우
         if intent_name is not None and ner_tags is None:
@@ -31,14 +62,14 @@ class FindAnswer:
             where += "')"
 
             sql = sql + where
-            answer = self.db.select_row(sql)  # 관련된 답변 전부 가져오기
+            answer = self.db.select_row(sql)
 
             if answer is None:
                 self.keyword.append("again")
                 where += " and (keyword like '%again%')"
                 sql = sql + where
 
-                answer = self.db.select_row(sql)  # 관련된 답변 전부 가져오기
+                answer = self.db.select_row(sql)
 
         # 의도명, 개체명 둘 다 있는 경우
         elif (intent_name is not None) and (ner_tags is not None):
@@ -68,10 +99,10 @@ class FindAnswer:
             where += "')"
             sql = sql + where
 
-            answer = self.db.select_row(sql)  # 관련된 답변 전부 가져오기
+            answer = self.db.select_row(sql)
 
             if len(answer) > 1:
-                sql_new = sql[:-2]  # )' 없애기
+                sql_new = sql[:-2]
 
                 for i in range(len(self.extra_keyword)):
                     sql_new += "%{}%".format(self.extra_keyword[i])
@@ -88,7 +119,7 @@ class FindAnswer:
         count = answer[0]['count']
         count = count + 1
         row_id = answer[0]['id']
-        sql_count = "update chatbot_train_data_new set count = {} where (id = {})".format(count, row_id)
+        sql_count = "update {} set count = {} where (id = {})".format(table_name, count, row_id)
         self.db.execute(sql_count)
 
         return answer_result
@@ -97,7 +128,6 @@ class FindAnswer:
     def tag_to_word(self, ner_predicts, answer):
         for word, tag in ner_predicts:
 
-            # 변환해야 하는 태그가 있는 경우 추가
             if tag == 'B_LV1':
                 answer = answer.replace(tag, word)
 
