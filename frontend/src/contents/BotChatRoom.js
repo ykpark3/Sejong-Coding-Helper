@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   addMsgData,
+  addKeywordData,
   getBotResponse,
   fetchChatData,
   changeCRoomId,
@@ -32,6 +33,7 @@ const BotChatRoom = ({
   chatsData,
   list,
   addMsgData,
+  addKeywordData,
   getBotResponse,
   userId,
   userName,
@@ -72,19 +74,28 @@ const BotChatRoom = ({
         clearChatList();
         getUserInfo();
         getBotChatRoomList();
+        getHotKeyword();
       }
     };
 
     auth();
   }, []);
 
-
   const chatData = ({ chatsData }) => {
     const chatItems = chatsData.map((chat) => {
       if (chat.sender === 'bot') {
-        return <BotChatMsgItem msg={chat.msg} reco={chat.reco} key={chat.id} time={chat.time} />;
+        return (
+          <BotChatMsgItem
+            msg={chat.msg}
+            reco={chat.reco}
+            key={chat.id}
+            time={chat.time}
+          />
+        );
       } else if (chat.sender === 'user') {
-        return <UserChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />;
+        return (
+          <UserChatMsgItem msg={chat.msg} key={chat.id} time={chat.time} />
+        );
       }
     });
 
@@ -94,7 +105,9 @@ const BotChatRoom = ({
   const listData = ({ list }) => {
     const listItems = list.map((item) => {
       return (
-        <li className="nonSelectedRoomLi" key={item.id}
+        <li
+          className="nonSelectedRoomLi"
+          key={item.id}
           onClick={() => {
             setHotKeywordTitle(item.title);
             setHotKeywordContent(item.des);
@@ -111,24 +124,32 @@ const BotChatRoom = ({
   };
 
   function BotChatMsgItem({ msg, reco, time }) {
-
     let reconContents = null;
-    console.log(reco);
-    if (reco !== undefined && reco !== null) {
 
+    if (reco !== undefined && reco !== null) {
       // reco = reco.toString().replace(/\'/g, '').replace(/]/g, '').replace(/\[/g, '');
       // let recoContent = reco.toString().split(",");
       let i = 0;
       reconContents = reco.map((msg) => {
         i++;
-        return <p className="botSenderRecoItem" key={i} onClick={() => {
-          msgInput.current.value = msg;
-          sendMsg();
-        }}>{"# " + msg}</p>;
-      })
+        return (
+          <p
+            className="botSenderRecoItem"
+            key={i}
+            onClick={() => {
+              msgInput.current.value = msg;
+              sendMsg();
+            }}
+          >
+            {'# ' + msg}
+          </p>
+        );
+      });
     }
 
-    const msgResult = msg.split('\n').map( (it, i) => <div key={'x'+i}>{it}</div> );
+    const msgResult = msg
+      .split('\n')
+      .map((it, i) => <div key={'x' + i}>{it}</div>);
 
     return (
       <li className="botMsg">
@@ -142,11 +163,11 @@ const BotChatRoom = ({
               <div className="botSenderContent"> {msgResult}</div>
 
               <>
-                {reconContents !== null ?
-                  <div className="botSenderRecoContentBox">
-                    {reconContents}
-                  </div>
-                  : ''}
+                {reconContents !== null ? (
+                  <div className="botSenderRecoContentBox">{reconContents}</div>
+                ) : (
+                  ''
+                )}
               </>
             </div>
           </div>
@@ -168,6 +189,35 @@ const BotChatRoom = ({
       </li>
     );
   }
+
+  const getHotKeyword = () => {
+    axios
+      .post(
+        API_BASE_URL + '/chatbotRoom/hotKeyword',
+        {},
+        {
+          headers: {
+            'Content-type': 'application/json',
+            Accept: 'application/json',
+          },
+          withCredentials: true,
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.data[i].intent === '정의' || res.data[i].intent === '오류' ) {
+            addKeywordData(res.data[i].keyword, res.data[i].answer);
+          }
+        }
+      })
+      .catch((res) => {
+        console.log(res);
+        changeLoadingState(false);
+        alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
+      });
+  };
 
   const getUserInfo = () => {
     axios
@@ -265,23 +315,28 @@ const BotChatRoom = ({
           if (res.data[i].user.id === CHATBOT_ID) {
             name = 'bot';
           }
-          console.log(res.data[i]);
-          if(name === 'user'){
+
+          if (name === 'user') {
             addMsgData(
               num,
               name,
               res.data[i].message,
               getTime(res.data[i].createTime),
             );
-          }
-          else{
-            let len = res.data[i].recommends.length - 1;
-            let reco = res.data[i].recommends.substring(1,len).split(',');
+          } else {
+            let len,
+              reco = null;
+
+            if (res.data[i].recommends !== null) {
+              len = res.data[i].recommends.length - 1;
+              reco = res.data[i].recommends.substring(1, len).split(',');
+            }
 
             getBotResponse(
               res.data[i].message,
               reco,
-              getTime(res.data[i].createTime));
+              getTime(res.data[i].createTime),
+            );
           }
         }
 
@@ -372,8 +427,11 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-        //console.log(res.data.recommend);
-        getBotResponse(res.data.result.message, res.data.recommend, getTime(res.data.result.createTime));
+        getBotResponse(
+          res.data.result.message,
+          res.data.recommend,
+          getTime(res.data.result.createTime),
+        );
         scrollToBottom();
         changeLoadingState(false);
       })
@@ -484,7 +542,9 @@ const mapDispatchToProps = (dispatch) => {
     fetchChatData: () => dispatch(fetchChatData()),
     addMsgData: (id, sender, msg, time) =>
       dispatch(addMsgData(id, sender, msg, time)),
-    getBotResponse: (msg, reco, time) => dispatch(getBotResponse(msg, reco, time)),
+    addKeywordData: (title, des) => dispatch(addKeywordData(title, des)),
+    getBotResponse: (msg, reco, time) =>
+      dispatch(getBotResponse(msg, reco, time)),
     changeUserId: (id) => dispatch(changeUserId(id)),
     changeUserName: (name) => dispatch(changeUserName(name)),
     changeCRoomId: (id) => dispatch(changeCRoomId(id)),
