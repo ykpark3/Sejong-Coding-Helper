@@ -27,7 +27,6 @@ class FindAnswer:
             count = count + 1
             row_id = answer[0]['id']
             sql_count = "update {} set count = {} where (id = {})".format(table_name, count, row_id)
-
             self.db.execute(sql_count)
 
         return answer_result
