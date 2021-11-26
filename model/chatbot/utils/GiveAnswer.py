@@ -18,12 +18,12 @@ class GiveAnswer:
 
         else:
             # 의도 파악
-            predict = intent.predict_class(msg)
+            predict = intent.predict_intent_class(msg)
 
             intent_name = intent.labels[predict]
 
             # 개체명 인식
-            predicts = ner.predict(msg)
+            predicts = ner.predict_ner_class(msg)
             ner_tags = ner.predict_tags(msg)
 
             # 답변 검색

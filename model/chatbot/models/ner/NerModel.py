@@ -16,7 +16,7 @@ class NerModel:
         self.p = preprocess
 
     # 개체명 클래스 예측
-    def predict(self, query):
+    def predict_ner_class(self, query):
         pos = self.p.pos(query)
 
         keywords = self.p.get_keywords(pos, without_tag=True)
@@ -26,7 +26,7 @@ class NerModel:
         max_len = 40
         padded_seqs = preprocessing.sequence.pad_sequences(sequences, padding="post", value=0, maxlen=max_len)
 
-        predict = self.model.predict(np.array([padded_seqs[0]]))
+        predict = self.model.predict_ner_class(np.array([padded_seqs[0]]))
         predict_class = tf.math.argmax(predict, axis=-1)    # argmax(): 가장 높은 값의 인덱스 반환
 
         tags = [self.index_to_ner[i] for i in predict_class.numpy()[0]]
@@ -43,7 +43,7 @@ class NerModel:
 
         max_len = 40
         padded_seqs = preprocessing.sequence.pad_sequences(sequences, padding="post", value=0, maxlen=max_len)
-        predict = self.model.predict(np.array([padded_seqs[0]]))
+        predict = self.model.predict_ner_class(np.array([padded_seqs[0]]))
         predict_class = tf.math.argmax(predict, axis=-1)
 
         tags = []
