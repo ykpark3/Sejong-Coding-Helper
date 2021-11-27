@@ -87,12 +87,12 @@ class FindAnswer:
             # predicts 있는 경우
             if predicts is not None:
 
-                for i in range(len(predicts)):  # predicts 길이에 따라
+                for i in range(len(predicts)):
 
                     if predicts[i][1] == 'B_LV1':
-                        self.keyword.append(predicts[i][0])  # keyword 리스트에 넣어주기
+                        self.keyword.append(predicts[i][0])
                     else:
-                        self.extra_keyword.append(predicts[i][0])  # 나중에 다시 사용하기 위해 extra_keyword에 넣기
+                        self.extra_keyword.append(predicts[i][0])
 
             where += " and (keyword like '"
 
@@ -107,7 +107,8 @@ class FindAnswer:
                 sql_new = sql[:-2]
 
                 for i in range(len(self.extra_keyword)):
-                    sql_new += "%{}%".format(self.extra_keyword[i])
+                    if self.extra_keyword[i] != '뭐':
+                        sql_new += "%{}%".format(self.extra_keyword[i])
 
                 sql_new += "')"
                 answer = self.db.select_row(sql_new)
