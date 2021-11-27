@@ -12,6 +12,7 @@ import {
   changePRoomId,
   changeNowBotRoomId,
   clearChatList,
+  clearKeywordList,
 } from '../redux/chat/bot_chat/botChatActions';
 import '../css/Chatroom.css';
 import axios from 'axios';
@@ -46,6 +47,7 @@ const BotChatRoom = ({
   changePRoomId,
   changeNowBotRoomId,
   clearChatList,
+  clearKeywordList,
 
   onLoginSuccess,
   changeType,
@@ -74,7 +76,6 @@ const BotChatRoom = ({
         clearChatList();
         getUserInfo();
         getBotChatRoomList();
-        getHotKeyword();
       }
     };
 
@@ -190,10 +191,12 @@ const BotChatRoom = ({
     );
   }
 
-  const getHotKeyword = () => {
+  const getHotKeyword = (lang) => {
+
+    clearKeywordList();
     axios
       .post(
-        API_BASE_URL + '/chatbotRoom/c/hotKeyword',
+        API_BASE_URL + '/chatbotRoom/'+lang+'/hotKeyword',
         {},
         {
           headers: {
@@ -281,8 +284,10 @@ const BotChatRoom = ({
           // UI 바꾸기 처리.
           if (isCRoom) {
             setCBntStyleClass('navQuestionSelectedBnt');
+            getHotKeyword('c');
           } else {
             setPBntStyleClass('navQuestionSelectedBnt');
+            getHotKeyword('python');
           }
 
           getBotChatList(roomId);
@@ -472,6 +477,7 @@ const BotChatRoom = ({
               setRoomIdSession(cRoomId);
               changeNowBotRoomId(cRoomId);
               clearChatList();
+              getHotKeyword('c');
               getBotChatList(cRoomId);
               setCBntStyleClass('navQuestionSelectedBnt');
               setPBntStyleClass('navQuestionBnt');
@@ -488,6 +494,7 @@ const BotChatRoom = ({
               setRoomIdSession(pRoomId);
               changeNowBotRoomId(pRoomId);
               clearChatList();
+              getHotKeyword('python');
               getBotChatList(pRoomId);
               setPBntStyleClass('navQuestionSelectedBnt');
               setCBntStyleClass('navQuestionBnt');
@@ -553,6 +560,7 @@ const mapDispatchToProps = (dispatch) => {
     changePRoomId: (id) => dispatch(changePRoomId(id)),
     changeNowBotRoomId: (id) => dispatch(changeNowBotRoomId(id)),
     clearChatList: () => dispatch(clearChatList()),
+    clearKeywordList: () => dispatch(clearKeywordList()),
 
     changeType: (type) => dispatch(changeType(type)),
     changeLoadingState: (props) => dispatch(changeLoadingState(props)),

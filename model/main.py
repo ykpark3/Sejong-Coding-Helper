@@ -15,8 +15,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from re import match
 
 app = Flask(__name__)
-loca = os.getcwd()
-#loca = ""
+#loca = os.getcwd()
+loca = ""
 ############# chatbot #############
 
 # 전처리 객체 생성
