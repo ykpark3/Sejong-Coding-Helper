@@ -149,7 +149,7 @@ const BotChatRoom = ({
 
     const msgResult = msg
       .split('\n')
-      .map((it, i) => <div key={'x' + i}>{it}</div>);
+      .map((it, i) => <div key={'x' + i}>{it}<br/></div>);
 
     return (
       <li className="botMsg">
@@ -193,7 +193,7 @@ const BotChatRoom = ({
   const getHotKeyword = () => {
     axios
       .post(
-        API_BASE_URL + '/chatbotRoom/hotKeyword',
+        API_BASE_URL + '/chatbotRoom/c/hotKeyword',
         {},
         {
           headers: {
@@ -204,10 +204,10 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
 
         for (let i = 0; i < res.data.length; i++) {
-          if (res.data[i].intent === '정의' || res.data[i].intent === '오류' ) {
+          if (res.data[i].intent === '정의' || res.data[i].intent === '오류') {
             addKeywordData(res.data[i].keyword, res.data[i].answer);
           }
         }
@@ -403,6 +403,7 @@ const BotChatRoom = ({
 
   function sendMsg() {
     const text = msgInput.current.value;
+    let chatLang = 'p';
 
     if (text === '') {
       return;
@@ -417,7 +418,7 @@ const BotChatRoom = ({
     axios
       .post(
         API_CHATBOT_URL + '/chatbotMessage/message/' + nowRoomId + '/' + userId,
-        { message: text, time: nowTime },
+        { message: text, time: nowTime, cRoomId:cRoomId,pRoomId:pRoomId},
         {
           headers: {
             'Content-type': 'application/json',
@@ -437,6 +438,7 @@ const BotChatRoom = ({
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   }

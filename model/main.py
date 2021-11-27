@@ -38,19 +38,27 @@ question = GiveAnswer(db=db)
 
 reco = Recommendation()
 komoran = Komoran(userdic=loca +'/recommend/user_dic.txt')
-recoPreProcessing = reco.preProcess()
+recoCPreProcessing = reco.preProcessC(db=db)
+recoPythonPreProcessing = reco.preProcessPython(db=db)
 
 @app.route('/predict/bot_response', methods=['POST'])
 def predictBotResonse():
-    msg = request.get_json()
-    msg = msg.get("message")
-    print(msg)
+    req = request.get_json()
+    msg = req.get("message")
+    language = req.get("botLang")
+    print(msg + "   lang : " + language)
 
-    language = 'p'
     result_chatbot = question.give_answer(msg, intent, ner, language)
-    test_data = reco.insertUserData(recoPreProcessing, komoran, msg)
-    result_reco = reco.get_recommendations(test_data, len(test_data) - 1)
-    test_data = reco.deleteUserData(test_data)
+
+    c_data = reco.insertUserData(recoCPreProcessing, komoran, msg)
+    python_data = reco.insertUserData(recoPythonPreProcessing, komoran, msg)
+
+    if language == 'c':
+        result_reco = reco.get_recommendations(c_data, len(c_data) - 1)
+        c_data = reco.deleteUserData(c_data)
+    else:
+        result_reco = reco.get_recommendations(python_data, len(python_data) - 1)
+        python_data = reco.deleteUserData(python_data)
 
     result_dict = dict()
     result_dict["botMsg"] = result_chatbot
