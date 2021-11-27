@@ -8,7 +8,9 @@ class FindAnswer:
 
     # msg와 같은 title 값이 있는지 확인
     def search_title(self, msg, language):
-        if language == 'p':
+        answer_result = None
+
+        if language == ('p' or 'P'):
             table_name = "chatbot_train_data_python"
         else:
             table_name = "chatbot_train_data_c"
@@ -34,12 +36,13 @@ class FindAnswer:
     # 답변 검색
     def search(self, intent_name, ner_tags, predicts, language):
         answer = None
+        answer_result = None
 
         self.keyword.clear()
         self.extra_keyword.clear()
 
         # 의도명과 개체명으로 답변 검색
-        if language == 'p':
+        if language == ('p' or 'P'):
             table_name = "chatbot_train_data_python"
         else:
             table_name = "chatbot_train_data_c"
