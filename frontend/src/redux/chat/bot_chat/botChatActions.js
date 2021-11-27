@@ -5,6 +5,7 @@ import {
   FETCH_CHATDATA_SUCCESS,
   FETCH_CHATDATA_FAILURE,
   ADD_BOT_CHATMSG,
+  ADD_KEYWORD_LIST,
   GET_BOT_RESPONSE,
   CHAGNE_CROOM_ID,
   CHAGNE_PROOM_ID,
@@ -60,6 +61,14 @@ export const addMsgData = (id, sender,msg,time) => {
       type: ADD_BOT_CHATMSG,
       data:{id:id,sender: sender, msg: msg,time:time,}
     };
+}
+
+export const addKeywordData = (title,des) => {
+  
+  return{
+    type:ADD_KEYWORD_LIST,
+    data:{title:title,des:des}
+  };
 }
 
 export const getBotResponse = (msg,reco, time) => {

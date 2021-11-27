@@ -23,7 +23,12 @@ question = GiveAnswer(db=db)
 cnt = 0
 while cnt < 5:
     print("cnt = ", cnt)
-    question.give_answer(intent, ner)
+
+    # 사용자 질문
+    print("input = ")
+    msg = input()
+    language = 'p'
+    question.give_answer(msg, intent, ner, language)
     cnt += 1
 
 db.close()  # DB 연결 끊음
