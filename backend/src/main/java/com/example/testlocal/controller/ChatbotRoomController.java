@@ -3,7 +3,7 @@ package com.example.testlocal.controller;
 import com.example.testlocal.config.Constants;
 import com.example.testlocal.domain.dto.ChatbotRoomDTO;
 import com.example.testlocal.domain.entity.ChatbotRoom;
-import com.example.testlocal.domain.entity.ChatbotTrainData;
+import com.example.testlocal.domain.entity.ChatbotTrainDataC;
 import com.example.testlocal.service.ChatbotRoomService;
 import com.example.testlocal.service.ChatbotTrainDataService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class ChatbotRoomController {
     }
 
     @PostMapping("/chatbotRoom/hotKeyword")
-    public List<ChatbotTrainData> getHotKeyWord(){
+    public List<ChatbotTrainDataC> getHotKeyWord(){
         return chatbotTrainDataService.findTop10TrainData();
     }
 

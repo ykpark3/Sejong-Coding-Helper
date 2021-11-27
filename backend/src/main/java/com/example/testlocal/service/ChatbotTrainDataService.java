@@ -1,7 +1,7 @@
 package com.example.testlocal.service;
 
-import com.example.testlocal.domain.entity.ChatbotTrainData;
-import com.example.testlocal.repository.ChatbotTrainDataRepository;
+import com.example.testlocal.domain.entity.ChatbotTrainDataC;
+import com.example.testlocal.repository.ChatbotTrainDataCRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +11,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatbotTrainDataService {
 
-    private final ChatbotTrainDataRepository repository;
+    private final ChatbotTrainDataCRepository chatbotTrainDataCRepository;
 
-    public List<ChatbotTrainData> findTop10TrainData(){
-        return repository.findTop15ByOrderByCountDesc();
+    public List<ChatbotTrainDataC> findTop10TrainData(){
+        return chatbotTrainDataCRepository.findTop15ByOrderByCountDesc();
     }
 }

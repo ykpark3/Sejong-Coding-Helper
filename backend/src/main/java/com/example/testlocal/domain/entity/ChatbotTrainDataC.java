@@ -12,9 +12,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "chatbot_train_data_new")
-@Table(name = "chatbot_train_data_new")
-public class ChatbotTrainData {
+@Entity(name = "chatbot_train_data_c")
+@Table(name = "chatbot_train_data_c")
+public class ChatbotTrainDataC {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
