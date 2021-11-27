@@ -46,7 +46,8 @@ def predictBotResonse():
     msg = msg.get("message")
     print(msg)
 
-    result_chatbot = question.give_answer(msg, intent, ner)
+    language = 'p'
+    result_chatbot = question.give_answer(msg, intent, ner, language)
     test_data = reco.insertUserData(recoPreProcessing, komoran, msg)
     result_reco = reco.get_recommendations(test_data, len(test_data) - 1)
     test_data = reco.deleteUserData(test_data)

@@ -23,7 +23,7 @@ class GiveAnswer:
             intent_name = intent.labels[predict]
 
             # 개체명 인식
-            predicts = ner.predict_ner_class(msg)
+            predicts = ner.predict(msg)
             ner_tags = ner.predict_tags(msg)
 
             # 답변 검색
