@@ -5,8 +5,8 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from re import match
-from chatbot.config.DatabaseConfig import *
-from chatbot.utils.Database import Database
+from config.DatabaseConfig import *
+from Database import Database
 
 class Recommendation:
 
