@@ -22,13 +22,12 @@ class FindAnswer:
         if answer:
             answer_result = answer[0]['answer']
 
-        # 호출되었으니 count 1 증가
-        count = answer[0]['count']
-        count = count + 1
-        row_id = answer[0]['id']
-        sql_count = "update {} set count = {} where (id = {})".format(table_name, count, row_id)
-
-        self.db.execute(sql_count)
+            # 호출되었으니 count 1 증가
+            count = answer[0]['count']
+            count = count + 1
+            row_id = answer[0]['id']
+            sql_count = "update {} set count = {} where (id = {})".format(table_name, count, row_id)
+            self.db.execute(sql_count)
 
         return answer_result
 
@@ -116,11 +115,11 @@ class FindAnswer:
         if answer:
             answer_result = answer[0]['answer']
 
-        count = answer[0]['count']
-        count = count + 1
-        row_id = answer[0]['id']
-        sql_count = "update {} set count = {} where (id = {})".format(table_name, count, row_id)
-        self.db.execute(sql_count)
+            count = answer[0]['count']
+            count = count + 1
+            row_id = answer[0]['id']
+            sql_count = "update {} set count = {} where (id = {})".format(table_name, count, row_id)
+            self.db.execute(sql_count)
 
         return answer_result
 
