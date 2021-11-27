@@ -3,7 +3,7 @@ package com.example.testlocal.controller;
 import com.example.testlocal.config.Constants;
 import com.example.testlocal.domain.dto.ChatbotRoomDTO;
 import com.example.testlocal.domain.entity.ChatbotRoom;
-import com.example.testlocal.domain.entity.ChatbotTrainData;
+import com.example.testlocal.domain.entity.ChatbotTrainDataC;
 import com.example.testlocal.service.ChatbotRoomService;
 import com.example.testlocal.service.ChatbotTrainDataService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -31,9 +30,14 @@ public class ChatbotRoomController {
         return chatbotRoomService.create(requestDTO);
     }
 
-    @PostMapping("/chatbotRoom/hotKeyword")
-    public List<ChatbotTrainData> getHotKeyWord(){
-        return chatbotTrainDataService.findTop10TrainData();
+    @PostMapping("/chatbotRoom/c/hotKeyword")
+    public List<ChatbotTrainDataC> getHotKeyWordC(){
+        return chatbotTrainDataService.findTop10TrainDataC();
+    }
+
+    @PostMapping("/chatbotRoom/python/hotKeyword")
+    public List<ChatbotTrainDataC> getHotKeyWordPython(){
+        return chatbotTrainDataService.findTop10TrainDataPython();
     }
 
     @PostMapping("/chatbotRoom/studentId")
