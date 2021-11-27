@@ -30,9 +30,14 @@ public class ChatbotRoomController {
         return chatbotRoomService.create(requestDTO);
     }
 
-    @PostMapping("/chatbotRoom/hotKeyword")
-    public List<ChatbotTrainDataC> getHotKeyWord(){
-        return chatbotTrainDataService.findTop10TrainData();
+    @PostMapping("/chatbotRoom/c/hotKeyword")
+    public List<ChatbotTrainDataC> getHotKeyWordC(){
+        return chatbotTrainDataService.findTop10TrainDataC();
+    }
+
+    @PostMapping("/chatbotRoom/python/hotKeyword")
+    public List<ChatbotTrainDataC> getHotKeyWordPython(){
+        return chatbotTrainDataService.findTop10TrainDataPython();
     }
 
     @PostMapping("/chatbotRoom/studentId")
