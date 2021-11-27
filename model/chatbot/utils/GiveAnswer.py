@@ -31,13 +31,13 @@ class GiveAnswer:
                 answer_text = f.search(intent_name, ner_tags, predicts, language)
 
                 if not answer_text:
-                    answer = "죄송해요, 무슨 말인지 모르겠어요."
+                    answer = "죄송해요. 잘 이해하지 못했어요. 제가 알아들을 수 있게 다시 한 번 질문해주세요."
                 else:
                     answer = f.tag_to_word(predicts, answer_text)
 
             except Exception as e:
                 print("e = ", e)
                 print(traceback.format_exc())
-                answer = "죄송해요, 무슨 말인지 모르겠어요."
+                answer = "안녕하세요. 질문이 있으신가요?"
 
         print("답변 : ", answer)
