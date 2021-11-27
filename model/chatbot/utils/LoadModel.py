@@ -1,8 +1,8 @@
-from config.DatabaseConfig import *
-from Database import Database
-from Preprocess import Preprocess
-from models.intent.IntentModel import IntentModel
-from models.ner.NerModel import NerModel
+from chatbot.config.DatabaseConfig import *
+from chatbot.utils.Database import Database
+from chatbot.utils.Preprocess import Preprocess
+from chatbot.models.intent.IntentModel import IntentModel
+from chatbot.models.ner.NerModel import NerModel
 from GiveAnswer import GiveAnswer
 
 # 전처리 객체 생성

@@ -1,12 +1,12 @@
 from flask import Flask
 from flask import request
-from config.DatabaseConfig import *
-from Database import Database
-from Preprocess import Preprocess
-from models.intent.IntentModel import IntentModel
-from models.ner.NerModel import NerModel
-from GiveAnswer import GiveAnswer
-from recommend import Recommendation
+from chatbot.config.DatabaseConfig import *
+from chatbot.utils.Database import Database
+from chatbot.utils.Preprocess import Preprocess
+from chatbot.models.intent.IntentModel import IntentModel
+from chatbot.models.ner.NerModel import NerModel
+from chatbot.utils.GiveAnswer import GiveAnswer
+from recommend.recommend import Recommendation
 import os
 from konlpy.tag import Komoran
 import pandas as pd
@@ -16,7 +16,7 @@ from re import match
 
 app = Flask(__name__)
 #loca = os.getcwd()
-loca = ""
+loca = '.'
 ############# chatbot #############
 
 # 전처리 객체 생성
@@ -67,5 +67,7 @@ def predictBotResonse():
     return result_dict
 
 if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8082)
     app.run(debug=True)
+
 

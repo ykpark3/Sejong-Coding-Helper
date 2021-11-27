@@ -1,6 +1,5 @@
 import traceback
-
-from utils.FindAnswer import FindAnswer
+from chatbot.utils.FindAnswer import FindAnswer
 
 class GiveAnswer:
     def __init__(self, db):
