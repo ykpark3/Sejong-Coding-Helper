@@ -21,7 +21,7 @@ ner = NerModel(model_name='../models/ner/ner_model.h5', preprocess=p)
 question = GiveAnswer(db=db)
 
 cnt = 0
-while cnt < 5:
+while cnt < 10:
     print("cnt = ", cnt)
 
     # 사용자 질문
