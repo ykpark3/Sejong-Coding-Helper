@@ -82,7 +82,7 @@ class FindAnswer:
                 where += "and ("
                 for ne in ner_tags:
                     where += " ner like '%{}%' or ".format(ne)
-                where = where[:-3] + ')'  
+                where = where[:-3] + ')'
 
             if predicts is not None:
                 for i in range(len(predicts)):
