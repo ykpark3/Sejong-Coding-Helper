@@ -12,6 +12,7 @@ import {
   changePRoomId,
   changeNowBotRoomId,
   clearChatList,
+  clearKeywordList,
 } from '../redux/chat/bot_chat/botChatActions';
 import '../css/Chatroom.css';
 import axios from 'axios';
@@ -46,6 +47,7 @@ const BotChatRoom = ({
   changePRoomId,
   changeNowBotRoomId,
   clearChatList,
+  clearKeywordList,
 
   onLoginSuccess,
   changeType,
@@ -74,7 +76,6 @@ const BotChatRoom = ({
         clearChatList();
         getUserInfo();
         getBotChatRoomList();
-        getHotKeyword();
       }
     };
 
@@ -149,7 +150,7 @@ const BotChatRoom = ({
 
     const msgResult = msg
       .split('\n')
-      .map((it, i) => <div key={'x' + i}>{it}</div>);
+      .map((it, i) => <div key={'x' + i}>{it}<br/></div>);
 
     return (
       <li className="botMsg">
@@ -190,10 +191,12 @@ const BotChatRoom = ({
     );
   }
 
-  const getHotKeyword = () => {
+  const getHotKeyword = (lang) => {
+
+    clearKeywordList();
     axios
       .post(
-        API_BASE_URL + '/chatbotRoom/hotKeyword',
+        API_BASE_URL + '/chatbotRoom/'+lang+'/hotKeyword',
         {},
         {
           headers: {
@@ -204,10 +207,10 @@ const BotChatRoom = ({
         },
       )
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
 
         for (let i = 0; i < res.data.length; i++) {
-          if (res.data[i].intent === '정의' || res.data[i].intent === '오류' ) {
+          if (res.data[i].intent === '정의' || res.data[i].intent === '오류') {
             addKeywordData(res.data[i].keyword, res.data[i].answer);
           }
         }
@@ -281,8 +284,10 @@ const BotChatRoom = ({
           // UI 바꾸기 처리.
           if (isCRoom) {
             setCBntStyleClass('navQuestionSelectedBnt');
+            getHotKeyword('c');
           } else {
             setPBntStyleClass('navQuestionSelectedBnt');
+            getHotKeyword('python');
           }
 
           getBotChatList(roomId);
@@ -403,6 +408,7 @@ const BotChatRoom = ({
 
   function sendMsg() {
     const text = msgInput.current.value;
+    let chatLang = 'p';
 
     if (text === '') {
       return;
@@ -417,7 +423,7 @@ const BotChatRoom = ({
     axios
       .post(
         API_CHATBOT_URL + '/chatbotMessage/message/' + nowRoomId + '/' + userId,
-        { message: text, time: nowTime },
+        { message: text, time: nowTime, cRoomId:cRoomId,pRoomId:pRoomId},
         {
           headers: {
             'Content-type': 'application/json',
@@ -437,6 +443,7 @@ const BotChatRoom = ({
       })
       .catch((res) => {
         console.log(res);
+        changeLoadingState(false);
         alert('일시적 오류가 발생했습니다. 다시 시도해주세요.');
       });
   }
@@ -470,6 +477,7 @@ const BotChatRoom = ({
               setRoomIdSession(cRoomId);
               changeNowBotRoomId(cRoomId);
               clearChatList();
+              getHotKeyword('c');
               getBotChatList(cRoomId);
               setCBntStyleClass('navQuestionSelectedBnt');
               setPBntStyleClass('navQuestionBnt');
@@ -486,6 +494,7 @@ const BotChatRoom = ({
               setRoomIdSession(pRoomId);
               changeNowBotRoomId(pRoomId);
               clearChatList();
+              getHotKeyword('python');
               getBotChatList(pRoomId);
               setPBntStyleClass('navQuestionSelectedBnt');
               setCBntStyleClass('navQuestionBnt');
@@ -551,6 +560,7 @@ const mapDispatchToProps = (dispatch) => {
     changePRoomId: (id) => dispatch(changePRoomId(id)),
     changeNowBotRoomId: (id) => dispatch(changeNowBotRoomId(id)),
     clearChatList: () => dispatch(clearChatList()),
+    clearKeywordList: () => dispatch(clearKeywordList()),
 
     changeType: (type) => dispatch(changeType(type)),
     changeLoadingState: (props) => dispatch(changeLoadingState(props)),

@@ -40,4 +40,5 @@ class GiveAnswer:
                 print(traceback.format_exc())
                 answer = "안녕하세요. 질문이 있으신가요?"
 
-        print("답변 : ", answer)
+        #print("답변 : ", answer)
+        return answer

@@ -14,6 +14,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -47,7 +49,12 @@ public class ChatbotController {
     //@SendTo("/topic/public")    //server -> client
 
     @PostMapping("/chatbotMessage/message/{roomId}/{userId}")
-    public Map<Object, Object> send(@RequestBody Map<String, Object> map,@PathVariable Long roomId, @PathVariable Long userId) throws IOException, InterruptedException, TimeoutException {
+    public Map<Object, Object> send(HttpServletRequest request, @RequestBody Map<String, Object> map, @PathVariable Long roomId, @PathVariable Long userId) throws IOException, InterruptedException, TimeoutException {
+
+        int cRoomId = (int) map.get("cRoomId");
+        String botLang = ( Long.valueOf(cRoomId) == roomId) ? "c" : "p";
+        map.put("botLang",botLang);
+
         ChatbotDTO input = null, result = null;
         String chatMessage = (String)map.get("message");
         String resultMessage = "", resultBotMsg = "";

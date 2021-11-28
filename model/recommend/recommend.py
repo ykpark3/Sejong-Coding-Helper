@@ -10,22 +10,24 @@ from Database import Database
 
 class Recommendation:
 
-    def preProcess(self):
+    def preProcessC(self, db):
 
-        # #DB 연결
-        db = Database(
-            host=DB_HOST, user=DB_USER, password=DB_PASSWORD, db_name=DB_NAME
-        )
-        db.connect()
-
-        data = db.select_row("select * from chatbot_train_data_new")
-
-        df = pd.DataFrame(data) # 데이터셋에 삽입
+        data = db.select_row("select * from chatbot_train_data_c")
+        df = pd.DataFrame(data)  # 데이터셋에 삽입
 
         # Description과 Title이 공백이면 데이터프레임에서 제거
         data = df[['title', 'description']].dropna()
-        print()
-        db.close()  # DB 연결 끊음
+
+
+        return data
+
+    def preProcessPython(self, db):
+
+        data = db.select_row("select * from chatbot_train_data_python")
+        df = pd.DataFrame(data)  # 데이터셋에 삽입
+
+        # Description과 Title이 공백이면 데이터프레임에서 제거
+        data = df[['title', 'description']].dropna()
 
         return data
 
