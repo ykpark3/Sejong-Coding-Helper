@@ -32,7 +32,7 @@ class GiveAnswer:
 
                 if not answer_text:
                     answer = "질문을 잘 이해하지 못 했어요. 더 구체적으로 질문해보세요.\n" \
-                             "키워드나 명사 위주로 질문하면 정확한 답변을 받을 수 있어요."
+                             "키워드나 명사 위주로 질문하면 더욱 정확한 답변을 받을 수 있어요."
                 else:
                     answer = f.tag_to_word(predicts, answer_text)
 
