@@ -8,6 +8,7 @@ class FindAnswer:
 
     # msg와 같은 title 값이 있는지 확인
     def search_title(self, msg, language):
+        print("search_title")
         answer_result = None
 
         if language == ('p' or 'P'):
