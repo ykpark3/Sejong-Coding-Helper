@@ -2,6 +2,7 @@ import traceback
 
 from utils.FindAnswer import FindAnswer
 
+
 class GiveAnswer:
     def __init__(self, db):
         self.db = db
@@ -19,10 +20,13 @@ class GiveAnswer:
 
         # msg와 일치하는 title 값 있는지 확인
         answer_text = f.search_title(msg, language)
+        print("answertext none? = ", answer_text is not None)
 
         # 비어있지 않으면
         if answer_text is not None:
+            print("answer text is not none")
             answer = answer_text
+            print("answer = ", answer)
             return answer
 
         # 의도 파악
@@ -36,16 +40,19 @@ class GiveAnswer:
         # 답변 검색
         try:
             answer_text = f.search(intent_name, ner_tags, predicts, language)
-
+            print("try answer_Text = ", answer_text)
             if not answer_text:
                 # 추천 id 값으로 찾기
                 answer_text = f.search_id(recommend_dict[0]['id'], language)
                 answer = answer_text
 
                 if not answer_text:
+                    print("if not answer text 2")
                     answer = no_answer
             else:
                 answer = f.tag_to_word(predicts, answer_text)
+
+            print("answer = ", answer)
 
         except Exception as e:
             print("e = ", e)
