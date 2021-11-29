@@ -32,6 +32,7 @@ import HotKeywordInfoModal from './modal/HotKeywordInfoModal';
 const BotChatRoom = ({
   num,
   chatsData,
+  isLoading,
   list,
   addMsgData,
   addKeywordData,
@@ -127,7 +128,7 @@ const BotChatRoom = ({
   function BotChatMsgItem({ msg, reco, time }) {
     let reconContents = null;
 
-    if (reco !== undefined && reco !== null) {
+    if (reco !== undefined && reco !== null && reco[0] !== "") {
       // reco = reco.toString().replace(/\'/g, '').replace(/]/g, '').replace(/\[/g, '');
       // let recoContent = reco.toString().split(",");
       let i = 0;
@@ -150,7 +151,7 @@ const BotChatRoom = ({
 
     const msgResult = msg
       .split('\n')
-      .map((it, i) => <div key={'x' + i}>{it}<br/></div>);
+      .map((it, i) => <div key={'x' + i}>{it}<br /></div>);
 
     return (
       <li className="botMsg">
@@ -196,7 +197,7 @@ const BotChatRoom = ({
     clearKeywordList();
     axios
       .post(
-        API_BASE_URL + '/chatbotRoom/'+lang+'/hotKeyword',
+        API_BASE_URL + '/chatbotRoom/' + lang + '/hotKeyword',
         {},
         {
           headers: {
@@ -401,14 +402,19 @@ const BotChatRoom = ({
   };
 
   const handleKeyPress = (e) => {
+
     if (e.key === 'Enter') {
       sendMsg();
     }
   };
 
   function sendMsg() {
+
+    if(isLoading){
+      return;
+    }
+
     const text = msgInput.current.value;
-    let chatLang = 'p';
 
     if (text === '') {
       return;
@@ -423,7 +429,7 @@ const BotChatRoom = ({
     axios
       .post(
         API_CHATBOT_URL + '/chatbotMessage/message/' + nowRoomId + '/' + userId,
-        { message: text, time: nowTime, cRoomId:cRoomId,pRoomId:pRoomId},
+        { message: text, time: nowTime, cRoomId: cRoomId, pRoomId: pRoomId },
         {
           headers: {
             'Content-type': 'application/json',
@@ -518,6 +524,8 @@ const BotChatRoom = ({
           <div id="inputForm">
             <input
               id="msgInput"
+              placeholder="'HELP' 를 입력해서 질문하는 팁을 확인하세요!"
+              autoComplete="off"
               ref={msgInput}
               onKeyPress={handleKeyPress}
             ></input>
@@ -531,10 +539,11 @@ const BotChatRoom = ({
   );
 };
 
-const mapStateToProps = ({ botChats, login }) => {
+const mapStateToProps = ({ views, botChats, login }) => {
   //console.log(botChats.chats);
 
   return {
+    isLoading: views.isLoading,
     chatsData: botChats.chats,
     list: botChats.list,
     num: botChats.num,
