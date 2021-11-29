@@ -27,7 +27,7 @@ while cnt < 10:
     # 사용자 질문
     print("input = ")
     msg = input()
-    language = 'p'
+    language = 'c'
     question.give_answer(msg, intent, ner, language)
     cnt += 1
 
