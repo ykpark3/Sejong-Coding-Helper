@@ -19,9 +19,10 @@ class FindAnswer:
         msg_sql = '%' + msg_sql + '%'
 
         sql = "select * from {}".format(table_name)
-        where = " where replace (keyword,' ', '') like '{}'".format(msg_sql)
-        sql = sql + where
+        where = " where replace (title,' ', '') = '{}'".format(msg_sql)
 
+        sql = sql + where
+        print("sql = ", sql)
         answer = self.db.select_row(sql)
 
         if answer:
