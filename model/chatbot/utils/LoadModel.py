@@ -28,7 +28,13 @@ while cnt < 10:
     print("input = ")
     msg = input()
     language = 'c'
-    question.give_answer(msg, intent, ner, language)
+    recommend_dict = [{'id': 30, 'intent': '정의', 'title': '조건문'},
+    # recommend_dict = [{'id': 1, 'intent': '인사', 'title': '헬로'},
+                    {'id': 31, 'intent': '정의', 'title': '관계연산자'},
+                    {'id': 34, 'intent': '정의', 'title': 'if문'},
+                    {'id': 22, 'intent': '정의', 'title': '변수 선언'}]
+    answer = question.give_answer(msg, intent, ner, language, recommend_dict)
     cnt += 1
+    print(answer)
 
 db.close()  # DB 연결 끊음
