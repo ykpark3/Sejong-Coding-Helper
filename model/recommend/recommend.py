@@ -13,24 +13,24 @@ class Recommendation:
     def preProcessC(self, db):
 
         data = db.select_row("select * from chatbot_train_data_c")
-        df = pd.DataFrame(data)  # 데이터셋에 삽입
+        df = pd.DataFrame(data) # 데이터셋에 삽입
 
         # Description과 Title이 공백이면 데이터프레임에서 제거
         data = df[['title', 'description']].dropna()
-
 
         return data
 
     def preProcessPython(self, db):
 
         data = db.select_row("select * from chatbot_train_data_python")
-        df = pd.DataFrame(data)  # 데이터셋에 삽입
+        df = pd.DataFrame(data) # 데이터셋에 삽입
 
+        #Inetnt가 인사이면 제거
         # Description과 Title이 공백이면 데이터프레임에서 제거
+        df = df[df.intent != "인사"]
         data = df[['title', 'description']].dropna()
 
         return data
-
 
     def insertUserData(self, data,komoran, user_question):
 
@@ -89,7 +89,7 @@ class Recommendation:
         ques_indices = self.get_similarity(data, first_result_idx)
 
         for i in range(len(ques_indices)):
-            if (ques_indices[i] == idx):
+            if(ques_indices[i] == idx):
                 ques_indices[i] = first_result_idx
 
         result = []
@@ -100,7 +100,7 @@ class Recommendation:
         return result
 
 
-    def deleteUserData(self,data):
+    def deleteUserData(self, data):
         #사용자 질문 데이터를 데이터셋에서 삭제 (마지막행 삭제)
         data = data.drop(len(data) - 1)
 
