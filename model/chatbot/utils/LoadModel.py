@@ -35,6 +35,6 @@ while cnt < 10:
                     {'id': 22, 'intent': '정의', 'title': '변수 선언'}]
     answer = question.give_answer(msg, intent, ner, language, recommend_dict)
     cnt += 1
-    print(answer)
+    print("답변: ", answer)
 
 db.close()  # DB 연결 끊음
