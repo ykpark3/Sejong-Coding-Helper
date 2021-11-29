@@ -51,6 +51,9 @@ public class ChatbotController {
     @PostMapping("/chatbotMessage/message/{roomId}/{userId}")
     public Map<Object, Object> send(HttpServletRequest request, @RequestBody Map<String, Object> map, @PathVariable Long roomId, @PathVariable Long userId) throws IOException, InterruptedException, TimeoutException {
 
+        Map<Object, Object> resultMap = new HashMap<>();
+        List<String> recoList = new ArrayList<>();
+
         int cRoomId = (int) map.get("cRoomId");
         String botLang = ( Long.valueOf(cRoomId) == roomId) ? "c" : "p";
         map.put("botLang",botLang);
@@ -61,25 +64,28 @@ public class ChatbotController {
         input = new ChatbotDTO(userId,roomId, chatMessage, "");
         input.setCreateTime(new Timestamp((Long) map.get("time")));
 
-        //resultMessage = chatbotService.executePython(chatMessage);
+        if(chatMessage.trim().toLowerCase().equals("tip") || chatMessage.trim().toLowerCase().equals("help") ||
+                chatMessage.trim().equals("가이드") ||chatMessage.trim().equals("팁") ||chatMessage.trim().equals("사용법")){
+            resultBotMsg = Constants.CHATBOT_TIP;
+        }
+        else {
+            HttpHeaders headers = new HttpHeaders();
 
-        HttpHeaders headers = new HttpHeaders();
+            RestTemplate restTemplate = new RestTemplate();
 
-        RestTemplate restTemplate = new RestTemplate();
+            resultMessage = restTemplate.postForObject(Constants.BOT_PREDICTION_URL, new HttpEntity<>(map, headers), String.class);
 
-        resultMessage = restTemplate.postForObject(Constants.BOT_PREDICTION_URL,new HttpEntity<>(map, headers),String.class);
+            JSONObject resultJson = new JSONObject(resultMessage);
+            resultBotMsg = (String) resultJson.get("botMsg");
 
-        JSONObject resultJson = new JSONObject(resultMessage);
-        resultBotMsg = (String)resultJson.get("botMsg");
+            JSONArray resultReco = resultJson.getJSONArray("reco");
 
-        JSONArray resultReco = resultJson.getJSONArray("reco");
-        List<String> recoList = new ArrayList<>();
-        for(int i = 0;i<resultReco.length();i++)
-            recoList.add((String) resultReco.get(i));
+            for (int i = 0; i < resultReco.length(); i++)
+                recoList.add((String) resultReco.get(i));
+        }
 
         result = new ChatbotDTO(CHATBOT_ID ,roomId, resultBotMsg, recoList.toString());
-        System.out.println(resultReco);
-        Map<Object, Object> resultMap = new HashMap<>();
+
         resultMap.put("result", result);
         resultMap.put("recommend", recoList);
 
