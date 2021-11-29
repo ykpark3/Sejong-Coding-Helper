@@ -124,6 +124,32 @@ class FindAnswer:
 
         return answer_result
 
+    # id 값으로 찾기
+    def search_id(self, recommend_id, language):
+        answer_result = None
+
+        if language == ('p' or 'P'):
+            table_name = "chatbot_train_data_python"
+        else:
+            table_name = "chatbot_train_data_c"
+
+        sql = "select * from {}".format(table_name)
+        where = " where id={}".format(recommend_id)
+        sql = sql + where
+
+        answer = self.db.select_row(sql)
+
+        if answer:
+            answer_result = answer[0]['answer']
+
+            count = answer[0]['count']
+            count = count + 1
+            row_id = answer[0]['id']
+            sql_count = "update {} set count = {} where (id = {})".format(table_name, count, row_id)
+            self.db.execute(sql_count)
+
+        return answer_result
+
     # NER 태그를 실제 입력된 단어로 변환
     def tag_to_word(self, ner_predicts, answer):
         for word, tag in ner_predicts:

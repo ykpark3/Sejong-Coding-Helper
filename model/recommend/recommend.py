@@ -25,6 +25,7 @@ class Recommendation:
         data = db.select_row("select * from chatbot_train_data_python")
         df = pd.DataFrame(data) # 데이터셋에 삽입
 
+        #Inetnt가 인사이면 제거
         # Description과 Title이 공백이면 데이터프레임에서 제거
         data = df[['id', 'intent', 'title', 'description']].dropna()
 
