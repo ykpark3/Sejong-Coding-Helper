@@ -48,8 +48,6 @@ def predictBotResonse():
     language = req.get("botLang")
     print(msg + "   lang : " + language)
 
-    result_chatbot = question.give_answer(msg, intent, ner, language)
-
     c_data = reco.insertUserData(recoCPreProcessing, komoran, msg)
     python_data = reco.insertUserData(recoPythonPreProcessing, komoran, msg)
 
@@ -60,9 +58,15 @@ def predictBotResonse():
         result_reco = reco.get_recommendations(python_data, len(python_data) - 1)
         python_data = reco.deleteUserData(python_data)
 
+    result_reco_title = []
+    for i in range(len(result_reco)):
+        result_reco_title.append(result_reco[i].get('title'))
+
+    result_chatbot = question.give_answer(msg, intent, ner, language)
+
     result_dict = dict()
     result_dict["botMsg"] = result_chatbot
-    result_dict["reco"] = result_reco
+    result_dict["reco"] = result_reco_title
     print(result_dict)
     return result_dict
 

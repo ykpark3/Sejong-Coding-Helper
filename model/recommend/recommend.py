@@ -16,7 +16,7 @@ class Recommendation:
         df = pd.DataFrame(data) # 데이터셋에 삽입
 
         # Description과 Title이 공백이면 데이터프레임에서 제거
-        data = df[['title', 'description']].dropna()
+        data = df[['id', 'intent', 'title', 'description']].dropna()
 
         return data
 
@@ -27,8 +27,7 @@ class Recommendation:
 
         #Inetnt가 인사이면 제거
         # Description과 Title이 공백이면 데이터프레임에서 제거
-        df = df[df.intent != "인사"]
-        data = df[['title', 'description']].dropna()
+        data = df[['id', 'intent', 'title', 'description']].dropna()
 
         return data
 
@@ -39,8 +38,10 @@ class Recommendation:
             if len(str(noun)) >= 2 and (match('[^방법]', noun)):
                 nouns = nouns + ' ' + noun
 
-                # 사용자의 문장 데이터셋에 삽입
+        # 사용자의 문장 데이터셋에 삽입
         new_data = {
+            'id': 0,
+            'intent':'정의',
             'title': 'user question',
             'description': nouns
         }
@@ -92,12 +93,13 @@ class Recommendation:
             if(ques_indices[i] == idx):
                 ques_indices[i] = first_result_idx
 
-        result = []
+        result_list = []
 
         for i in ques_indices:
-            result.append(data['title'][i])
+            result = {'id': data['id'][i], 'intent': data['intent'][i], 'title': data['title'][i]}
+            result_list.append(result)
 
-        return result
+        return result_list
 
 
     def deleteUserData(self, data):
