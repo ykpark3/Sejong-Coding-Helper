@@ -1,7 +1,7 @@
 class FindAnswer:
 
-    keyword = list()    # 개체명 'B_LV1'
-    extra_keyword = list()  # 개체명 'O'
+    keyword = list()
+    extra_keyword = list()
 
     def __init__(self, db):
         self.db = db
@@ -15,16 +15,18 @@ class FindAnswer:
         else:
             table_name = "chatbot_train_data_c"
 
-        sql = "select * from {}".format(table_name)
-        where = " where (title='{}')".format(msg)
-        sql = sql + where
+        msg_sql = ('%').join(msg.split())
+        msg_sql = '%' + msg_sql + '%'
 
+        sql = "select * from {}".format(table_name)
+        where = " where replace (title,' ', '') = '{}'".format(msg_sql)
+
+        sql = sql + where
         answer = self.db.select_row(sql)
 
         if answer:
             answer_result = answer[0]['answer']
 
-            # 호출되었으니 count 1 증가
             count = answer[0]['count']
             count = count + 1
             row_id = answer[0]['id']
@@ -51,18 +53,16 @@ class FindAnswer:
 
         # 의도명만 있는 경우
         if intent_name is not None and ner_tags is None:
-
             where = " where (intent='{}' )".format(intent_name)
 
             for i in range(len(predicts)):
                 self.extra_keyword.append(predicts[i][0])
 
-            where += " and (keyword like '"
+            where += " and replace (keyword, ' ', '') like '"
 
             for i in range(len(self.extra_keyword)):
                 where += "%{}%".format(self.extra_keyword[i])
-            where += "')"
-
+            where += "'"
             sql = sql + where
             answer = self.db.select_row(sql)
 
@@ -84,21 +84,18 @@ class FindAnswer:
                     where += " ner like '%{}%' or ".format(ne)
                 where = where[:-3] + ')'
 
-            # predicts 있는 경우
             if predicts is not None:
-
                 for i in range(len(predicts)):
-
                     if predicts[i][1] == 'B_LV1':
                         self.keyword.append(predicts[i][0])
                     else:
                         self.extra_keyword.append(predicts[i][0])
 
-            where += " and (keyword like '"
+            where += " and replace (keyword, ' ', '') like '"
 
             for i in range(len(self.keyword)):
                 where += "%{}%".format(self.keyword[i])
-            where += "')"
+            where += "'"
             sql = sql + where
 
             answer = self.db.select_row(sql)
@@ -110,11 +107,37 @@ class FindAnswer:
                     if self.extra_keyword[i] != '뭐':
                         sql_new += "%{}%".format(self.extra_keyword[i])
 
-                sql_new += "')"
+                sql_new += "'"
                 answer = self.db.select_row(sql_new)
 
             if not answer:
                 answer = self.db.select_row(sql)
+
+        if answer:
+            answer_result = answer[0]['answer']
+
+            count = answer[0]['count']
+            count = count + 1
+            row_id = answer[0]['id']
+            sql_count = "update {} set count = {} where (id = {})".format(table_name, count, row_id)
+            self.db.execute(sql_count)
+
+        return answer_result
+
+    # id 값으로 찾기
+    def search_id(self, recommend_id, language):
+        answer_result = None
+
+        if language == ('p' or 'P'):
+            table_name = "chatbot_train_data_python"
+        else:
+            table_name = "chatbot_train_data_c"
+
+        sql = "select * from {}".format(table_name)
+        where = " where id={}".format(recommend_id)
+        sql = sql + where
+
+        answer = self.db.select_row(sql)
 
         if answer:
             answer_result = answer[0]['answer']
