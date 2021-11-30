@@ -13,6 +13,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from re import match
+from chatbot.utils.Log import logger
 
 app = Flask(__name__)
 
@@ -47,6 +48,7 @@ def predictBotResonse():
     req = request.get_json()
     msg = req.get("message")
     language = req.get("botLang")
+    logger.debug(msg + "   lang : " + language)
     print(msg + "   lang : " + language)
 
     c_data = reco.insertUserData(recoCPreProcessing, komoran, msg)
@@ -74,7 +76,7 @@ def predictBotResonse():
     return result_dict
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8082)
+    #app.run(host='0.0.0.0', port=8082)
     app.run(debug=True)
 
 

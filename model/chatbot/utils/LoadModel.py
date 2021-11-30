@@ -3,7 +3,7 @@ from chatbot.utils.Database import Database
 from chatbot.utils.Preprocess import Preprocess
 from chatbot.models.intent.IntentModel import IntentModel
 from chatbot.models.ner.NerModel import NerModel
-from GiveAnswer import GiveAnswer
+from chatbot.utils.GiveAnswer import GiveAnswer
 
 # 전처리 객체 생성
 p = Preprocess(word2index_dic='../train_tools/dict/chatbot_dict.bin',
