@@ -110,3 +110,38 @@
   #qaNoticeBox a:hover{
     background-color: #ff7777;
   }
+
+  #qaNoticeBox .question {
+    display: flex;
+    flex-direction: row;
+    
+  }
+
+  #qaNoticeBox p {
+    font-family: 'nanumB';
+    font-size: 17px;
+    align-self: center;
+    margin-left: 10px;
+  }
+
+  #qaNoticeBox .answer {
+    font-family: 'nanumB';
+    font-size: 14px;
+    align-self: center;
+    color: #6b6b6b;
+    margin-left: 43px;
+    margin-bottom: 30px;
+  }
+
+  #qaNoticeBox .question img {
+    width: 30px;
+    height: 30px;
+  
+    /* padding:  5px; */
+    border: 0;
+    margin: 0;
+    /* 이미지  */
+    image-rendering: -webkit-optimize-contrast;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }

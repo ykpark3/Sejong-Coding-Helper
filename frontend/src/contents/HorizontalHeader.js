@@ -11,6 +11,9 @@ function RenderingImg({ isMain }) {
         <Link to="/mypage">
           <img className="horizonLogoImg2" src="img/user.png" />
         </Link>
+        <Link to="/faq">
+        <img className="horizonLogoImg2" src="img/faqWhite.png" />
+      </Link>
         <Link to="/">
           <img className="horizonLogoImg2" src="img/home.png" />
         </Link>
@@ -21,6 +24,9 @@ function RenderingImg({ isMain }) {
     <>
       <Link to="/myPage">
         <img className="horizonLogoImg" src="img/userBlack.png" />
+      </Link>
+      <Link to="/faq">
+        <img className="horizonLogoImg" src="img/faqBlack.png" />
       </Link>
       <Link to="/">
         <img className="horizonLogoImg" src="img/homeBlack.png" />

@@ -11,6 +11,7 @@ import UserRoute from './router/UserRoute';
 import SignupRoute from './router/SignupRoute';
 import MyPage from './contents/MyPage';
 import Qa from './contents/Qa';
+import FAQ from './contents/FAQ';
 import CodingEditor from './contents/CodingEditor';
 import TaChatRoom from './contents/TaChatRoom';
 import Root from './contents/Root';
@@ -36,6 +37,7 @@ function App() {
           <UserRoute path="/codingEditor" component={CodingEditor} />
 
           <Route path="/signup" component={Signup} />
+          <Route path="/faq" component={FAQ} />
           <SignupRoute path="/signupDetails" component={SignupDetails}/>
           {/* <Route path="/signupDetails" component={SignupDetails}/> */}
           <SignupRoute path="/signupComplete" component={SignupComplete}/> 
