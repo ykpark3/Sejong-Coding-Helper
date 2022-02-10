@@ -49,4 +49,47 @@
 ✔️ 조교에게 코드 및 입, 출력 결과 간편 전송 가능.
 ```
 
+<details>
+<summary><b>💻 Features Preview</b></summary>
+<p align="center"> <img src = "https://user-images.githubusercontent.com/64072741/153474450-db73e8d2-575b-4a6f-857b-f9b92a64be1d.jpg"> </p><br>
+<p align="center"> <img src = "https://user-images.githubusercontent.com/64072741/153474949-03e3522e-94a9-4968-8274-08f550365576.jpg"> </p><br>
+</details>
+
+<br>
+
+
+##  📚  Stack & Library
+
+### Front-End
++ ReactJS
++ Redux
+
+### Back-End
++ Spring Boot
++ Spring JPA
++ Flask
++ MySQL
+
+### Machine Learning
++ TensorFlow
++ Scikt Learn
+
+### Intrastructure
++ AWS EC2, RDS
++ Nginx
++ Docker
+
+<br>
+
+##  🛠️  Architecture
+<p align="center"> <img src = "https://user-images.githubusercontent.com/64072741/153477922-7ffb7423-249a-484c-8887-aa18b7b7b822.png"> </p><br>
+
+## 🎓 I Learned
+비밀입니다!
+
+<br>
+
+## 🔍 More
+<p align="center"> <a href="https://www.youtube.com/watch?v=2Y8-H26Ypds"><img src="https://user-images.githubusercontent.com/64072741/153478838-f0929818-e243-4ea1-9ed1-7a3c9fbc293e.png"/></a> </p>
+
 
