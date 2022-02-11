@@ -84,9 +84,13 @@
 ##  🛠️  Architecture
 <p align="center"> <img src = "https://user-images.githubusercontent.com/64072741/153477922-7ffb7423-249a-484c-8887-aa18b7b7b822.png"> </p><br>
 
-## 🎓 I Learned
-비밀입니다!
-
+## 🎓 My Part
++ 플랫폼의 UI/UX 디자인 및 설계를 담당했습니다.
++ React를 활용하여 전반적인 Frontend 기능 개발을 담당했습니다.
++ 실시간 채팅 기능 개발을 위해 STOMP 웹 소켓 통신의 클라이언트 사이드 파트를 개발했습니다.
++ Spring Security 기반 JWT를 활용하여 회원가입 및 로그인 보안 처리를 담당했습니다.
++ 클라이언트 사이드에 필요한 DB 데이터를 전송하는 api를 일부 개발했습니다.
++ 머신러닝 돌아가는 Flask 기반 서버를 구축하였고, 서버 to 서버 통신을 처리했습니다.
 <br>
 
 ## 🔍 More
