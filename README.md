@@ -72,7 +72,7 @@
 
 ### Machine Learning
 + TensorFlow
-+ Scikt Learn
++ Scikit Learn
 
 ### Intrastructure
 + AWS EC2, RDS
